@@ -1,8 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'public/base.html' %}
 
 {% block content %}
 
- <div class="flex flex-1 w-full">
+<div class="flex flex-col">
+    <div class="flex flex-1 w-full">
 
         <div id="indicators-carousel" class="relative w-full" data-carousel="static">
             <!-- Carousel wrapper -->
@@ -254,5 +255,7 @@
         </div>
 
     </div>
+    {% include 'public/footer.html' %}
+</div>
 
 {% endblock %}

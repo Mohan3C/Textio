@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm
 # Create your views here.
 
 def home(request):
-    return render(request,"main.html")
+    return render(request,"public/main.html")
 
 
 def registeruser(request):
