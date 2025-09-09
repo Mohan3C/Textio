@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+
+<div class="flex flex-1 justify-center items-center h-[100vh] bg-slate-100">
+    <div class="w-8/12 px-5 py-3 bg-white flex flex-row items-center justify-center rounded-lg shadow-lg">
+        <div class="flex flex-col items-center justify-center ">
+            <h2 class="text-xl font-bold mb-2 mt-3 shadow-lg">Signup</h2>
+            <div class=" bg-white px-3 py-2  ">
+                <form action="" method="post">
+                    {% csrf_token %}
+
+                    {{form|crispy}}
+
+                    <div class="mb-3">
+                        <input type="submit" value="Signup" class="bg-teal-500 rounded text-white px-3 p-2 w-full">
+                    </div>
+
+                </form>
+
+                <span>I already have an <a href="{% url 'login' %}" class="underline text-blue-800">Account</a></span>
+            </div>
+        </div>
+        <div class="w-6/12 bg-slate-100 border-l flex  items-center justify-center border-slate-400 h-full">
+            <div class="flex flex-col items-center justify-center gap-10">
+                <h1 class="font-medium bg-white px-3 pb-15">Login</h1>
+                <span class="text-2xl font-bold ">Welcome to Textio!</span>
+                <span class="text-slate-700">Do you already have an account?</span>
+                <a href="{% url 'login' %}" class="bg-blue-500 rounded-lg px-5 py-2 text-white font-bold">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

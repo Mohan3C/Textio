@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% load tailwind_filters %}
+
+<div class="flex flex-1 justify-center items-center h-[100vh] bg-slate-100">
+    <div class="w-8/12 px-5 py-3 bg-white flex flex-col items-center justify-center rounded-lg">
+        <h2 class="text-xl font-bold mt-3 mb-2">Login</h2>
+        <div class="w-8/12 bg-white px-8 py-5  m-5 ">
+            <form action="" method="post">
+                {% csrf_token %}
+
+                {{form|crispy}}
+
+                <div class="mb-3">
+                    <input type="submit" value="Login" class="bg-teal-500 rounded text-white px-3 p-2 w-full">
+                </div>
+
+            </form>
+
+            <span>I don`t have an <a href="{% url 'registration' %}" class="underline text-blue-800">Account</a></span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
