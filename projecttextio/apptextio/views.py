@@ -10,6 +10,16 @@ def home(request):
 def viewproduct(request):
   return render(request, 'public/viewproduct.html')
 
+def dashboard(request):
+  return render(request,"admin/dashboard.html")
+
+def manageproduct(request):
+  return render(request,"admin/manage_products.html")
+
+def managecategory(request):
+  return render(request,"admin/manage_category.html")
+
+
 
 def registeruser(request):
 

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+
+    <div class="flex flex-1 bg-purple-600 text-white px-[5%] py-5 justify-between items-center">
+        <h2>Admin Panel | Textio</h2>
+
+        <div class="flex ">
+            <a href="{% url 'homepage' %}" class="text-white bg-red-500 px-3 py-2 rounded">Log Out</a>
+        </div>
+    </div>
+
+    <div class="px-[5%] flex flex-1 mt-5 gap-10">
+        <div class="w-3/12">
+            <div class="flex flex-col divide-y divide-slate-600">
+                <a href="{% url 'dashboard' %}" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Dashbord</a>
+                <a href="{% url 'managecategory' %}" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage Categories</a>
+                <a href="{% url 'manageproduct' %}" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage Product</a>
+                <a href="" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage User</a>
+                <a href="" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage Order</a>
+                <a href="" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage Coupons</a>
+                <a href="" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Manage Payment</a>
+                <a href="" class="bg-purple-600 text-white px-3 py-2 hover:bg-red-500">Logout</a>
+            </div>
+        </div>
+
+        <div class="w-9/12">
+            {% block content %}
+
+            {% endblock %}
+        </div>
+    </div>
+
+
+</body>
+
+</html>
