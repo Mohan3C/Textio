@@ -1,23 +1,19 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
+from .models import *
 
 # Create your views here.
 
 def home(request):
-    return render(request,"public/main.html")
+    products = Product.objects.all()
+    return render(request,"public/main.html",{"products":products})
 
 def viewproduct(request):
-  return render(request, 'public/viewproduct.html')
+  products = Product.objects.all()
+  return render(request, 'public/viewproduct.html',{'products':products})
 
-def dashboard(request):
-  return render(request,"admin/dashboard.html")
 
-def manageproduct(request):
-  return render(request,"admin/manage_products.html")
-
-def managecategory(request):
-  return render(request,"admin/manage_category.html")
 
 
 

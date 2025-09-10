@@ -5,7 +5,7 @@
 <div class="flex flex-col">
     <div class="flex flex-1 w-full">
 
-        <div id="indicators-carousel" class="relative w-full" data-carousel="static">
+        <div id="indicators-carousel" class="relative w-full z-30" data-carousel="static">
             <!-- Carousel wrapper -->
             <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
                 <!-- Item 1 -->
@@ -139,83 +139,31 @@
 
         <div class="grid grid-cols-4 py-[4%] gap-5">
 
-
-            <div
+            
+            {% for product in products %}
+                <div
                 class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <a href="#">
-                    <img class="rounded-t-lg" src="https://picsum.photos/400/400" alt="" class="w-full object-cover" />
+                    <img class="rounded-t-lg" src="{{product.image.url}}" alt="" class="w-full object-cover" />
                 </a>
                 <div class="p-5">
-                    <h2 class="text-xl font-semibold">Brand</h2>
+                    <h2 class="text-xl font-semibold">Brand: <span>{{product.brand}} </span> </h2>
 
-                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">Noteworthy
-                        technology acquisitions 2021</p>
+                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">{{product.title}}</p>
 
-                    <div class="flex flex-1 gap-5">
-                        <p><span>discount price: 3500</span> <del>Price: 5000</del></p>
+                    <div class="flex gap-5">
+                        <p class="text-lg font-medium">Price <span >{{product.dis_price}}</span> <del>{{product.price}}</del></p>
                     </div>
+                    <p>Size : {{product.size}}</p>
                         <a href="{% url 'allproduct' %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
 
 
                 </div>
             </div>
-            <div
-                class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                    <img class="rounded-t-lg" src="https://picsum.photos/400/400" alt="" class="w-full object-cover" />
-                </a>
-                <div class="p-5">
-                    <h2 class="text-xl font-semibold">Brand</h2>
-
-                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">Noteworthy
-                        technology acquisitions 2021</p>
-
-                    <div class="flex flex-1 gap-5">
-                        <p><span>discount price: 3500</span> <del>Price: 5000</del></p>
-                    </div>
-                        <a href="{% url 'allproduct' %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
-
-
-                </div>
-            </div>
-            <div
-                class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                    <img class="rounded-t-lg" src="https://picsum.photos/400/400" alt="" class="w-full object-cover" />
-                </a>
-                <div class="p-5">
-                    <h2 class="text-xl font-semibold">Brand</h2>
-
-                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">Noteworthy
-                        technology acquisitions 2021</p>
-
-                    <div class="flex flex-1 gap-5">
-                        <p><span>discount price: 3500</span> <del>Price: 5000</del></p>
-                    </div>
-                        <a href="{% url 'allproduct' %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
-
-
-                </div>
-            </div>
-            <div
-                class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
-                    <img class="rounded-t-lg" src="https://picsum.photos/400/400" alt="" class="w-full object-cover" />
-                </a>
-                <div class="p-5">
-                    <h2 class="text-xl font-semibold">Brand</h2>
-
-                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">Noteworthy
-                        technology acquisitions 2021</p>
-
-                    <div class="flex flex-1 gap-5">
-                        <p><span>discount price: 3500</span> <del>Price: 5000</del></p>
-                    </div>
-                        <a href="{% url 'allproduct' %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
-
-
-                </div>
-            </div>
+            
+            {% endfor %}
+                
+            
 
         </div>
         <div class="flex flex-1 items-center justify-end">

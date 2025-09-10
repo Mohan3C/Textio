@@ -4,22 +4,27 @@
 
 <div class=" w-full bg-slate-100">
         <div class="flex flex-1 px-[8%] py-8 gap-10">
+            
+            {% for product in products %}
+                
+           
+                
             <div class="w-4/12 flex flex-col">
                 <div class="flex flex-1">
-                    <img src="https://rukminim2.flixcart.com/image/612/612/xif0q/t-shirt/q/7/i/m-aa-12-ausk-original-imahbq3gzcrsbuys.jpeg?q=70" alt="random photo" class="object-cover h-[70vh] w-full">
+                    <img src="{{product.image.url}}" alt="random photo" class="object-cover h-[60vh] w-full">
                 </div>
                 <div class="flex flex-1 mt-3 gap-3 ">
                     <a href="#" class="text-lg font-semibold bg-[#FF8C00] items-center justify-center flex w-full py-2 px-4 bg">Add To Cart</a>
                     <a href="#" class="text-lg font-semibold bg-[#FC4C02] text-white items-center justify-center flex w-full py-2 px-4 bg">By Now</a>
                 </div>
            </div>
-            <div class="w-8/12">
+            <div class="w-8/12 mt-5">
                 <div class="flex flex-col space-y-3">
-                    <h2 class="text-lg font-semibold text-black">Brand</h2>
-                    <p class="text-xl font-medium text-black ">Title : <span class="text-sm font-semibold line-clamp-1 text-gray-700">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Illo aperiam ut placeat quisquam laudantium rem itaque unde distinctio ea ratione explicabo, dolores magni sequi deleniti laboriosam, nostrum blanditiis nihil commodi.</span></p>
+                    <h2 class="text-lg font-semibold text-black">Brand: <span class="text-md">{{product.brand}}</span></h2>
+                    <p class="text-xl font-medium text-black ">Title : <span class="text-sm font-semibold line-clamp-1 text-gray-700">{{product.title}}</span></p>
                     <div class="flex flex-1 gap-5">
                         <p class="text-lg font-semibold">Price:</p>
-                        <span> 699 <del> 999</del> <span>20% Off</span></span>
+                        <span> {{product.dis_price}} <del>{{product.price}} </del> <span>20% Off</span></span>
                     </div>
                     <div class="flex flex-1 gap-5 items-center">
                         <span class="text-xl font-semibold">Size</span>
@@ -34,9 +39,10 @@
                     <div class="flex flex-1">
                         <p>Coupon here -----</p>
                     </div>
-                    <p class="line-clamp-4 text-md">Product Descriptions : Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi itaque delectus reiciendis possimus blanditiis, pariatur esse laudantium vitae tempore expedita distinctio. Minus aliquid perferendis ipsum quidem facere id, natus explicabo? Lorem ipsum dolor, sit amet consectetur adipisicing elit. Alias nostrum laborum aperiam officiis commodi doloribus, sunt odit distinctio incidunt facilis repellat a, repellendus eum culpa laudantium sed. Impedit, corrupti officiis!</p>
+                    <p class="line-clamp-4 text-md">{{product.title}} </p>
                 </div>
             </div>
+             {% endfor %}
         </div>
     </div>
   
