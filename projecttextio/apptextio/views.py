@@ -30,3 +30,6 @@ def registeruser(request):
     form = UserCreationForm()
 
   return render(request,"registration/register.html", {"form":form})
+
+def cart(request):
+  return render(request,"public/cart.html")

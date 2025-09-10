@@ -1,0 +1,149 @@
+{% extends 'public/base.html' %}
+
+{% load tailwind_filters %}
+
+{% block content %}
+
+
+
+<div class=" bg-slate-100 w-full px-10 h-screen ">
+    <div class="flex flex-1  gap-10 ">
+        <div class="w-8/12 border rounded-lg mt-5 ">
+            <div class=" rounded-lg px-5 py-3 flex flex-1 justify-between items-center border bg-white">
+                <span>From save address</span>
+                <a href="" class="flex items-center justify-center border rounded-lg">
+                    <span class="px-3 py-2  text-sm font-bold text-blue-600">Enter Delivary Pincode</span>
+                </a>
+            </div>
+
+
+            <div class="flex flex-col gap-4 mt-3">
+                <div class="bg-white w-full self-start">
+                    <div class="flex flex-col gap-2 border-t py-5">
+                        <div class="flex flex-1 gap-4 ">
+                            <div class="w-2/12 flex justify-center items-center ">
+                                <div class="w-[100px] h-[100px]">
+                                    <img src="" class="object-cover h-[100px] w-[100px]" alt="">
+                                </div>
+                            </div>
+                            <div class="w-10/12">
+                                <div class="flex flex-col items-start justify-between  h-full">
+                                    <h1 class="text-sm font-semibold truncate w-[20]" title="{{o.product_id.title}}">
+                                        product title</h1>
+                                    <h1 class="text-sm font-medium truncate w-[20]" title="{{o.product_id.title}}">
+                                        product title</h1>
+                                    <h2>Price: ₹discount price <del class="text-sm text-slate-600">₹total price</del>
+                                        <span class="text-green-700 font-semibold text-sm">discount
+                                            percentage%Off</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-1 mt-2  justify-center   items-center px-5 gap-3">
+                            <a href="" class="bg-slate-100 rounded-full text-sm px-3 py-1">-</a>
+                            <span class="px-3 py-1 text-sm border">1</span>
+                            <a href="" class="bg-slate-100 rounded-full text-sm  px-2 py-1">+</a>
+                            <div class="flex flex-1 justify-start px-4">
+                                <a href="" class=" font-bold text-xl ">
+                                    <span>remove</span>
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-2 py-5 border-t">
+                        <div class="flex flex-1 gap-4 ">
+                            <div class="w-2/12 flex justify-center items-center ">
+                                <div class="w-[100px] h-[100px]">
+                                    <img src="" class="object-cover h-[100px] w-[100px]" alt="">
+                                </div>
+                            </div>
+                            <div class="w-10/12">
+                                <div class="flex flex-col items-start justify-between  h-full">
+                                    <h1 class="text-sm font-semibold truncate w-[20]" title="{{o.product_id.title}}">
+                                        product title</h1>
+                                    <h1 class="text-sm font-medium truncate w-[20]" title="{{o.product_id.title}}">
+                                        product title</h1>
+                                    <h2>Price: ₹discount price <del class="text-sm text-slate-600">₹total price</del>
+                                        <span class="text-green-700 font-semibold text-sm">discount
+                                            percentage%Off</span>
+                                    </h2>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex flex-1 mt-2  justify-center   items-center px-5 gap-3">
+                            <a href="" class="bg-slate-100 rounded-full text-sm px-3 py-1">-</a>
+                            <span class="px-3 py-1 text-sm border">1</span>
+                            <a href="" class="bg-slate-100 rounded-full text-sm  px-2 py-1">+</a>
+                            <div class="flex flex-1 justify-start px-4">
+                                <a href="" class=" font-bold text-xl ">
+                                    <span>remove</span>
+
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class=" px-5 py-3 flex  justify-end items-end border  bg-white">
+
+                <a href="" class="flex items-end justify-center bg-orange-600 px-10 border rounded-lg ">
+                    <span class="px-8 py-3 font-bold text-white">Place orrder</span>
+                </a>
+            </div>
+        </div>
+
+
+        <div class="w-4/12 bg-white p-5 mt-5  self-start ">
+
+
+            <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
+
+            <div class="flex flex-col">
+                <div class="flex justify-between py-2">
+                    <span class="text-normal">Price( items)</span>
+                    <span class="font-semibold">5000</span>
+                </div>
+                <div class="flex justify-between py-2 ">
+                    <span class="text-normal "> Discount </span>
+                    <span class="font-semibold text-green-400">2000</span>
+                </div>
+               
+                <div class="flex justify-between py-2 flex-1 ">
+                    <span class="text-normal">Coupon ( name ) <a href="" class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
+                    <span class="font-medium text-gray-400">-₹ coupon amount <span>
+                </div>
+
+                <div class="flex justify-between border-y  py-2 ">
+                    <span class="text-normal">Total  Amount</span>
+                    <span class="font-semibold text-green-700  text-2xl">₹ 3000</span>
+                </div>
+                <h2 class="py-2">Apply Coupons</h2>
+                <div class="flex flex-1 py-2 border-t ">
+                    <span class="text-sm font-semibold">You will save ₹4,205 on this order</span>
+                </div>
+
+
+                
+
+
+            </div>
+
+
+
+        </div>
+
+
+        <div class="bg-slate-100 ">
+
+        </div>
+
+
+
+
+
+
+    </div>
+</div>
+
+{% endblock %}
