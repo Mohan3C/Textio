@@ -1,6 +1,5 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
 from django.contrib.auth import login
 
 # Create your views here.
@@ -20,11 +19,7 @@ def registeruser(request):
     if form.is_valid():
       user=form.save()
       login(request,user)
-      messages.success(request,"Your account is created successfully")
-      
       return redirect("homepage")  
-    else:
-      messages.error(request,"error")
   else:
     form = UserCreationForm()
 
