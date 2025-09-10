@@ -6,6 +6,9 @@ from django.contrib.auth.forms import UserCreationForm
 def home(request):
     return render(request,"public/main.html")
 
+def viewproduct(request):
+  return render(request, 'public/viewproduct.html')
+
 
 def registeruser(request):
   form = UserCreationForm(request.POST or None)
@@ -17,4 +20,4 @@ def registeruser(request):
   else:
     form = UserCreationForm()
 
-  return render(request,"registration/registration.html",{"form":form})
+  return render(request,"registration/register.html", {"form":form})
