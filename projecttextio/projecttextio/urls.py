@@ -10,8 +10,20 @@ from apptextio.admin_views import *
 urlpatterns = [
     path('superadmin/', admin.site.urls),
     path("", home, name="homepage"),
-    path("viewproduct/", viewproduct, name="allproduct"),
+    path("viewproduct/<int:id>/", viewproduct, name="allproduct"),
+    path("filter/<int:id>/",filter_product,name="filter"),
+
+    # cart and coupon urls
     path("home/product/cart",cart,name="cart"),
+    path("order/<int:product_id>/add-to-cart/",addtocart,name="addtocart"),
+    path("order/<int:product_id>/remove-from-cart/",removefromcart,name="removefromcart"),
+    path("order/<int:product_id>/delete-from-cart/",deletefromcart,name="deletefromcart"),
+    path("order/complete/",ordercomplete,name="ordercomplete"),
+    path("addCoupon/", addCoupon, name="addCoupon"),
+    path("RemoveCoupon/<int:coupon_id>/", RemoveCoupon, name="RemoveCoupon"),
+    path("admin/coupons", manageCoupons, name="manageCoupons"),
+    path("admin/coupons/<int:id>/delete/", delete_coupon, name="deletecoupon"),
+
 
 
     path("accounts/", include("django.contrib.auth.urls")),

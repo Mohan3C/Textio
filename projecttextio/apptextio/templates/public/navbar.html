@@ -13,12 +13,12 @@
 
                     {% if request.user.is_authenticated %}
 
-                    <span class="text-xl font-bold">{{user.username}}</span>
+                    <span class="text-xl font-bold"><a href="{% url 'dashboard' %}">{{user.username}}</a></span>
                    
 
                     <form action="{% url 'logout' %}" method="post">
                         {% csrf_token %}
-                        <input class="  cursor-pointer text-xl font-medium mx-5" type="submit" value="logout">
+                        <input class="  cursor-pointer text-xl font-medium px-1 text-red-500 font-semibold" type="submit" value="logout">
 
                     </form>
 
@@ -28,7 +28,7 @@
 
                     {% endif %}
 
-                    <a href="{% url 'dashboard' %}" class="text-xl font-medium">
+                    <a href="{% url 'cart' %}" class="text-xl font-medium">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="purple" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="size-6">
                             <path stroke-linecap="round" stroke-linejoin="round"

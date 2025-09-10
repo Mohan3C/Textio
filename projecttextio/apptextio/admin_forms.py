@@ -11,3 +11,14 @@ class ProductInsertForm(ModelForm):
         model = Product
         fields = "__all__"
         
+class CouponcartForm(ModelForm):
+    
+    class Meta:
+        model = Coupon
+        fields = ["code"]
+
+class CouponForm(ModelForm):
+
+    class Meta:
+        model = Coupon
+        fields ="__all__"

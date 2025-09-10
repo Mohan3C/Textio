@@ -1,5 +1,5 @@
-from django.shortcuts import render, redirect
-from .admin_forms import CategroyForm, ProductInsertForm
+from django.shortcuts import render, redirect,get_object_or_404
+from .admin_forms import CategroyForm, ProductInsertForm,CouponForm
 from .models import *
 
 
@@ -39,3 +39,21 @@ def deleteCategory(request, id):
    return redirect(managecategory)
 
 
+
+def manageCoupons(req):
+    coupon_form = CouponForm(req.POST or None)
+    coupons = Coupon.objects.all()
+    
+    if req.method == "POST":
+        if coupon_form.is_valid():
+            coupon_form.save()
+            return redirect(manageCoupons)
+    return render(req, "admin/manage_coupon.html", {"coupons":coupons, "form":coupon_form})
+
+
+
+def delete_coupon(request,id):
+    data = get_object_or_404(Coupon,id=id)
+
+    data.delete()
+    return redirect("manageCoupons")
