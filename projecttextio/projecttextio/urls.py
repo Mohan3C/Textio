@@ -12,6 +12,7 @@ urlpatterns = [
     path("", home, name="homepage"),
     path("viewproduct/<int:id>/", viewproduct, name="allproduct"),
     path("filter/<int:id>/",filter_product,name="filter"),
+    path("allproducts",products,name="products"),
 
     # cart and coupon urls
     path("home/product/cart",cart,name="cart"),

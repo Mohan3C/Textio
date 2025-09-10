@@ -17,7 +17,9 @@ def viewproduct(request,id):
   products = Product.objects.get(id=id)
   return render(request, 'public/viewproduct.html',{'products':products})
 
-
+def products(request):
+  products = Product.objects.all()
+  return render(request,"public/allproduct.html",{"products":products})
 
 
 

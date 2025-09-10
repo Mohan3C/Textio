@@ -30,7 +30,8 @@
                             </div>
                             <div class="w-10/12">
                                 <div class="flex flex-col items-start justify-between  h-full">
-                                    <h1 class="text-normal font-semibold truncate w-[20]" title="{{o.product_id.title}}">
+                                    <h1 class="text-normal font-semibold truncate w-[20]"
+                                        title="{{o.product_id.title}}">
                                         {{i.product_id.title | truncatewords:10}}</h1>
                                     <h1 class="text-sm font-bold  w-[20]">Brand: {{i.product_id.brand}}</h1>
                                     <h2>Price: ₹{{i.total_discount_price}} <del
@@ -55,7 +56,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                 </div>
                 {% empty %}
                 <h1 class="text-9xl font-bold text-slate-200 flex justify-center items-center">Empty Cart</h1>
@@ -69,61 +70,72 @@
             </div>
         </div>
 
+        <div class="w-4/12 mt-5">
+            <div class=" bg-white p-5   self-start ">
 
-        <div class="w-4/12 bg-white p-5 mt-5  self-start ">
+
+                <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
+
+                {% if orderitems %}
+                <div class="flex flex-col">
+                    <div class="flex justify-between py-2">
+                        <span class="text-normal">Price( items)</span>
+                        <span class="font-semibold">{{order.gettotalamount}}</span>
+                    </div>
+                    <div class="flex justify-between py-2 ">
+                        <span class="text-normal "> Discount </span>
+                        <span class="font-semibold text-green-500">-{{order.gettotaldiscount}}</span>
+                    </div>
+                    {% if order.coupon_id %}
+                    <div class="flex justify-between py-2 flex-1 ">
+                        <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a
+                                href="{% url 'RemoveCoupon' order.coupon_id.id %}"
+                                class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
+                        <span class="font-medium text-gray-400">-₹{{order.coupon_id.amount}} <span>
+                    </div>
+                    {% endif %}
+
+                    <div class="flex justify-between border-y  py-2 ">
+                        <span class="text-normal">Total Amount</span>
+                        <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
+                    </div>
+                    {% if not order.coupon_id %}
+                    {% if messages %}
+                    {% for message in messages %}
+                    <h2 class="py-2">Apply Coupons</h2>
+                    {% endfor %}
+                    {% endif %}
+                    <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
+                        <form action="{% url 'addCoupon' %}" method="post" class="flex flex-col px-2 py-1">
+                            {% csrf_token %}
+                            {{form|crispy}}
+
+                            <input type="submit" value="Apply Coupon" class="bg-teal-600 rounded text-white px-2 py-1">
+                        </form>
+
+                    </div>
+                    {% endif %}
+                    <div class="flex flex-1 py-2 border-t ">
+                        <span class="text-sm font-semibold text-green-500">You will save ₹{{order.totalsaving}} on this
+                            order</span>
+                    </div>
 
 
-            <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
 
-            {% if orderitems %}
-            <div class="flex flex-col">
-                <div class="flex justify-between py-2">
-                    <span class="text-normal">Price( items)</span>
-                    <span class="font-semibold">{{order.gettotalamount}}</span>
+
+
                 </div>
-                <div class="flex justify-between py-2 ">
-                    <span class="text-normal "> Discount </span>
-                    <span class="font-semibold text-green-500">-{{order.gettotaldiscount}}</span>
-                </div>
-                {% if order.coupon_id %}
-                <div class="flex justify-between py-2 flex-1 ">
-                    <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a href="{% url 'RemoveCoupon' order.coupon_id.id %}"
-                            class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
-                    <span class="font-medium text-gray-400">-₹{{order.coupon_id.amount}} <span>
-                </div>
-                {% endif %}
-
-                <div class="flex justify-between border-y  py-2 ">
-                    <span class="text-normal">Total Amount</span>
-                    <span
-                        class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
-                </div>
-                {% if not order.coupon_id %}
-                {% if messages %}
-                {% for message in messages %}
-                <h2 class="py-2">Apply Coupons</h2>
-                {% endfor %}
-                {% endif %}
-                <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
-                    <form action="{% url 'addCoupon' %}" method="post" class="flex flex-col px-2 py-1">
-                        {% csrf_token %}
-                        {{form|crispy}}
-
-                        <input type="submit" value="Apply Coupon" class="bg-teal-600 rounded text-white px-2 py-1">
-                    </form>
-
-                </div>
-                {% endif %}
-                <div class="flex flex-1 py-2 border-t ">
-                    <span class="text-sm font-semibold text-green-500">You will save ₹{{order.totalsaving}} on this order</span>
-                </div>
-
-
-
-
 
             </div>
+            <div class="flex flex-1 gap-5 mt-10 text-xl font-semibold text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                    stroke="currentColor" class="size-12">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+                </svg>
 
+                <p>Safe and Secure Payments.Easy returns.100% Authentic products.</p>
+            </div>
         </div>
         {% else %}
 
