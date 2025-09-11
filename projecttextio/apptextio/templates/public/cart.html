@@ -79,7 +79,7 @@
                 {% if orderitems %}
                 <div class="flex flex-col">
                     <div class="flex justify-between py-2">
-                        <span class="text-normal">Price( items)</span>
+                        <span class="text-normal">Price({{ orderitems|length}} items)</span>
                         <span class="font-semibold">{{order.gettotalamount}}</span>
                     </div>
                     <div class="flex justify-between py-2 ">
