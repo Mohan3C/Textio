@@ -154,8 +154,15 @@
                     <div class="flex gap-5">
                         <p class="text-lg font-medium">Price <span >{{product.dis_price}}</span> <del>{{product.price}}</del></p>
                     </div>
-                    <p>Size : {{product.size}}</p>
-                        <a href="{% url 'allproduct' product.id %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
+
+                    <p> Size :
+                        {% for size in product.size.all%}
+                        <span>
+                            {{size.get_size_display}}|
+                        </span>
+                         {% endfor %}
+                    </p>
+                    <a href="{% url 'allproduct' product.id %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
 
 
                 </div>

@@ -26,9 +26,11 @@ urlpatterns = [
     path("admin/coupons/<int:id>/delete/", delete_coupon, name="deletecoupon"),
 
 
-
+    # default login urls
     path("accounts/", include("django.contrib.auth.urls")),
     path("accounts/registration/",registeruser, name="registration"),
+       
+       
         # admin urls
     path("admin/admin-base/",dashboard,name="dashboard"),
     path("manage-category/",managecategory,name="managecategory"),

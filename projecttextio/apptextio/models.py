@@ -14,12 +14,13 @@ class Size(models.Model):
 
 class SizeVariant(models.Model):
     SIZE_CHOICES = [
-        ('S', 'Small'),
-        ('M', 'Medium'),
-        ('L', 'Large'),
-        ('XL', 'Extra Large'),
+        ( 'Small','S'),
+        ( 'Medium','M'),
+        ( 'Large','L'),
+        ( 'Extra Large','XL'),
+        
     ]
-    size = models.CharField(max_length=3, choices=SIZE_CHOICES, unique=True)
+    size = models.CharField(max_length=12, choices=SIZE_CHOICES, unique=True)
 
     def __str__(self):
         return self.get_size_display()
