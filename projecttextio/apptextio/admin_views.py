@@ -10,6 +10,8 @@ def manageproduct(request):
   products = Product.objects.all()
   return render(request,"admin/manage_products.html",{"products":products})
 
+
+
 def deleteProduct(request, id):
     itmes = Product.objects.get(id=id)
     itmes.delete()
