@@ -18,8 +18,9 @@ def viewproduct(request,id):
   return render(request, 'public/viewproduct.html',{'products':products})
 
 def products(request):
+  categories = Category.objects.all()
   products = Product.objects.all()
-  return render(request,"public/allproduct.html",{"products":products})
+  return render(request,"public/allproduct.html",{"products":products, "categories":categories})
 
 
 
