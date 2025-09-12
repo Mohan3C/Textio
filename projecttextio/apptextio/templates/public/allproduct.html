@@ -15,13 +15,23 @@
         <a href="{% url 'allproduct' i.id %}" class="bg-slate-100 h-full">
 
             <div class=" border rounded-lg shadow-lg flex flex-col ">
-                <img src="{{i.image.url}}" class="w-full h-72 object-cover  rounded-t-lg "
+                <img src="{{i.image.url}}" class="w-full h-80 object-cover  rounded-t-lg "
                     alt="{{i.title}}">
 
-                <div class="p-3 flex flex-col justify-between flex-grow">
-                    <h2 class="px-3 py-2 font-bold truncate  h-12" title="{{i.title}}">{{i.title}}</h2>
-                    <p class="px-3 font-semibold truncate  h-6 ">{{i.brand}}</p>
-                    <h3 class="px-3 py-1 truncate  h-6">₹{{i.dis_price}} <del>₹{{i.price}}</del></h3>
+                <div class=" flex flex-col justify-between flex-grow">
+                    <h2 class="px-3 font-bold truncate " title="{{i.title}}">{{i.title}}</h2>
+                    <p class="px-3 font-semibold truncate  ">{{i.brand}}</p>
+                    <p class="px-3 text-md font-medium"> Size :
+                        {% for size in i.size.all%}
+                        <span>
+                            {{size.get_size_display}}|
+                        </span>
+                         {% endfor %}
+                    </p>
+                    <h3 class="px-3 py-1 text-md font-semibold"> Price :
+                        <span class="text-lg font-semibold">₹{{ i.dis_price }}</span>
+                        <del class="text-md text-gray-700 ml-2">₹{{ i.price }}</del>
+                    </h3>
                 </div>
             </div>
 
