@@ -22,3 +22,8 @@ class CouponForm(ModelForm):
     class Meta:
         model = Coupon
         fields ="__all__"
+
+class AddressForm(ModelForm):
+    class Meta:
+        model = Address
+        fields = ['name','alt_contact','street','landmark','city','state','pincode','type']

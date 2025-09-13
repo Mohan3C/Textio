@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import *
-from .admin_forms import CouponcartForm
+from .admin_forms import CouponcartForm, AddressForm
 
 # Create your views here.
 
@@ -39,7 +39,7 @@ def registeruser(request):
   return render(request,"registration/register.html", {"form":form})
 
 
-
+@login_required
 def filter_product(request,id):
   categories = Category.objects.all()
   products = Product.objects.filter(category_id = id)
@@ -48,6 +48,19 @@ def filter_product(request,id):
   page_obj = paging.get_page(page_number)
   
   return render(request,"main.html",{"categories":categories,"page_obj":page_obj})
+@login_required
+def checkoutaddress(request):
+  form = AddressForm(request.POST or None)
+  data = {}
+  if  request.method == "POST":
+    if form.is_valid():
+      address = form.save(commit=False)
+      address.user = request.user
+      address.save()
+      return redirect(checkoutaddress)
+
+  data['form'] = form
+  return render(request, 'public/address.html', data)
 
 @login_required
 def addtocart(request,product_id):

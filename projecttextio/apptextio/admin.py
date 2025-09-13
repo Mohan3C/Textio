@@ -1,6 +1,6 @@
 # admin.py
 from django.contrib import admin
-from .models import Product, SizeVariant, Category,Order,OrderItem,Coupon
+from .models import *
 
 class ProductAdmin(admin.ModelAdmin):
     list_display = ('id', 'title', 'price', 'get_sizes')
@@ -16,3 +16,4 @@ admin.site.register(Category)
 admin.site.register(Order)
 admin.site.register(OrderItem)
 admin.site.register(Coupon)
+admin.site.register(Address)

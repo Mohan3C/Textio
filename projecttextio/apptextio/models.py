@@ -108,3 +108,16 @@ class Coupon(models.Model):
     def __str__(self):
         return self.code
     
+class Address(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=200)
+    alt_contact = models.CharField(max_length=100)
+    street = models.CharField(max_length=200)
+    landmark = models.CharField(max_length=200)
+    city = models.CharField(max_length=200 , choices=(('Purnea','Purnea'),('Madhepura','Madhepura'),('Katihar','Katihar'),('Bhagelpur','Bhagelpur'),('Patna','Patna'),))
+    state = models.CharField(max_length=200, choices=(('Bihar','Bihar'),('Up','Up'),('Jharkhand','Jharkhand'),('Punjab','Punjab'),('Haryana','Haryana'),))
+    pincode = models.CharField(max_length=200)
+    type = models.CharField(max_length=200, choices=(("Home","Home"),("Office","Office")))
+
+    def __str__(self):
+        return self.name
