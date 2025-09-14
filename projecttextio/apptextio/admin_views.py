@@ -5,7 +5,12 @@ from django.contrib.auth.decorators import login_required
 
 
 def dashboard(request):
-  return render(request,"admin/dashboard.html")
+  data = {}
+  data['products'] = Product.objects.all()
+  data['categories'] = Category.objects.all()
+  data['coupons'] = Coupon.objects.all()
+  data['users'] = User.objects.all()
+  return render(request,"admin/dashboard.html", data)
 
 def manageproduct(request):
   products = Product.objects.all()
@@ -64,3 +69,8 @@ def delete_coupon(request,id):
 def saveAddress(request):
     addresses  = Address.objects.filter(user = request.user)
     return render(request, 'admin/manage_address.html', {'addresses':addresses})
+
+def manageUser(request):
+    data = {}
+    data['users'] = User.objects.all()
+    return render(request, 'admin/users.html', data)

@@ -37,6 +37,7 @@ urlpatterns = [
     path("manage-category/",managecategory,name="managecategory"),
     path("manage-product/",manageproduct,name="manageproduct"),
     path("manage-address/",saveAddress,name="manageaddress"),
+    path("manage-user/",manageUser,name="manageuser"),
     path("delete-product/<int:id>/",deleteProduct ,name="deleteproduct"),
     path("insert-product/",insertProduct,name="insert-product"),
     path("delete-product/<int:id>/",deleteCategory ,name="delete-product"),
