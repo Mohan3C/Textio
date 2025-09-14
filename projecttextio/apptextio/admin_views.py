@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .admin_forms import CategroyForm, ProductInsertForm,CouponForm
 from .models import *
+from django.contrib.auth.decorators import login_required
 
 
 def dashboard(request):
@@ -59,3 +60,7 @@ def delete_coupon(request,id):
 
     data.delete()
     return redirect("manageCoupons")
+
+def saveAddress(request):
+    addresses  = Address.objects.filter(user = request.user)
+    return render(request, 'admin/manage_address.html', {'addresses':addresses})

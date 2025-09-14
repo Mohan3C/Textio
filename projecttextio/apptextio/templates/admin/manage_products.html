@@ -5,7 +5,7 @@
 {% block content %}
 
 <div class="flex flex-1 justify-between items-center">
-    <h2 class="text-2xl font-semibold ">Manage Products (20)</h2>
+    <h2 class="text-2xl font-semibold ">Manage Product {{products|length}}</h2>
     <a href="{% url 'insert-product' %}" class="text-white bg-green-600 px-3 py-2 rounded">Insert Product</a>
 </div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
