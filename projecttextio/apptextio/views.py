@@ -48,10 +48,15 @@ def filter_product(request,id):
   page_obj = paging.get_page(page_number)
   
   return render(request,"main.html",{"categories":categories,"page_obj":page_obj})
+
 @login_required
 def checkoutaddress(request):
-  form = AddressForm(request.POST or None)
+ 
   data = {}
+  data['cform'] = CouponcartForm(request.POST or None)
+  data['form'] = AddressForm(request.POST or None)
+ 
+
   if  request.method == "POST":
     if form.is_valid():
       address = form.save(commit=False)
@@ -59,7 +64,6 @@ def checkoutaddress(request):
       address.save()
       return redirect(checkoutaddress)
 
-  data['form'] = form
   return render(request, 'public/address.html', data)
 
 @login_required
@@ -189,3 +193,6 @@ def RemoveCoupon(request, coupon_id):
     order.save()
     return redirect(cart) 
   
+
+def payment(request):
+  return render(request, 'public/make-payment.html')

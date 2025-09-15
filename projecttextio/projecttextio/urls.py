@@ -22,6 +22,7 @@ urlpatterns = [
     path("order/<int:product_id>/delete-from-cart/",deletefromcart,name="deletefromcart"),
     path("order/complete/",ordercomplete,name="ordercomplete"),
     path("addCoupon/", addCoupon, name="addCoupon"),
+    path("makepayment/", payment, name="makepayment"),
     path("RemoveCoupon/<int:coupon_id>/", RemoveCoupon, name="RemoveCoupon"),
     path("admin/coupons", manageCoupons, name="manageCoupons"),
     path("admin/coupons/<int:id>/delete/", delete_coupon, name="deletecoupon"),
