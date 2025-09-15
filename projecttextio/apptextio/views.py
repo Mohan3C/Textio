@@ -193,6 +193,7 @@ def RemoveCoupon(request, coupon_id):
     order.save()
     return redirect(cart) 
   
-
+@login_required
 def payment(request):
+  
   return render(request, 'public/make-payment.html')

@@ -44,13 +44,12 @@ class Product(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isordered = models.BooleanField(default=False)
-
+    address_id = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
     
-
     def gettotalamount(self):
         total = 0
         for item in OrderItem.objects.filter(order_id=self.id):
