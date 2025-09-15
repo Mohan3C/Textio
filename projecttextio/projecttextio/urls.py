@@ -34,7 +34,7 @@ urlpatterns = [
        
        
         # admin urls
-    path("admin/admin-base/",dashboard,name="dashboard"),
+    path("admin-base/",dashboard,name="dashboard"),
     path("manage-category/",managecategory,name="managecategory"),
     path("manage-product/",manageproduct,name="manageproduct"),
     path("manage-address/",saveAddress,name="manageaddress"),
