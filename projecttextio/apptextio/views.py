@@ -54,7 +54,7 @@ def checkoutaddress(request):
  
   data = {}
   data['cform'] = CouponcartForm(request.POST or None)
-  data['form'] = AddressForm(request.POST or None)
+  form = AddressForm(request.POST or None)
  
 
   if  request.method == "POST":
@@ -63,7 +63,7 @@ def checkoutaddress(request):
       address.user = request.user
       address.save()
       return redirect(checkoutaddress)
-
+  data['form'] = form
   return render(request, 'public/address.html', data)
 
 @login_required
