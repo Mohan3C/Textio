@@ -221,5 +221,11 @@ def RemoveCoupon(request, coupon_id):
   
 @login_required
 def payment(request):
+  order = Order.objects.filter(user=request.user, isordered=False).last()
+
+  if order.address:
+    return render(request, 'public/make-payment.html')
+  else:
+    return redirect('address', id=order.id)
+    
   
-  return render(request, 'public/make-payment.html')

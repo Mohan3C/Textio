@@ -44,7 +44,7 @@ class Product(models.Model):
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     isordered = models.BooleanField(default=False)
-    address_id = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
+    address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
@@ -120,3 +120,13 @@ class Address(models.Model):
 
     def __str__(self):
         return self.name
+    
+# class Payment(models.Model):
+#     user = models.ForeignKey(User, on_delete=models.CASCADE)
+#     order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
+#     amount = models.DecimalField(max_digits=10, decimal_places=2)
+#     transication_id = models.CharField(max_length=200, blank=True, null=True)
+#     create_at = models.DateTimeField(auto_now_add=True)
+
+#     def __str__(self):
+#         return self.transication_id
