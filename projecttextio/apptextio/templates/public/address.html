@@ -19,7 +19,7 @@
                 {% csrf_token %}
                 {{form|crispy}}
                 <div class="mt-3">
-                    <input type="submit" class="bg-green-600 py-3 text-xl font-semibold rounded-lg text-white w-full">
+                    <input type="submit" value="Save Address" class="bg-green-600 py-3 text-xl font-semibold rounded-lg text-white w-full">
                 </div>
             </form>
 
@@ -31,20 +31,29 @@
             <div class="flex flex-col top-0 sticky bg-white border mt-5 px-10 py-5">
                 <h1 class="text-center ">Price Detail </h1>
                 <hr class="mt-2">
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>price(1 item)</p>
-                    <p>500</p>
+                {% if not orderitems %}
+                 <div class="flex flex-1 items-center justify-between  py-1">
+                    <p>price</p>
+                    <p>{{order.gettotalamount}}</p>
                 </div>
                 <div class="flex flex-1 items-center justify-between  py-1">
                     <p>discount price </p>
-                    <p>400</p>
+                    <p>{{i.dis_price}}</p>
                 </div>
-                <form action="" method="post">
-                    {% csrf_token %}
-                    {{cform|crispy}}
-
-                    <input type="submit" value="Apply Coupon" class="bg-teal-600 rounded text-white px-2 py-1 w-full">
-                </form>
+                {% else %}
+                {% for i in product %}
+                <div class="flex flex-1 items-center justify-between  py-1">
+                    <p>price</p>
+                    <p>{{i.price}}</p>
+                </div>
+                <div class="flex flex-1 items-center justify-between  py-1">
+                    <p>discount price </p>
+                    <p>{{i.dis_price}}</p>
+                </div>
+                {% endfor %}
+                
+        
+                {% endif%}
                 <hr class="mt-5 ">
                 <div class="flex flex-1 mt-5 ">
                 <a href="{% url 'makepayment' %}" class="text-lg font-semibold py-2 rounded-lg text-center bg-blue-500 w-full">Pay Amount</a>

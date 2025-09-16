@@ -49,11 +49,31 @@ def filter_product(request,id):
   
   return render(request,"main.html",{"categories":categories,"page_obj":page_obj})
 
+def buynow(request,id):
+  product = get_object_or_404(Product,id = id)  
+   
+  
+  
+
+
+  o = Order()
+  o.user = request.user
+  o.save()
+  oi = OrderItem()
+  oi.user = request.user
+  oi.isordered = False
+  oi.product_id = product
+  oi.order_id = o
+
+  return redirect(checkoutaddress,id)
+
 @login_required
-def checkoutaddress(request):
+def checkoutaddress(request,id):
  
-  data = {}
-  data['cform'] = CouponcartForm(request.POST or None)
+  order = Order.objects.filter(user=request.user,isordered = False).first()
+  orderitems = OrderItem.objects.filter(user=request.user,order_id = order)
+  product = Product.objects.filter(id = id)
+
   form = AddressForm(request.POST or None)
  
 
@@ -62,9 +82,13 @@ def checkoutaddress(request):
       address = form.save(commit=False)
       address.user = request.user
       address.save()
-      return redirect(checkoutaddress)
-  data['form'] = form
-  return render(request, 'public/address.html', data)
+
+      order.address_id = address
+      order.save()
+      return redirect(payment)
+  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems})
+
+
 
 @login_required
 def addtocart(request,product_id):
@@ -86,6 +110,7 @@ def addtocart(request,product_id):
       oi.isordered = False
       oi.product_id = product
       oi.order_id = order
+      
       oi.save()
   else:
     o = Order()
@@ -97,6 +122,7 @@ def addtocart(request,product_id):
     oi.isordered = False
     oi.product_id = product
     oi.order_id = o
+    
     oi.save()
 
   return redirect("cart")
