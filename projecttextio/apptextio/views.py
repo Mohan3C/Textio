@@ -130,6 +130,13 @@ def addtocart(request,product_id):
 @login_required()
 def cart(request):
   order = Order.objects.filter(user=request.user,isordered = False).first()
+  if order:
+    orderitems = OrderItem.objects.filter(user=request.user,isordered = False,order_id = order)
+  else:
+    order = Order()
+    order.user = request.user
+    order.save()
+
   orderitems = OrderItem.objects.filter(order_id=order,user=request.user)
   form = CouponcartForm(request.POST or None)
   return render(request,"public/cart.html",{"order":order,"orderitems":orderitems,"form":form})
