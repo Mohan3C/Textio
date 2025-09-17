@@ -15,7 +15,8 @@ def home(request):
 
 def viewproduct(request,id):
   products = Product.objects.get(id=id)
-  return render(request, 'public/viewproduct.html',{'products':products})
+  categories = Category.objects.all()
+  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories})
 
 def products(request):
   categories = Category.objects.all()
@@ -43,37 +44,39 @@ def registeruser(request):
 def filter_product(request,id):
   categories = Category.objects.all()
   products = Product.objects.filter(category_id = id)
-  paging = Paginator(products,8)
-  page_number = request.GET.get('page')
+  paging=Paginator(products,1)
+  page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
   
-  return render(request,"main.html",{"categories":categories,"page_obj":page_obj})
+  numbers = products.count()
+
+ 
+  
+  return render(request,"public/allproduct.html",{"categories":categories,"page_obj":page_obj,"numbers":numbers})
 
 def buynow(request,id):
   product = get_object_or_404(Product,id = id)  
    
-  
-  
-
-
   o = Order()
   o.user = request.user
+  o.is_buynow=True
   o.save()
   oi = OrderItem()
   oi.user = request.user
   oi.isordered = False
   oi.product_id = product
   oi.order_id = o
+  oi.save()
 
-  return redirect(checkoutaddress,id)
+  return redirect(checkoutaddress,id=o.id)
 
 @login_required
 def checkoutaddress(request,id):
   order = Order.objects.filter(user=request.user,isordered = False).first()
-  orderitems = OrderItem.objects.filter(user=request.user,order_id = order)
+  orderitems = OrderItem.objects.filter(user=request.user,order_id=id)
   product = Product.objects.filter(id=id)
  
-  
+  address = Address.objects.all()
 
   form = AddressForm(request.POST or None)
  
@@ -87,7 +90,7 @@ def checkoutaddress(request,id):
       order.address_id = address
       order.save()
       return redirect('address',id = order.id)
-  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems})
+  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems,"address":address})
 
 
 
@@ -229,7 +232,7 @@ def RemoveCoupon(request, coupon_id):
   
 @login_required
 def payment(request):
-  order = Order.objects.get(user=request.user, isordered=False)
+  order = Order.objects.filter(user=request.user, isordered=False).first()
   if not order:
       messages.error(request, "No active order found. Please add items to your cart first.")
       return redirect('cart')

@@ -143,7 +143,7 @@
             {% for product in products %}
                 <div
                 class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                <a href="#">
+                <a href="{% url 'allproduct' product.id %}">
                     <img class="rounded-t-lg w-full object-cover h-80" src="{{product.image.url}}" alt="" />
                 </a>
                 <div class="p-5">

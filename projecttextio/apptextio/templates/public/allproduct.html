@@ -5,7 +5,7 @@
 
 
 
-<div class="md:ml-auto md:mr-auto flex flex-wrap items-center text-black bg-slate-50  px-[3%] py-10 gap-5">
+<div class="md:ml-auto w-full md:mr-auto flex flex-wrap items-center text-black bg-slate-50  px-[3%] py-10 gap-5">
 
     <div class="w-full flex gap-3">
         <div class="w-2/12 bg-white p-3 rounded-lg border self-start">
@@ -13,8 +13,8 @@
                 <h2 class="text-lg font-bold px-4 py-1">All Category</h2>
 
                 {% for c in categories %}
-                <a href="#" class="px-4 py-2 ">{{c.name}}</a>
-            
+                <a href="{% url 'filter' c.id %}" class="px-4 py-2 ">{{c.name}}</a>
+
                 {% endfor %}
 
             </div>
@@ -22,8 +22,8 @@
             <div class="flex flex-col">
                 <h1>Filter By Size</h1>
                 <div class="flex flex-1 gap-5 items-center">
-                    
-                    {% for size in products.size.all %}
+
+                    {% for size in page_obj.size.all %}
 
                     <a href="#"
                         class="text-sm font-semibold py-1 rounded-sm px-3 bg-gray-200 hover:bg-gray-300">{{size.get_size_display}}</a>
@@ -33,9 +33,10 @@
             </div>
         </div>
         <div class="w-10/12">
-          
+
+            <h1 class="pb-2">Showing {{page_obj.start_index}}-{{page_obj.end_index}} of {{numbers}} result</h1>
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 items-stretch ">
-                {% for i in products %}
+                {% for i in page_obj %}
                 <!-- i make changes in loop for pagination. i change products to page_obj  -->
                 <a href="{% url 'allproduct' i.id %}" class="bg-slate-100 h-full">
 
@@ -45,8 +46,7 @@
                         <div class=" flex flex-col justify-between flex-grow">
                             <h2 class="px-3 font-bold truncate " title="{{i.title}}">{{i.title}}</h2>
                             <p class="px-3 font-semibold truncate  ">{{i.brand}}</p>
-                            <p class="px-3 text-md font-medium"> Size :
-                                {% for size in i.size.all%}
+                            <p class="px-3 text-md font-medium"> Size : {% for size in i.size.all%}
                                 <span>
                                     {{size.get_size_display}}|
                                 </span>
@@ -62,7 +62,17 @@
                 </a>
                 {% endfor %}
             </div>
+            <div class="flex justify-center mt-6 space-x-2">
+                {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 bg-blue-200 rounded hover:bg-blue-400">Previous</a>
+                {% endif %}
 
+                <span class="px-3 py-1 bg-gray-300 rounded">Page {{ page_obj.number }} of {{page_obj.paginator.num_pages}}</span>
+
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 bg-blue-200 hover:bg-blue-400 rounded">Next</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 

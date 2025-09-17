@@ -69,6 +69,7 @@ class Order(models.Model):
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
     items = models.ManyToManyField(OrderItem)
     create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    is_buynow = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
