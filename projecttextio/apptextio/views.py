@@ -69,10 +69,23 @@ def buynow(request,id):
 
 @login_required
 def checkoutaddress(request,id):
+  product = get_object_or_404(Product,id=id)
  
   order = Order.objects.filter(user=request.user,isordered = False).first()
-  orderitems = OrderItem.objects.filter(user=request.user,order_id = order)
-  product = Product.objects.filter(id = id)
+  orderitems = OrderItem.objects.filter(user=request.user,order_id = order).first()
+  if orderitems:
+    oi = OrderItem.objects.get(user=request.user,isordered=False,order_id=order,product_id=id)
+    oi.qty +=1
+    oi.save()
+  else:
+    oi = OrderItem()
+    oi.user = request
+    oi.order_id = order
+    oi.product_id =  product
+    oi.isordered = False
+
+
+    oi.save()
 
   form = AddressForm(request.POST or None)
  
@@ -85,7 +98,7 @@ def checkoutaddress(request,id):
 
       order.address_id = address
       order.save()
-      return redirect('address', id=order.id)
+      return redirect(payment)
   return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems})
 
 
@@ -231,13 +244,6 @@ def payment(request):
   order = Order.objects.filter(user=request.user, isordered=False).last()
 
   if order.address:
-    if request.method == "POST":
-      order.isordered = True
-      orderitems = order.items.all()
-      for item in orderitems:
-        item.isordered = True
-        item.save()
-      order.save()
     return render(request, 'public/make-payment.html')
   else:
     return redirect('address', id=order.id)
