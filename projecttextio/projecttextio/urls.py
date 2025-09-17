@@ -14,6 +14,7 @@ urlpatterns = [
     path("filter/<int:id>/",filter_product,name="filter"),
     path("allproducts",products,name="products"),
     path("address/<int:id>/",checkoutaddress ,name="address"),
+    path("address-info/",addAddressInfo ,name="address-info"),
     path("buynow/<int:id>/",buynow ,name="buynow"),
     path("success-page/",success ,name="success"),
 

@@ -76,7 +76,7 @@ def checkoutaddress(request,id):
   orderitems = OrderItem.objects.filter(user=request.user,order_id=id)
   product = Product.objects.filter(id=id)
  
-  address = Address.objects.all()
+  addresses = Address.objects.filter(user=request.user)
 
   form = AddressForm(request.POST or None)
  
@@ -90,9 +90,20 @@ def checkoutaddress(request,id):
       order.address_id = address
       order.save()
       return redirect('address',id = order.id)
-  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems,"address":address})
+  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems,"addresses":addresses})
 
-
+def addAddressInfo(request):
+  if request.method == 'POST':
+    order = Order.objects.filter(user=request.user, isordered=False).last()
+    if order:
+      address_id = request.POST.get('address')
+      address = Address.objects.get(pk=address_id)
+      if address:
+        order.address = address
+        order.save()
+        return redirect(checkoutaddress, id=order.id)
+    else:
+      return redirect(cart)  
 
 @login_required
 def addtocart(request,product_id):
