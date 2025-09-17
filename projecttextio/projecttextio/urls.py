@@ -15,6 +15,7 @@ urlpatterns = [
     path("allproducts",products,name="products"),
     path("address/<int:id>/",checkoutaddress ,name="address"),
     path("buynow/<int:id>/",buynow ,name="buynow"),
+    path("success-page/",success ,name="success"),
 
     # cart and coupon urls
     path("home/product/cart",cart,name="cart"),
@@ -40,6 +41,7 @@ urlpatterns = [
     path("manage-product/",manageproduct,name="manageproduct"),
     path("manage-address/",saveAddress,name="manageaddress"),
     path("manage-user/",manageUser,name="manageuser"),
+    path("manage-order/",manageOrder,name="manageorder"),
     path("delete-product/<int:id>/",deleteProduct ,name="deleteproduct"),
     path("insert-product/",insertProduct,name="insert-product"),
     path("delete-product/<int:id>/",deleteCategory ,name="delete-product"),

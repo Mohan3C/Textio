@@ -74,3 +74,8 @@ def manageUser(request):
     data = {}
     data['users'] = User.objects.all()
     return render(request, 'admin/users.html', data)
+
+def manageOrder(request):
+    data = {}
+    data["orders"] = Order.objects.all()
+    return render(request, 'admin/manage_order.html', data)

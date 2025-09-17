@@ -242,8 +242,11 @@ def payment(request):
         item.isordered =True
         item.save()
       order.save()
+      return redirect(success)
     return render(request, 'public/make-payment.html')
   else:
     return redirect('address', id=order.id)
     
+def success(request):
+  return render(request, 'public/success_page.html')
   
