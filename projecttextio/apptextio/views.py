@@ -86,7 +86,7 @@ def checkoutaddress(request,id):
 
       order.address_id = address
       order.save()
-      return redirect(payment)
+      return redirect('address',id = order.id)
   return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems})
 
 
@@ -229,9 +229,19 @@ def RemoveCoupon(request, coupon_id):
   
 @login_required
 def payment(request):
-  order = Order.objects.filter(user=request.user, isordered=False).last()
-
+  order = Order.objects.get(user=request.user, isordered=False)
+  if not order:
+      messages.error(request, "No active order found. Please add items to your cart first.")
+      return redirect('cart')
+  
   if order.address:
+    if request.method == "POST":
+      order.isordered = True
+      orderitems = OrderItem.objects.filter(order_id=order.id)
+      for item in orderitems:
+        item.isordered =True
+        item.save()
+      order.save()
     return render(request, 'public/make-payment.html')
   else:
     return redirect('address', id=order.id)
