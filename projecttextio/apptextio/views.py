@@ -59,8 +59,8 @@ def buynow(request,id):
    
   o = Order()
   o.user = request.user
-  o.is_buynow=True
   o.save()
+
   oi = OrderItem()
   oi.user = request.user
   oi.isordered = False
@@ -72,14 +72,14 @@ def buynow(request,id):
 
 @login_required
 def checkoutaddress(request,id):
-  order = Order.objects.filter(user=request.user,isordered = False).first()
-  orderitems = OrderItem.objects.filter(user=request.user,order_id=id)
-  product = Product.objects.filter(id=id)
+  order = get_object_or_404(Order,user=request.user,isordered=False,id=id)
+  orderitems = OrderItem.objects.filter(user=request.user,order_id=id,isordered=False)
+  product_no = int(orderitems.count())
  
   addresses = Address.objects.filter(user=request.user)
 
   form = AddressForm(request.POST or None)
- 
+  couponform = CouponcartForm(request.POST or None)
 
   if  request.method == "POST":
     if form.is_valid():
@@ -90,7 +90,8 @@ def checkoutaddress(request,id):
       order.address_id = address
       order.save()
       return redirect('address',id = order.id)
-  return render(request, 'public/address.html',{"product":product,"form":form,"order":order,"orderitems":orderitems,"addresses":addresses})
+    
+  return render(request, 'public/address.html',{"product_no":product_no,"form":form,"order":order,"orderitems":orderitems,"addresses":addresses,"couponform":couponform})
 
 def addAddressInfo(request):
   if request.method == 'POST':
@@ -214,6 +215,21 @@ def ordercomplete(request):
 
   return render(request,"ordercomplete.html")
 
+@login_required()
+def Couponadd(request,id):
+  if request.method == "POST":
+    code = request.POST.get("code")
+    coupon  = Coupon.objects.filter(code=code).first()
+    if coupon:
+        order = Order.objects.filter(user=request.user, isordered=False,id=id).first()
+        if order.getpayableamount() > coupon.amount:
+          order.coupon_id = coupon
+          order.save()
+        else:
+          messages.add_message(request,messages.ERROR,  message="this Coupon is not applicable in this Order Amount")
+    else:
+      messages.add_message(request, messages.ERROR, message="This coupon is invalid or Expired")
+  return redirect(checkoutaddress,id=order.id)
 
 @login_required()
 def addCoupon(request):
@@ -221,7 +237,7 @@ def addCoupon(request):
     code = request.POST.get("code")
     coupon  = Coupon.objects.filter(code=code).first()
     if coupon:
-        order = Order.objects.get(user=request.user, isordered=False)
+        order = Order.objects.filter(user=request.user, isordered=False).first()
         if order.getpayableamount() > coupon.amount:
           order.coupon_id = coupon
           order.save()
@@ -236,7 +252,7 @@ def addCoupon(request):
 def RemoveCoupon(request, coupon_id):
   coupon  = Coupon.objects.get(id=coupon_id)
   if coupon:
-    order = Order.objects.get(user=request.user, isordered=False)
+    order = Order.objects.filter(user=request.user, isordered=False)
     order.coupon_id = None
     order.save()
     return redirect(cart) 

@@ -60,29 +60,38 @@
             <div class="flex flex-col top-0 sticky bg-white border mt-5 px-10 py-5">
                 <h1 class="text-center ">Price Detail </h1>
                 <hr class="mt-2">
-                {% if order.is_buy %}
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>price</p>
-                    <p>{{product.price}}</p>
-                </div>
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>discount price </p>
-                    <p>{{product.dis_price}}</p>
-                </div>
-                {% elif orderitems %}
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>price</p>
-                    <p>{{order.gettotalamount}}</p>
-                </div>
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>discount price </p>
-                    <p>{{order.getpayableamount}}</p>
-                </div>
+                {% if order.items %}
+                    {% if product_no == 1 %}
+                        <div class="flex flex-1 items-center justify-between  py-1">
+                            <p>price</p>
+                            <p>{{order.gettotalamount}}</p>
+                        </div>
+                        <div class="flex flex-1 items-center justify-between  py-1">
+                            <p>discount price </p>
+                            <p>{{order.getpayableamount}}</p>
+                        </div>
                 
+                        <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
+                            <form action="{% url 'Couponadd' order.id %}" method="post" class="flex flex-col px-2 py-1">
+                                {% csrf_token %}
+                                {{couponform|crispy}}
 
-                
+                                <input type="submit" value="Apply Coupon" class="bg-teal-600 rounded text-white px-2 py-1">
+                            </form>
 
-                {% endif%}
+                        </div>
+                    {%else %}
+                        <div class="flex flex-1 items-center justify-between  py-1">
+                            <p>price</p>
+                            <p>{{order.gettotalamount}}</p>
+                        </div>
+                        <div class="flex flex-1 items-center justify-between  py-1">
+                            <p>discount price </p>
+                            <p>{{order.getpayableamount}}</p>
+                        </div>
+                        <p>{{product_no}}</p>
+                    {% endif %}
+                {% endif %}
                 <hr class="mt-5 ">
                 <div class="flex flex-1 mt-5 ">
                     <a href="{% url 'makepayment' %}"
