@@ -38,6 +38,27 @@ class Product(models.Model):
     def __str__(self):
         sizes = ", ".join([size.get_size_display() for size in self.size.all()])
         return f"{self.title} - {sizes}"
+    
+class OrderItem(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE,blank=True,null=True)
+    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
+    qty = models.IntegerField(default=1)
+    isordered = models.BooleanField(default=False)
+
+
+    def __str__(self):
+        return self.product_id.title
+    
+
+    def total_price(self):
+        return self.product_id.price*self.qty
+    
+    def total_discount_price(self):
+        return self.product_id.dis_price*self.qty
+    
+    def getpercentage(self):
+        return(self.total_price()-self.total_discount_price())/self.total_price()*100
 
     
 
@@ -46,6 +67,8 @@ class Order(models.Model):
     isordered = models.BooleanField(default=False)
     address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
+    items = models.ManyToManyField(OrderItem)
+    create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
 
     def __str__(self):
         return self.user.username
@@ -78,26 +101,7 @@ class Order(models.Model):
         else:
             return self.gettotaldiscount()
     
-class OrderItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE,blank=True,null=True)
-    product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
-    qty = models.IntegerField(default=1)
-    isordered = models.BooleanField(default=False)
 
-
-    def __str__(self):
-        return self.product_id.title
-    
-
-    def total_price(self):
-        return self.product_id.price*self.qty
-    
-    def total_discount_price(self):
-        return self.product_id.dis_price*self.qty
-    
-    def getpercentage(self):
-        return(self.total_price()-self.total_discount_price())/self.total_price()*100
     
 
 class Coupon(models.Model):

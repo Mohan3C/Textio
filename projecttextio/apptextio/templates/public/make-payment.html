@@ -20,6 +20,7 @@
                 <!-- Card Body -->
                 <div class="p-5 bg-white">
                     <form action="" method="post" class="flex flex-col space-y-4">
+                        {% csrf_token %}
                         <!-- Cash on Delivery -->
                         <label for="cod"
                             class="flex items-center p-3 border rounded-lg cursor-pointer hover:bg-purple-50 transition">
