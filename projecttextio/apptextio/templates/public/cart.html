@@ -58,16 +58,16 @@
                     </div>
 
                 </div>
+                <div class=" px-5 py-3 flex  justify-end items-end border sticky fixed bottom-0 left-0  bg-white">
+
+                    <a href="{% url 'address' order.id %}"
+                        class="flex items-end justify-center bg-orange-600 px-10 border rounded-lg ">
+                        <span class="px-8 py-3 font-bold text-white">Place order</span>
+                    </a>
+                </div>
                 {% empty %}
                 <h1 class="text-9xl font-bold text-slate-200 flex justify-center items-center">Empty Cart</h1>
                 {% endfor %}
-            </div>
-            <div class=" px-5 py-3 flex  justify-end items-end border sticky fixed bottom-0 left-0  bg-white">
-
-                <a href="{% url 'address' order.id %}"
-                    class="flex items-end justify-center bg-orange-600 px-10 border rounded-lg ">
-                    <span class="px-8 py-3 font-bold text-white">Place order</span>
-                </a>
             </div>
         </div>
 

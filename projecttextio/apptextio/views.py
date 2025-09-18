@@ -89,6 +89,7 @@ def checkoutaddress(request,id):
 
       order.address_id = address
       order.save()
+      messages.success(request,"Address has been saved successfully")
       return redirect('address',id = order.id)
     
   return render(request, 'public/address.html',{"product_no":product_no,"form":form,"order":order,"orderitems":orderitems,"addresses":addresses,"couponform":couponform})
@@ -102,6 +103,7 @@ def addAddressInfo(request):
       if address:
         order.address = address
         order.save()
+        messages.success(request,"Address has been saved successfully")
         return redirect(checkoutaddress, id=order.id)
     else:
       return redirect(cart)  

@@ -114,7 +114,7 @@ class Coupon(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    alt_contact = models.CharField(max_length=100)
+    alt_contact = models.CharField(max_length=10)
     street = models.CharField(max_length=200)
     landmark = models.CharField(max_length=200)
     city = models.CharField(max_length=200 , choices=(('Purnea','Purnea'),('Madhepura','Madhepura'),('Katihar','Katihar'),('Bhagelpur','Bhagelpur'),('Patna','Patna'),))
