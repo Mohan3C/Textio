@@ -82,21 +82,12 @@
                     <p>price ( 1 item )</p>
                     <p>{{order.gettotalamount}}</p>
                 </div>
-                {% if order.coupon_id %}
                 <div class="flex flex-1 items-center justify-between  py-1">
-                    <div>
-
-                        <p>Coupon <a href="" class="px-4">X</a></p>
-                    </div>
-                    <p class="text-green-500">-{{order.coupon_id.amount}}</p>
-                </div>
-                {% endif %}
-                <div class="flex flex-1 items-center justify-between border-b py-1">
                     <p>Payable Amount </p>
-                    <p >{{order.getpayableamount}}</p>
+                    <p>{{order.getpayableamount}}</p>
                 </div>
-                {% if not order.coupon_id %}
-                <div class="flex flex-1 pb-2 pt-3 mx-5 px-2  ">
+
+                <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
                     <form action="{% url 'Couponadd' order.id %}" method="post" class="flex flex-col px-2 py-1">
                         {% csrf_token %}
                         {{couponform|crispy}}
@@ -105,7 +96,6 @@
                     </form>
 
                 </div>
-                {% endif %}
                 {%else %}
                 <div class="flex flex-1 items-center justify-between  py-1">
                     <p>price ( {{product_no}} items )</p>
