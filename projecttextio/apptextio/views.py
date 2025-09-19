@@ -293,7 +293,8 @@ def payment(request):
 def success(request):
   return render(request, 'public/success_page.html')
 
-def myOrder(request):
+@login_required
+def my_order(request):
   data = {}
   data['orders'] = Order.objects.filter(user=request.user, isordered=True)
   return render(request, "public/my_order.html", data)
