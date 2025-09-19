@@ -11,7 +11,11 @@ from .admin_forms import CouponcartForm, AddressForm
 
 def home(request):
   products = Product.objects.all()
-  return render(request,"public/main.html",{"products":products})
+
+  paging = Paginator(products,12)
+  page_number = request.GET.get("page")
+  page_obj = paging.get_page(page_number)
+  return render(request,"public/main.html",{"page_obj":page_obj})
 
 def viewproduct(request,id):
   products = Product.objects.get(id=id)
@@ -21,7 +25,14 @@ def viewproduct(request,id):
 def products(request):
   categories = Category.objects.all()
   products = Product.objects.all()
-  return render(request,"public/allproduct.html",{"products":products, "categories":categories})
+
+  paging = Paginator(products,20)
+  page_number = request.GET.get("page")
+  page_obj = paging.get_page(page_number)
+
+  no_of_products = products.count()
+
+  return render(request,"public/allproduct.html",{"page_obj":page_obj,"no_of_products":no_of_products, "categories":categories})
 
 
 
@@ -43,7 +54,7 @@ def registeruser(request):
 @login_required
 def filter_product(request,id):
   categories = Category.objects.all()
-  products = Product.objects.filter(category_id = id)
+  products = Product.objects.filter(category = id)
   paging=Paginator(products,1)
   page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
