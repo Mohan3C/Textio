@@ -3,6 +3,165 @@
 {% block style %}
 <style>
     body {
+  background: 
+    linear-gradient(#0007, #0000),
+    #123;
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+@keyframes firework {
+  0% { transform: translate(var(--x), var(--initialY)); width: var(--initialSize); opacity: 1; }
+  50% { width: 0.5vmin; opacity: 1; }
+  100% { width: var(--finalSize); opacity: 0; }
+}
+
+/* @keyframes fireworkPseudo {
+  0% { transform: translate(-50%, -50%); width: var(--initialSize); opacity: 1; }
+  50% { width: 0.5vmin; opacity: 1; }
+  100% { width: var(--finalSize); opacity: 0; }
+}
+ */
+.firework,
+.firework::before,
+.firework::after
+{
+  --initialSize: 0.5vmin;
+  --finalSize: 45vmin;
+  --particleSize: 0.2vmin;
+  --color1: yellow;
+  --color2: khaki;
+  --color3: white;
+  --color4: lime;
+  --color5: gold;
+  --color6: mediumseagreen;
+  --y: -30vmin;
+  --x: -50%;
+  --initialY: 60vmin;
+  content: "";
+  animation: firework 2s infinite;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, var(--y));
+  width: var(--initialSize);
+  aspect-ratio: 1;
+  background: 
+    /*
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 0% 0%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 100% 0%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 100% 100%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 0% 100%,
+    */
+    
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 50% 0%,
+    radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 100% 50%,
+    radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 50% 100%,
+    radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 0% 50%,
+    
+    /* bottom right */
+    radial-gradient(circle, var(--color5) var(--particleSize), #0000 0) 80% 90%,
+    radial-gradient(circle, var(--color6) var(--particleSize), #0000 0) 95% 90%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 90% 70%,
+    radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 100% 60%,
+    radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 55% 80%,
+    radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 70% 77%,
+    
+    /* bottom left */
+    radial-gradient(circle, var(--color5) var(--particleSize), #0000 0) 22% 90%,
+    radial-gradient(circle, var(--color6) var(--particleSize), #0000 0) 45% 90%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 33% 70%,
+    radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 10% 60%,
+    radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 31% 80%,
+    radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 28% 77%,
+    radial-gradient(circle, var(--color5) var(--particleSize), #0000 0) 13% 72%,
+    
+    /* top left */
+    radial-gradient(circle, var(--color6) var(--particleSize), #0000 0) 80% 10%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 95% 14%,
+    radial-gradient(circle, var(--color2) var(--particleSize), #0000 0) 90% 23%,
+    radial-gradient(circle, var(--color3) var(--particleSize), #0000 0) 100% 43%,
+    radial-gradient(circle, var(--color4) var(--particleSize), #0000 0) 85% 27%,
+    radial-gradient(circle, var(--color5) var(--particleSize), #0000 0) 77% 37%,
+    radial-gradient(circle, var(--color6) var(--particleSize), #0000 0) 60% 7%,
+    
+    /* top right */
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 22% 14%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 45% 20%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 33% 34%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 10% 29%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 31% 37%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 28% 7%,
+    radial-gradient(circle, var(--color1) var(--particleSize), #0000 0) 13% 42%
+    ;
+  background-size: var(--initialSize) var(--initialSize);
+  background-repeat: no-repeat;
+}
+
+.firework::before {
+  --x: -50%;
+  --y: -50%;
+  --initialY: -50%;
+/*   transform: translate(-20vmin, -2vmin) rotate(40deg) scale(1.3) rotateY(40deg); */
+  transform: translate(-50%, -50%) rotate(40deg) scale(1.3) rotateY(40deg);
+/*   animation: fireworkPseudo 2s infinite; */
+}
+
+.firework::after {
+  --x: -50%;
+  --y: -50%;
+  --initialY: -50%;
+/*   transform: translate(44vmin, -50%) rotate(170deg) scale(1.15) rotateY(-30deg); */
+  transform: translate(-50%, -50%) rotate(170deg) scale(1.15) rotateY(-30deg);
+/*   animation: fireworkPseudo 2s infinite; */
+}
+
+.firework:nth-child(2) {
+  --x: 30vmin;
+}
+
+.firework:nth-child(2),
+.firework:nth-child(2)::before,
+.firework:nth-child(2)::after {
+  --color1: pink;
+  --color2: violet;
+  --color3: fuchsia;
+  --color4: orchid;
+  --color5: plum;
+  --color6: lavender;  
+  --finalSize: 40vmin;
+  left: 30%;
+  top: 60%;
+  animation-delay: -0.25s;
+}
+
+.firework:nth-child(3) {
+  --x: -30vmin;
+  --y: -50vmin;
+}
+
+.firework:nth-child(3),
+.firework:nth-child(3)::before,
+.firework:nth-child(3)::after {
+  --color1: cyan;
+  --color2: lightcyan;
+  --color3: lightblue;
+  --color4: PaleTurquoise;
+  --color5: SkyBlue;
+  --color6: lavender;
+  --finalSize: 35vmin;
+  left: 70%;
+  top: 60%;
+  animation-delay: -0.4s;
+}
+</style>
+  
+{% endblock style %}
+
+{% block style %}
+<style>
+    body {
         background:
             linear-gradient(#0007, #0000),
             #123;
@@ -169,29 +328,10 @@
 {% endblock style %}
 {% block content %}
 
-<div class="flex flex-1 bg-green-700 h-[90vh] flex-col justify-center text-center items-center gap-3">
-    <div class="flex">
-        <svg class="size-28 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            fill="currentColor" viewBox="0 0 24 24">
-            <path fill-rule="evenodd"
-                d="M12 2c-.791 0-1.55.314-2.11.874l-.893.893a.985.985 0 0 1-.696.288H7.04A2.984 2.984 0 0 0 4.055 7.04v1.262a.986.986 0 0 1-.288.696l-.893.893a2.984 2.984 0 0 0 0 4.22l.893.893a.985.985 0 0 1 .288.696v1.262a2.984 2.984 0 0 0 2.984 2.984h1.262c.261 0 .512.104.696.288l.893.893a2.984 2.984 0 0 0 4.22 0l.893-.893a.985.985 0 0 1 .696-.288h1.262a2.984 2.984 0 0 0 2.984-2.984V15.7c0-.261.104-.512.288-.696l.893-.893a2.984 2.984 0 0 0 0-4.22l-.893-.893a.985.985 0 0 1-.288-.696V7.04a2.984 2.984 0 0 0-2.984-2.984h-1.262a.985.985 0 0 1-.696-.288l-.893-.893A2.984 2.984 0 0 0 12 2Zm3.683 7.73a1 1 0 1 0-1.414-1.413l-4.253 4.253-1.277-1.277a1 1 0 0 0-1.415 1.414l1.985 1.984a1 1 0 0 0 1.414 0l4.96-4.96Z"
-                clip-rule="evenodd" />
-        </svg>
-
+<div class="flex flex-1 bg-green-700 h-[90vh]">
+    <div class="w-full flex justify-center items-center ">
+        <p class="text-2xl text-white">Order completed</p>
     </div>
-    <div class="firework"></div>
-    <div class="firework"></div>
-    <div class="firework"></div>
-    <h2 class="text-white text-4xl font-semibold ">Order Placed</h2>
-    <p class="text-slate-200 text-sm font-semibold ">Your Order Place is Successfully. Click On My Order button to see
-        your Order</p>
-
-
-
-
-
-    <a href="#" class="text-white bg-red-600 py-2 px-4 rounded-lg text-lg">My Order</a>
-
 </div>
 
 {% endblock %}

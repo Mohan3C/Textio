@@ -1,1 +1,33 @@
 {% extends 'public'%}
+{% extends 'public/base.html' %}
+
+{% load tailwind_filters %}
+
+{% block content %}
+
+
+
+<div class=" bg-slate-100 flex flex-1 flex-col  ">
+    <div class="flex-1 bg-teal-600 text-white px-[10%] ">
+        <h2 class="text-3xl font-semibold">My Order({{order|length}})</h2>
+        <p class="text-sm mt-2">Explore Our Order List</p>
+    </div>
+    
+    {% if order %}
+
+    <div class="flex mt-2 gap-5 px-[10%]">
+        <div class="w-full">
+            
+            {% for order in orders %}
+                
+            {% endfor %}
+                
+        </div>
+
+    </div>
+        
+    {% endif %}
+        
+</div>
+
+{% endblock %}
