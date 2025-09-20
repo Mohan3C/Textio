@@ -26,7 +26,7 @@ def products(request):
   categories = Category.objects.all()
   products = Product.objects.all()
 
-  paging = Paginator(products,20)
+  paging = Paginator(products,16)
   page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
 
@@ -55,7 +55,7 @@ def registeruser(request):
 def filter_product(request,id):
   categories = Category.objects.all()
   products = Product.objects.filter(category = id)
-  paging=Paginator(products,1)
+  paging=Paginator(products,16)
   page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
   
