@@ -6,6 +6,8 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from .models import *
 from .admin_forms import CouponcartForm, AddressForm
+import razorpay
+from django.conf import settings
 
 # Create your views here.
 
@@ -286,11 +288,31 @@ def payment(request):
         item.save()
       order.save()
       return redirect("success")
-    return render(request, 'public/make-payment.html')
+    
+    client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+    payment = client.order.create({'amount': order.getpayableamount()*100 , 'currency': 'INR', 'payment_capture': 1})
+    order.razor_pay_order_id = payment['id']
+    order.save()
+    # print("******")
+    # print(payment)
+    # print("******")
+    return render(request, 'public/make-payment.html', {'payment':payment})
   else:
     return redirect('address', id=order.id)
+  
+
     
 def success(request):
+  order_id = request.GET.get('razorpay_order_id')
+  
+  order = Order.objects.get(razor_pay_order_id = order_id)
+  order.isordered = True
+  order.save()
+  order_items = OrderItem.objects.filter(order_id = order)
+  for item in order_items:
+    item.isordered = True
+    item.save()
+  # order.items.update(isordered = True)
   return render(request, 'public/success_page.html')
 
 @login_required

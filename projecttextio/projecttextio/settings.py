@@ -140,3 +140,6 @@ LOGOUT_REDIRECT_URL = "/"
 
 
 MEDIA_ROOT = BASE_DIR / "media"
+
+KEY = 'rzp_test_RJKzOMnn4i4LG0'
+SECRET = 'skDdejIqeeky1G0kAPw2wbE2'

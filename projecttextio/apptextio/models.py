@@ -69,6 +69,11 @@ class Order(models.Model):
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
     items = models.ManyToManyField(OrderItem)
     create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    razor_pay_order_id = models.CharField(max_length=100, blank=True, null=True)
+    razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    razor_pay_payment_signature = models.CharField(max_length=100, blank=True, null=True)
+    is_paid = models.BooleanField(default=False, blank=True, null=True)
+
 
     def __str__(self):
         return self.user.username
