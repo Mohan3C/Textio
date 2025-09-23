@@ -50,6 +50,36 @@
         </div>
 
     </div>
+
+    <div class="flex flex-col  px-[5%] ">
+        <h2 class="text-center text-2xl font-semibold">Related products</h2>
+         <div class="grid grid-cols-4 py-[2%] gap-5">
+         {% for product in items %}
+                <div
+                class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                <a href="{% url 'allproduct' product.id %}">
+                    <img class="rounded-t-lg w-full object-cover h-80" src="{{product.image.url}}" alt="" />
+                </a>
+                <div class="p-5">
+                    <h2 class="text-xl font-semibold">Brand: <span>{{product.brand}} </span> </h2>
+
+                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">{{product.title}}</p>
+
+                    <div class="flex gap-5">
+                        <p class="text-lg font-medium">Price <span >{{product.dis_price}}</span> <del>{{product.price}}</del></p>
+                    </div>
+
+                    
+                    <a href="{% url 'allproduct' product.id %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
+
+
+                </div>
+            </div>
+            
+            {% endfor %}
+            </div>
+                
+    </div>
 </div>
 
 {% endblock %}

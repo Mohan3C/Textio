@@ -105,9 +105,6 @@ class Order(models.Model):
             return self.gettotaldiscount() + self.coupon_id.amount
         else:
             return self.gettotaldiscount()
-    
-
-    
 
 class Coupon(models.Model):
     code = models.CharField(max_length=200)

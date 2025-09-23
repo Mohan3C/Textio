@@ -11,18 +11,29 @@ from django.conf import settings
 
 # Create your views here.
 
-def home(request):
-  products = Product.objects.all()
+from django.core.paginator import Paginator
 
-  paging = Paginator(products,12)
-  page_number = request.GET.get("page")
-  page_obj = paging.get_page(page_number)
-  return render(request,"public/main.html",{"page_obj":page_obj})
+def home(request):
+    products = Product.objects.all()
+
+    # Check if search query exists
+    # search_query = request.GET.get('search')
+    # if search_query:
+    #     products = products.filter(title__icontains=search_query)
+
+    # Pagination
+    paginator = Paginator(products, 12)  
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    return render(request, "public/main.html", {"page_obj": page_obj})
+
 
 def viewproduct(request,id):
   products = Product.objects.get(id=id)
   categories = Category.objects.all()
-  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories})
+  items = Product.objects.exclude(pk=id)
+  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories, "items":items})
 
 def products(request):
   categories = Category.objects.all()
@@ -319,4 +330,5 @@ def success(request):
 def my_order(request):
   data = {}
   data['orders'] = Order.objects.filter(user=request.user, isordered=True)
+  data['orderitems'] = OrderItem.objects.filter(user=request, isordered = True, )
   return render(request, "public/my_order.html", data)
