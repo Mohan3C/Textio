@@ -41,7 +41,7 @@ class Product(models.Model):
     
 class OrderItem(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    order_id = models.ForeignKey("Order", on_delete=models.CASCADE,blank=True,null=True)
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE,blank=True,null=True, related_name="items")
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.IntegerField(default=1)
     isordered = models.BooleanField(default=False)
@@ -67,7 +67,6 @@ class Order(models.Model):
     isordered = models.BooleanField(default=False)
     address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
-    items = models.ManyToManyField(OrderItem)
     create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
     razor_pay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)

@@ -21,8 +21,7 @@
                 </div>
 
                 <!-- Order Items -->
-                {% if orderitems %}
-                {% for item in orderitems %}
+                {% for item in order.items.all %}
                 <div class="flex gap-4 py-3 border-b last:border-none">
                     <div class="w-[100px] h-[100px]">
                         <img src="{{item.product_id.image.url }}" alt="{{ item.product.title }}"
@@ -41,7 +40,6 @@
                     </div>
                 </div>
                 {% endfor %}
-                {% endif %}
                 <div>
                     <span class="text-green-500 text-lg">Order Amount : {{order.getpayableamount}}</span>
                 </div>

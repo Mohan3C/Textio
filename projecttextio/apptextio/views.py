@@ -370,10 +370,8 @@ def my_order(request):
    
 
     # Get order items related to those orders
-    orderitems = OrderItem.objects.filter( user=request.user, order_id__in=orders, isordered=True)
   
     data = {
       "orders":orders,
-      "orderitems":orderitems
     }
     return render(request, "public/my_order.html", data)
