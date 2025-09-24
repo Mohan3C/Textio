@@ -357,7 +357,13 @@ def success(request):
 
 @login_required
 def my_order(request):
-  data = {}
-  data['orders'] = Order.objects.filter(user=request.user, isordered=True)
-  data['orderitems'] = OrderItem.objects.filter(user=request, isordered = True, id=id )
-  return render(request, "public/my_order.html", data)
+    data = {}
+
+    # Get all confirmed orders for the logged-in user
+    orders = Order.objects.filter(user=request.user, isordered=True)
+    data['orders'] = orders
+
+    # Get order items related to those orders
+    data['orderitems'] = OrderItem.objects.filter(order_id__in=orders, isordered=True)
+
+    return render(request, "public/my_order.html", data)

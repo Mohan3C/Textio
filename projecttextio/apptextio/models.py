@@ -72,7 +72,7 @@ class Order(models.Model):
     razor_pay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_signature = models.CharField(max_length=100, blank=True, null=True)
-    is_paid = models.BooleanField(default=False, blank=True, null=True)
+    from_buynow = models.BooleanField(default=False, blank=True, null=True)
 
 
     def __str__(self):
