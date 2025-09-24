@@ -89,7 +89,7 @@ def filter_product(request,id):
 def buynow(request,id):
   product = get_object_or_404(Product,id = id)  
   
-  order = Order.objects.filter(user=request.user,isordered=False,is_paid=True)
+  order = Order.objects.filter(user=request.user,isordered=False,from_buynow=True)
 
   if order.exists():
     order = order[0]
@@ -153,7 +153,7 @@ def addAddressInfo(request):
 def addtocart(request,product_id):
   product = get_object_or_404(Product,id = product_id)
   
-  orders = Order.objects.filter(user=request.user, isordered = False,is_paid=False)
+  orders = Order.objects.filter(user=request.user, isordered = False,from_buynow=False)
 
   if orders.exists():
     order = orders[0]
@@ -189,7 +189,7 @@ def addtocart(request,product_id):
 
 @login_required()
 def cart(request):
-  order = Order.objects.filter(user=request.user,isordered = False,is_paid=False).first()
+  order = Order.objects.filter(user=request.user,isordered = False,from_buynow=False).first()
   if order:
     orderitems = OrderItem.objects.filter(user=request.user,isordered = False,order_id = order)
   else:
@@ -306,7 +306,7 @@ def addCoupon(request):
 @login_required()
 def RemoveCoupon(request, coupon_id):
   coupon  = Coupon.objects.get(id=coupon_id)
-  order = Order.objects.filter(user=request.user, isordered=False,is_paid=False).last()
+  order = Order.objects.filter(user=request.user, isordered=False,from_buynow=False).last()
   if coupon:
     order.coupon_id = None
     order.save()
@@ -357,13 +357,16 @@ def success(request):
 
 @login_required
 def my_order(request):
-    data = {}
 
     # Get all confirmed orders for the logged-in user
     orders = Order.objects.filter(user=request.user, isordered=True)
-    data['orders'] = orders
+   
 
     # Get order items related to those orders
-    data['orderitems'] = OrderItem.objects.filter(order_id__in=orders, isordered=True)
+    orderitems = OrderItem.objects.filter( user=request.user, order_id=orders, isordered=True)
 
+    data = {
+      "orders":orders,
+      "orderitems":orderitems
+    }
     return render(request, "public/my_order.html", data)
