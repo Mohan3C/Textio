@@ -64,7 +64,7 @@ def registeruser(request):
   return render(request,"registration/register.html", {"form":form})
 
 
-@login_required
+
 def filter_product(request,id):
   categories = Category.objects.all()
   products = Product.objects.filter(category = id)
@@ -72,27 +72,38 @@ def filter_product(request,id):
   page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
   
+  filter_category = get_object_or_404(Category,id=id)
   numbers = products.count()
 
  
   
-  return render(request,"public/allproduct.html",{"categories":categories,"page_obj":page_obj,"numbers":numbers})
+  return render(request,"public/allproduct.html",{"categories":categories,"page_obj":page_obj,"numbers":numbers,"filter_category":filter_category})
 
+@login_required
 def buynow(request,id):
   product = get_object_or_404(Product,id = id)  
-   
-  o = Order()
-  o.user = request.user
-  o.save()
+  
+  order = Order.objects.filter(user=request.user,isordered=False,is_paid=True)
 
-  oi = OrderItem()
-  oi.user = request.user
-  oi.isordered = False
-  oi.product_id = product
-  oi.order_id = o
-  oi.save()
+  if order.exists():
+    order = order[0]
+    OrderItem.objects.filter(user=request.user,isordered=False,order_id=order).delete()
+    order.coupon_id = None
+    order.save()
+  else:
+    order = Order()
+    order.user = request.user
+    order.is_paid = True
+    order.save()
 
-  return redirect(checkoutaddress,id=o.id)
+  orderitem = OrderItem()
+  orderitem.user = request.user
+  orderitem.isordered = False
+  orderitem.product_id = product
+  orderitem.order_id = order
+  orderitem.save()
+
+  return redirect(checkoutaddress,id=order.id)
 
 @login_required
 def checkoutaddress(request,id):
@@ -136,7 +147,7 @@ def addAddressInfo(request):
 def addtocart(request,product_id):
   product = get_object_or_404(Product,id = product_id)
   
-  orders = Order.objects.filter(user=request.user, isordered = False)
+  orders = Order.objects.filter(user=request.user, isordered = False,is_paid=False)
 
   if orders.exists():
     order = orders[0]
@@ -157,6 +168,7 @@ def addtocart(request,product_id):
   else:
     o = Order()
     o.user = request.user
+    o.is_paid = False
     o.save()
 
     oi = OrderItem()
@@ -171,12 +183,13 @@ def addtocart(request,product_id):
 
 @login_required()
 def cart(request):
-  order = Order.objects.filter(user=request.user,isordered = False).first()
+  order = Order.objects.filter(user=request.user,isordered = False,is_paid=False).first()
   if order:
     orderitems = OrderItem.objects.filter(user=request.user,isordered = False,order_id = order)
   else:
     order = Order()
     order.user = request.user
+    order.is_paid = False
     order.save()
 
   orderitems = OrderItem.objects.filter(order_id=order,user=request.user)
@@ -242,7 +255,7 @@ def ordercomplete(request):
   return render(request,"ordercomplete.html")
 
 @login_required()
-def Couponadd(request,id):
+def buynowaddCoupon(request,id):
   if request.method == "POST":
     code = request.POST.get("code")
     coupon  = Coupon.objects.filter(code=code).first()
@@ -256,6 +269,16 @@ def Couponadd(request,id):
     else:
       messages.add_message(request, messages.ERROR, message="This coupon is invalid or Expired")
   return redirect(checkoutaddress,id=order.id)
+
+@login_required()
+def removecouponfrombuynow(request, coupon_id):
+  coupon  = Coupon.objects.get(id=coupon_id)
+
+  order = Order.objects.filter(user=request.user, isordered=False).last()
+  if coupon:
+    order.coupon_id = None
+    order.save()
+    return redirect(checkoutaddress,id=order.id) 
 
 @login_required()
 def addCoupon(request):
@@ -277,8 +300,8 @@ def addCoupon(request):
 @login_required()
 def RemoveCoupon(request, coupon_id):
   coupon  = Coupon.objects.get(id=coupon_id)
+  order = Order.objects.filter(user=request.user, isordered=False,is_paid=False).last()
   if coupon:
-    order = Order.objects.filter(user=request.user, isordered=False)
     order.coupon_id = None
     order.save()
     return redirect(cart) 
