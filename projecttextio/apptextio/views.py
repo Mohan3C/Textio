@@ -8,6 +8,7 @@ from .models import *
 from .admin_forms import CouponcartForm, AddressForm
 import razorpay
 from django.conf import settings
+from django.db.models import Q
 
 # Create your views here.
 
@@ -17,9 +18,14 @@ def home(request):
     products = Product.objects.all()
 
     # Check if search query exists
-    # search_query = request.GET.get('search')
-    # if search_query:
-    #     products = products.filter(title__icontains=search_query)
+    search_query = request.GET.get('search')
+    if search_query:
+        products = products.filter(Q(title__icontains=search_query) | Q(category__name__icontains=search_query) | Q(brand__icontains=search_query))
+        paginator = Paginator(products, 12)  
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        return render(request, "public/allproduct.html", {"page_obj": page_obj})
 
     # Pagination
     paginator = Paginator(products, 12)  
@@ -353,5 +359,5 @@ def success(request):
 def my_order(request):
   data = {}
   data['orders'] = Order.objects.filter(user=request.user, isordered=True)
-  data['orderitems'] = OrderItem.objects.filter(user=request, isordered = True, )
+  data['orderitems'] = OrderItem.objects.filter(user=request, isordered = True, id=id )
   return render(request, "public/my_order.html", data)
