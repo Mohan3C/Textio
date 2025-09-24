@@ -1,6 +1,6 @@
 <div class="shadow-md">
     <nav class="bg-white dark:bg-gray-900 w-full z-20 top-0 left-0 border-b border-gray-200 dark:border-gray-600">
-        <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-wrap items-center justify-between py-4">
+        <div class="max-w-screen-xl mx-auto px-4 sm:px-6  flex flex-wrap items-center justify-between py-4">
 
             <!-- Logo -->
             <a href="{% url 'homepage' %}"
@@ -13,7 +13,7 @@
 
                 <!-- Search Form -->
                 <form action="{% url 'homepage' %}" method="get" class="flex border rounded-lg overflow-hidden shadow-sm">
-                    <input type="text" name="search" size="40" placeholder="Search Product by name..."
+                    <input type="text" name="search" size="25" placeholder="Search Product by name..."
                         class="px-4 py-2 w-full rounded-l-lg">
                     <button type="submit"
                         class="bg-slate-600 text-white px-4 hover:bg-slate-700 rounded-r-lg">Go</button>
@@ -50,6 +50,7 @@
                             cart_items_count }}</span>
                         {% endif %}
                     </a>
+                    <a href="{% url 'my_order' %}" class="bg-purple-300 py-1 px-3 text-md rounded-lg font-semibold">My Order</a>
                 </div>
             </div>
 

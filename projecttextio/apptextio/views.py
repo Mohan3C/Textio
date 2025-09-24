@@ -20,14 +20,21 @@ def home(request):
     # Check if search query exists
     search_query = request.GET.get('search')
     if search_query:
-        products = products.filter(Q(title__icontains=search_query) | Q(category__name__icontains=search_query) | Q(brand__icontains=search_query))
+        filter_products = products.filter(brand__icontains=search_query)
+        if filter_products.exists():
+          paginator = Paginator(products, 12)  
+          page_number = request.GET.get("page")
+          page_obj = paginator.get_page(page_number)
+
+          return render(request, "public/allproduct.html", {"page_obj": page_obj,"search_query": search_query})
+    
+
         paginator = Paginator(products, 12)  
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-        return render(request, "public/allproduct.html", {"page_obj": page_obj})
+        return render(request, "public/main.html", {"page_obj": page_obj})
 
-    # Pagination
     paginator = Paginator(products, 12)  
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
@@ -363,8 +370,8 @@ def my_order(request):
    
 
     # Get order items related to those orders
-    orderitems = OrderItem.objects.filter( user=request.user, order_id=orders, isordered=True)
-
+    orderitems = OrderItem.objects.filter( user=request.user, order_id__in=orders, isordered=True)
+  
     data = {
       "orders":orders,
       "orderitems":orderitems
