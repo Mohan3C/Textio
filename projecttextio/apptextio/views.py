@@ -9,6 +9,7 @@ from .admin_forms import CouponcartForm, AddressForm
 import razorpay
 from django.conf import settings
 from django.db.models import Q
+from django.contrib.auth.models import User
 
 # Create your views here.
 
@@ -65,16 +66,27 @@ def products(request):
 def registeruser(request):
 
   if request.method == "POST":
-    form = UserCreationForm(request.POST)
+    first_name = request.POST.get("first name")
+    last_name = request.POST.get("last name")
+    username = request.POST.get("username")
+    email = request.POST.get("email")
+    pass1 = request.POST.get("password1")
+    pass2 = request.POST.get("password2")
+    if pass1==pass2:
+      user = User()
+      user.first_name = first_name
+      user.last_name = last_name
+      user.username = username
+      user.email = email
+      user.set_password(pass1)
+      user.save()
 
-    if form.is_valid():
-      user=form.save()
       login(request,user)
-      return redirect("homepage")  
-  else:
-    form = UserCreationForm()
+      return redirect("homepage")
+    else:
+      messages.error(request, "password did not match")
 
-  return render(request,"registration/register.html", {"form":form})
+  return render(request,"registration/register.html")
 
 
 
