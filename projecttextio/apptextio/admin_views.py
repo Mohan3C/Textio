@@ -71,6 +71,11 @@ def manageUser(request):
     data['users'] = User.objects.all()
     return render(request, 'admin/users.html', data)
 
+def deleteuser(request,id):
+    user = User.objects.get(id=id)
+    user.delete()
+    return redirect(manageUser)
+
 def manageOrder(request):
     data = {}
     data["orders"] = Order.objects.all()
@@ -80,3 +85,4 @@ def managePayment(request):
     data = {}
     data['orders'] = Order.objects.filter(user=request.user , isordered = True)
     return render(request, 'admin/manage_payment.html', data)
+

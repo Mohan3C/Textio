@@ -43,16 +43,11 @@
                                 d="M4 4h1.5L8 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm.75-3H7.5M11 7H6.312M17 4v6m-3-3h6" />
                         </svg>
 
-                        <!-- Optional badge -->
-                        {% if cart_items_count %}
-                        <span
-                            class="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-1.5 rounded-full">{{
-                            cart_items_count }}</span>
-                        {% endif %}
+                       
                     </a>
-                    {% if order.isordered == True %}
+                   
                     <a href="{% url 'my_order' %}" class="bg-purple-300 py-1 px-3 text-md rounded-lg font-semibold">My Order</a>
-                    {% endif %}
+                   
                 </div>
             </div>
 

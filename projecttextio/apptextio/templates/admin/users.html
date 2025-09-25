@@ -13,6 +13,10 @@
                 <tr>
                     <th class="border p-3">Id</th>
                     <th class="border p-3">Username</th>
+                    <th class="border p-3">First name</th>
+                    <th class="border p-3">Last name</th>
+                    <th class="border p-3">Email</th>
+                    <th class="border p-3">Address</th>
                     <th class="border p-3">Action</th>
                 </tr>
             </thead>
@@ -22,10 +26,14 @@
 
                     <td class="border p-3">{{user.id}}</td>
                     <td class="border p-3"> {{user.username}} </td>
+                    <td class="border p-3"> {{user.first_name}} </td>
+                    <td class="border p-3"> {{user.last_name}} </td>
+                    <td class="border p-3"> {{user.email}} </td>
+                    <td class="border p-3"> {{user.address}} </td>
                     <td class="border p-3 flex gap-2 justify-center items-center">
 
 
-                        <a href="#" class="items-center justify-center flex flex-1">
+                        <a href="{% url 'deleteuser' user.id %}" class="items-center justify-center flex flex-1">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="red" viewBox="0 0 24 24" stroke-width="1.5"
                                 stroke="currentColor" class="size-6">
                                 <path stroke-linecap="round" stroke-linejoin="round"
