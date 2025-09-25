@@ -365,11 +365,7 @@ def success(request):
 @login_required
 def my_order(request):
 
-    # Get all confirmed orders for the logged-in user
     orders = Order.objects.filter(user=request.user, isordered=True)
-   
-
-    # Get order items related to those orders
   
     data = {
       "orders":orders,

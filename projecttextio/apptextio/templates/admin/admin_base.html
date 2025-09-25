@@ -18,9 +18,9 @@
         </div>
     </div>
 
-    <div class="px-[5%] flex flex-1 mt-5 gap-10">
-        <div class="w-3/12">
-            <div class="flex flex-col divide-y divide-slate-600">
+    <div class="px-[3%] flex flex-1 mt-5 gap-10">
+        <div class="w-3/12 self-start mt-4">
+            <div class="flex flex-col divide-y divide-slate-600 ">
                 <a href="{% url 'dashboard' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Dashbord</a>
                 <a href="{% url 'managecategory' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Categories</a>
                 <a href="{% url 'manageproduct' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Product</a>
@@ -28,12 +28,12 @@
                 <a href="{% url 'manageorder' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Order</a>
                 <a href="{% url 'manageaddress' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Addrress</a>
                 <a href="{% url 'manageCoupons' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Coupons</a>
-                <a href="" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Payment</a>
+                <a href="{% url 'managepayment' %}" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Manage Payment</a>
                 <a href="" class="bg-[#1E293B] text-white px-3 py-2 hover:bg-[#334155] text-lg font-medium">Logout</a>
             </div>
         </div>
 
-        <div class="w-9/12">
+        <div class="w-9/12 mt-4">
             {% block content %}
 
             {% endblock %}

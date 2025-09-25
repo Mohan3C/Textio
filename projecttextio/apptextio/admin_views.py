@@ -10,13 +10,12 @@ def dashboard(request):
   data['categories'] = Category.objects.all()
   data['coupons'] = Coupon.objects.all()
   data['users'] = User.objects.all()
+  data['orders'] = Order.objects.all()
   return render(request,"admin/dashboard.html", data)
 
 def manageproduct(request):
   products = Product.objects.all()
   return render(request,"admin/manage_products.html",{"products":products})
-
-
 
 def deleteProduct(request, id):
     itmes = Product.objects.get(id=id)
@@ -46,8 +45,6 @@ def deleteCategory(request, id):
    item.delete()
    return redirect(managecategory)
 
-
-
 def manageCoupons(req):
     coupon_form = CouponForm(req.POST or None)
     coupons = Coupon.objects.all()
@@ -57,7 +54,6 @@ def manageCoupons(req):
             coupon_form.save()
             return redirect(manageCoupons)
     return render(req, "admin/manage_coupon.html", {"coupons":coupons, "form":coupon_form})
-
 
 
 def delete_coupon(request,id):
@@ -79,3 +75,8 @@ def manageOrder(request):
     data = {}
     data["orders"] = Order.objects.all()
     return render(request, 'admin/manage_order.html', data)
+
+def managePayment(request):
+    data = {}
+    data['orders'] = Order.objects.filter(user=request.user , isordered = True)
+    return render(request, 'admin/manage_payment.html', data)

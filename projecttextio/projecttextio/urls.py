@@ -46,6 +46,7 @@ urlpatterns = [
     path("manage-address/",saveAddress,name="manageaddress"),
     path("manage-user/",manageUser,name="manageuser"),
     path("manage-order/",manageOrder,name="manageorder"),
+    path("manage-payment/",managePayment,name="managepayment"),
     path("delete-product/<int:id>/",deleteProduct ,name="deleteproduct"),
     path("insert-product/",insertProduct,name="insert-product"),
     path("delete-product/<int:id>/",deleteCategory ,name="delete-product"),

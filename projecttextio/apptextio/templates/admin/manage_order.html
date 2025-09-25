@@ -2,6 +2,70 @@
 
 {% block content %}
 
+<div class="bg-slate-100 flex flex-1 flex-col">
+    <!-- Header -->
+    <div class="flex-1 bg-teal-600 text-white px-[10%] py-6">
+        <h2 class="text-3xl font-semibold">My Orders ({{ orders|length }})</h2>
+        <p class="text-sm mt-2">Explore your order history and details.</p>
+    </div>
 
+    {% if orders %}
+    <div class="flex mt-4 gap-5 px-[10%]">
+        <div class="w-full">
+            {% for order in orders %}
+            <div class="flex flex-col  mt-6 border rounded-lg bg-white shadow-sm p-4">
+                <!-- Order Header -->
+                <div class="flex justify-between px-2 border-b">
+                    <p class="text-lg font-bold text-gray-500">User- {{order}} </p>
+                    <span class="text-lg">Payment- {{order.isordered}}</span> 
+                </div>
+                
+                <div class="flex items-center justify-between border-b pb-2">
+                    <h2 class="text-lg font-semibold text-gray-500">Order ID - {{ order.razor_pay_order_id }}</h2>
+                    <span class="text-sm text-gray-800">{{ order.create_at|date:"d M, Y H:i" }}</span>
+                </div>
+                
+
+                <!-- Order Items -->
+                {% for item in order.items.all %}
+                <div class="flex gap-4 py-3 border-b last:border-none">
+                    <div class="w-[100px] h-[100px]">
+                        <img src="{{item.product_id.image.url }}" alt="{{ item.product.title }}"
+                            class="object-cover w-full h-full rounded-lg border">
+                    </div>
+                    <div class="flex flex-col justify-between w-full">
+                        <h1 class="font-semibold">{{item.product_id.title}}</h1>
+                        <p class="text-gray-600 text-sm">Brand: {{ item.product_id.brand }}</p>
+                        <div class="flex justify-between mt-2">
+                            <div class="flex gap-4 items-center">
+                                <span class="font-bold ">₹{{ item.product_id.dis_price }}</span>
+                                <del class="font-semibold text-sm">₹{{ item.product_id.price }}</del>
+                            </div>
+                            <span class="text-sm text-gray-500">Qty: {{ item.qty }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div>
+                    <span class="text-green-500 text-lg">Order Amount : {{order.getpayableamount}}</span>
+                </div>
+
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    {% else %}
+    <!-- Empty Order State -->
+    <div class="flex flex-1 flex-col items-center justify-center text-center py-20">
+        <h2 class="text-3xl font-semibold">No Orders Yet</h2>
+        <p class="text-gray-600 mt-2">You haven't placed any orders yet. Start shopping now!</p>
+        <a href="{% url 'product_list' %}"
+            class="mt-4 bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg shadow">
+            View Products
+        </a>
+    </div>
+    {% endif %}
+</div>
 
 {% endblock  %}
