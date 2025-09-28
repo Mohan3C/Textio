@@ -40,7 +40,11 @@ def home(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "public/main.html", {"page_obj": page_obj})
+    has_order = False
+    if request.user.is_authenticated:
+      has_order = Order.objects.filter(user=request.user, isordered = True).exists()
+
+    return render(request, "public/main.html", {"page_obj": page_obj, "has_order":has_order})
 
 
 def viewproduct(request,id):
