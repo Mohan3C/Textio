@@ -46,27 +46,6 @@ def home(request):
 
     return render(request, "public/main.html", {"page_obj": page_obj, "has_order":has_order})
 
-
-def viewproduct(request,id):
-  products = Product.objects.get(id=id)
-  categories = Category.objects.all()
-  items = Product.objects.exclude(pk=id)
-  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories, "items":items})
-
-def products(request):
-  categories = Category.objects.all()
-  products = Product.objects.all()
-
-  paging = Paginator(products,16)
-  page_number = request.GET.get("page")
-  page_obj = paging.get_page(page_number)
-
-  no_of_products = products.count()
-
-  return render(request,"public/allproduct.html",{"page_obj":page_obj,"no_of_products":no_of_products, "categories":categories})
-
-
-
 def registeruser(request):
 
   if request.method == "POST":
@@ -92,21 +71,34 @@ def registeruser(request):
 
   return render(request,"registration/register.html")
 
-
-
-def filter_product(request,id):
+def viewproduct(request,id):
+  products = Product.objects.get(id=id)
   categories = Category.objects.all()
-  products = Product.objects.filter(category = id)
-  paging=Paginator(products,16)
+  items = Product.objects.exclude(pk=id)
+  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories, "items":items})
+
+def products(request,id=None):
+  categories = Category.objects.all()
+
+  context ={}
+  if id is not None:
+    filter_products = Product.objects.filter(category = id)
+    context["filter_category"] = get_object_or_404(Category,id=id)
+    context["numbers"] = filter_products.count()
+    paging = Paginator(filter_products,16)
+  else:
+    products = Product.objects.all()
+    context["no_of_products"] = products.count()
+    paging = Paginator(products,16)
+  
   page_number = request.GET.get("page")
   page_obj = paging.get_page(page_number)
   
-  filter_category = get_object_or_404(Category,id=id)
-  numbers = products.count()
+  context["page_obj"] = page_obj
+  context["categories"] = categories
 
- 
-  
-  return render(request,"public/allproduct.html",{"categories":categories,"page_obj":page_obj,"numbers":numbers,"filter_category":filter_category})
+  return render(request,"public/allproduct.html",context)
+
 
 @login_required
 def buynow(request,id):
@@ -122,7 +114,7 @@ def buynow(request,id):
   else:
     order = Order()
     order.user = request.user
-    order.is_paid = True
+    order.from_buynow = True
     order.save()
 
   orderitem = OrderItem()
@@ -197,7 +189,7 @@ def addtocart(request,product_id):
   else:
     o = Order()
     o.user = request.user
-    o.is_paid = False
+    o.from_buynow = False
     o.save()
 
     oi = OrderItem()
@@ -218,7 +210,7 @@ def cart(request):
   else:
     order = Order()
     order.user = request.user
-    order.is_paid = False
+    order.from_buynow = False
     order.save()
 
   orderitems = OrderItem.objects.filter(order_id=order,user=request.user)
@@ -266,22 +258,6 @@ def deletefromcart(request,product_id):
 
   return redirect("cart")
 
-
-@login_required
-def ordercomplete(request):
-  
-  orders = Order.objects.filter(user=request.user, isordered = False).first()
-
-  if orders:
-    orders.isordered = True
-    orders.save()
-   
-    order_items = OrderItem.objects.filter(user= request.user,order_id=orders,isordered=False)
-    for item in order_items:
-      item.isordered = True
-      item.save()
-
-  return render(request,"ordercomplete.html")
 
 @login_required()
 def buynowaddCoupon(request,id):
@@ -356,9 +332,6 @@ def payment(request):
     payment = client.order.create({'amount': order.getpayableamount()*100 , 'currency': 'INR', 'payment_capture': 1})
     order.razor_pay_order_id = payment['id']
     order.save()
-    # print("******")
-    # print(payment)
-    # print("******")
     return render(request, 'public/make-payment.html', {'payment':payment})
   else:
     return redirect('address', id=order.id)
