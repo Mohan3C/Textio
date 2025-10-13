@@ -66,146 +66,136 @@
 
     <div class="flex flex-1  gap-10  ">
         <div class="w-8/12   p-4 rounded-lg mt-2 ">
-            <div class=" rounded-lg px-5 py-3 flex flex-1 justify-between items-center border bg-white">
-                <span class="text-xl font-semibold text-slate-600">DELIVARY ADDRESS</span>
-                <h1 class="text-xl font-bold text-slate-600">Checkout Order</h1>
+            <div class=" rounded-lg px-5 py-3 flex flex-1 justify-between items-center border bg-gray-700">
+                <span class="text-xl font-semibold text-white">ADDRESS</span>
+                <h1 class="text-xl font-bold text-white">Checkout Order</h1>
 
             </div>
+
             <div class="flex flex-col flex-1 border rounded-lg mt-2">
+                <div class="">
 
-                <div class="p-4 bg-white">
-                    <form action="{% url 'address-info' %}" method="post" class="flex flex-1 gap-5">
+                    <form action="{% url 'address-info' %}" method="post" class="flex flex-col gap-5">
                         {% csrf_token %}
+                        <div class=" bg-white divide-y">
+                            {% if selected_address %}
+                            <h2 class="p-4 text-md font-semibold bg-blue-400">Dilivery address - <span class="px-2 bg-slate-200 text-slate-500 font-normal ">{{selected_address.type}}</span></h2>
+                            <div class="p-4 bg-blue-100">
+                                <label for="address{{selected_address.id}}" class="flex flex-col">
+                                    <input type="radio" name="address" id="address{{selected_address.id}}"
+                                        value="{{selected_address.id}}" class="peer hidden" 
+                                        {% if order.address and order.address.id == selected_address.id %}checked
+                                        {% endif %}
+                                        onchange="this.form.submit()">
 
-                        {% for address in addresses %}
-                        <label for="address{{address.id}}" class="">
-                            <input type="radio" name="address" id="address{{address.id}}" value="{{address.id}}"
-                                class="peer hidden" checked>
-                            <div
-                                class="peer-checked:border-teal-500 border px-4 py-2 hover:cursor-pointer rounded-lg peer-checked:bg-teal-100">
-                                {{address.name}}, {{address.alt_contact}}, {{address.streat}}, {{address.city}},
-                                ({{address.state}}),
-                                <span>LandMark : {{address.landmark}}, ({{address.pincode}}), </span><span>Type:
-                                    {{address.type}}</span>
+
+
+                                    <div
+                                        class="peer-checked:border-blue-100 border px-4 py-2 hover:cursor-pointer rounded peer-checked:bg-blue-100 ">
+                                        <h2 class="font-semibold text-md uppercase pb-1">{{selected_address.name}} <span
+                                                class="px-3"> {{selected_address.alt_contact}}</span> </h2>
+                                        <h2 class="capitalize">{{selected_address.street}},
+                                            {{selected_address.landmark}}, {{selected_address.city}},
+                                            {{selected_address.state}} - <span
+                                                class="font-semibold">{{selected_address.pincode}}</span>
+                                        </h2>
+                                    </div>
+
+                                </label>
                             </div>
-                        </label>
+                            {% endif %}
 
-                        {% endfor %}
-                        <div class="flex flex-1">
-                            <input type="submit" value="Deliver Here" class="bg-teal-300 px-3 py-1 w-full rounded-lg">
+                            {% if other_addresses %}
+                            <div class="p-4 ">
+                                <h2 class="py-3">Saved Address</h2>
+                                {% for address in other_addresses %}
+                                <label for="address{{address.id}}" class="flex flex-col gap-5 ">
+                                    <input type="radio" name="address" id="address{{address.id}}" value="{{address.id}}"
+                                        class="peer hidden" {% if order.address and order.address.id == address.id %}checked {% endif %} onchange="this.form.submit()">
+
+                                    <div class="peer-checked:border-blue-100 border px-4 py-2 hover:cursor-pointer rounded peer-checked:bg-blue-100 m-2">
+                                        <div class=" flex flex-col gap-1">
+                                            <h2 class="font-semibold text-md uppercase">{{address.name}} 
+                                                <span class="px-2 bg-slate-100 text-slate-500 font-normal ">
+                                                {{address.type}}
+                                                </span>
+                                                <span class="px-3"> {{address.alt_contact}}</span>
+                                            </h2>
+                                            <h2 class="capitalize">{{address.street}},
+                                                {{address.landmark}}, {{address.city}},
+                                                {{address.state}} - <span class="font-semibold">{{address.pincode}}</span>
+                                            </h2>
+                                        </div>
+                                    </div>
+                                </label>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+
                         </div>
                     </form>
-                    <div class="w-full py-2 flex justify-end">
-                        {% if messages %}
-                        {% for m in messages %}
-                        <p class="text-green-700">{{m}}</p>
-                        {% endfor %}
-                        {% endif %}
-                    </div>
                 </div>
             </div>
+
 
             <div class="flex flex-col w-full bg-white mt-2">
-                <h2 class="text-lg font-normal py-1 px-10 text-slate-800">Insert New Address</h2>
-                {% if messages %}
-                {% for m in messages %}
-                <p class="px-10 py-1 text-green-700">{{m}}</p>
-                {% endfor %}
+                <div class="text-lg font-normal py-1 px-6 text-slate-800 flex justify-between">
+                    <span>Insert New Address</span>
+                    {% if order %}
+                    <a href="{% url 'address' order.id %}?add_new_address=true"
+                        class="text-2xl font-bold px-5 bg-slate-100"> +</a>
+                    {% endif %}
+                </div>
+                {% if show_form %}
+                <form action="" method="post" class="mt-3 bg-white p-6 rounded-lg">
+                    {% csrf_token %}
+                    {{form|crispy}}
+                    <div class="mt-3">
+                        <input type="submit" value="Save Address"
+                            class="bg-green-600 py-3 text-xl font-semibold rounded-lg text-white w-full">
+                    </div>
+                </form>
                 {% endif %}
             </div>
-            <form action="" method="post" class="mt-3 bg-white p-6 rounded-lg">
-                {% csrf_token %}
-                {{form|crispy}}
-                <div class="mt-3">
-                    <input type="submit" value="Save Address"
-                        class="bg-green-600 py-3 text-xl font-semibold rounded-lg text-white w-full">
-                </div>
-            </form>
-
-
 
         </div>
 
         <div class="w-4/12 mt-5">
 
-            <!-- 
-            <div class="flex flex-col top-0 sticky bg-white border mt-5 px-10 py-5">
-                <h1 class="text-center ">Price Detail </h1>
-                <hr class="mt-2">
-               
-                
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>price ( 1 item )</p>
-                    <p>{{order.gettotalamount}}</p>
-                </div>
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>Payable Amount </p>
-                    <p>{{order.getpayableamount}}</p>
-                </div>
-                {% if not order.coupon_id %}
-                <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
-                    <form action="" method="post" class="flex flex-col px-2 py-1">
-                        {% csrf_token %}
-                        {{couponform|crispy}}
-
-                        <input type="submit" value="Apply Coupon" class="bg-teal-600 rounded text-white px-2 py-1">
-                    </form>
-
-                </div>
-                {% endif %}
-                
-                commentout from here -
-
-                <div class="flex flex-1 items-center justify-between  py-1">
-                    <p>price ( {{product_no}} items )</p>
-                    <p>{{order.gettotalamount}}</p>
-                </div>
-                <div class="flex flex-1 items-center justify-between font-bold text-gray-700  py-1">
-                    <p>Payable Amount </p>
-                    <p>{{order.getpayableamount}}</p>
-                </div> 
-                end commentout here
-                
-                <hr class="mt-5 ">
-                <div class="flex flex-1 mt-5 ">
-                    <a href="{% url 'makepayment' %}"
-                        class="text-lg font-semibold py-2 rounded-lg text-center text-white bg-blue-500 hover:bg-blue-700 w-full">Pay
-                        Amount</a>
-                </div>
-            </div> -->
-
-            <div class="flex flex-col top-0 sticky">
+            <div class=" w-full flex flex-col top-0 sticky">
                 <div class=" bg-white py-5 px-[10%] self-start ">
 
                     <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
 
                     <div class="flex flex-col">
-                        <div class="flex justify-between py-2">
+                        <div class="w-full flex justify-between py-2">
                             <span class="text-normal">Price({{ orderitems|length}} items)</span>
                             <span class="font-semibold">{{order.gettotalamount}}</span>
                         </div>
-                        <div class="flex justify-between py-2 ">
+                        <div class="w-full flex justify-between py-2 ">
                             <span class="text-normal "> Discount </span>
                             <span class="font-semibold text-green-500">-{{order.gettotaldiscount}}</span>
                         </div>
                         {% if order.coupon_id %}
-                        <div class="flex justify-between py-2 flex-1 ">
-                            <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a href="{% url 'removecouponfrombuynow' order.coupon_id.id %}"
+                        <div class="w-full flex justify-between py-2 flex-1 ">
+                            <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a
+                                    href="{% url 'removecouponfrombuynow' order.coupon_id.id %}"
                                     class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
                             <span class="font-medium text-gray-400">-₹{{order.coupon_id.amount}} <span>
                         </div>
                         {% endif %}
 
-                        <div class="flex justify-between border-y  py-2 ">
+                        <div class="w-full flex justify-between border-y  py-2 ">
                             <span class="text-normal">Total Amount</span>
                             <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
                         </div>
                         {% if not order.coupon_id %}
-                       
+
                         <h2 class="py-2">Apply Coupons</h2>
-                        
-                        <div class="flex flex-1 pb-2 pt-3 mx-5  px-2 ">
-                            <form action="{% url 'buynowaddCoupon' order.id %}" method="post" class="flex flex-col px-2 py-1">
+
+                        <div class="flex flex-1 pb-2 pt-3   px-2 ">
+                            <form action="{% url 'buynowaddCoupon' order.id %}" method="post"
+                                class="flex flex-col px-2 py-1">
                                 {% csrf_token %}
                                 {{couponform|crispy}}
 
@@ -218,10 +208,12 @@
                         <hr class="mt-5 ">
                         <div class="flex flex-1 mt-5 ">
                             <a href="{% url 'makepayment' %}"
-                                class="text-lg font-semibold py-2 rounded-lg text-center text-white bg-blue-500 hover:bg-blue-700 w-full">Pay Amount</a>
+                                class="text-lg font-semibold py-2 rounded-lg text-center text-white bg-blue-500 hover:bg-blue-700 w-full">Pay
+                                Amount</a>
                         </div>
                         <div class="flex flex-1 py-2 border-t ">
-                            <span class="text-sm font-semibold text-green-500">You will save ₹{{order.totalsaving}} on this order</span>
+                            <span class="text-sm font-semibold text-green-500">You will save ₹{{order.totalsaving}} on
+                                this order</span>
                         </div>
 
 

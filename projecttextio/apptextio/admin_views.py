@@ -2,21 +2,28 @@ from django.shortcuts import render, redirect,get_object_or_404
 from .admin_forms import CategroyForm, ProductInsertForm,CouponForm
 from .models import *
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 
 
 def dashboard(request):
-  data = {}
-  data['products'] = Product.objects.all()
-  data['categories'] = Category.objects.all()
-  data['coupons'] = Coupon.objects.all()
-  data['users'] = User.objects.all()
-  data['orders'] = Order.objects.all()
-  return render(request,"admin/dashboard.html", data)
+    if request.user.is_superuser:
+        data = {}
+        data['products'] = Product.objects.all()
+        data['categories'] = Category.objects.all()
+        data['coupons'] = Coupon.objects.all()
+        data['users'] = User.objects.all()
+        data['orders'] = Order.objects.all()
+        return render(request,"admin/dashboard.html", data)
+    else:
+       return redirect("homepage")
 
 def manageproduct(request):
-  products = Product.objects.all()
-  return render(request,"admin/manage_products.html",{"products":products})
-
+    if request.user.is_superuser:
+        products = Product.objects.all()
+        return render(request,"admin/manage_products.html",{"products":products})
+    else:
+        return render(request,"public/main.html")
+    
 def deleteProduct(request, id):
     itmes = Product.objects.get(id=id)
     itmes.delete()

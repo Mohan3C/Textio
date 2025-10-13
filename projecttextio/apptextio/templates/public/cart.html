@@ -148,9 +148,10 @@
                         {% if not order.coupon_id %}
                         {% if messages %}
                         {% for message in messages %}
-                        <h2 class="py-2">Apply Coupons</h2>
+                        <h2 class="py-2">{{ message }}</h2>
                         {% endfor %}
                         {% endif %}
+                        <h2 class="py-2">Apply Coupons</h2>
                         <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
                             <form action="{% url 'addCoupon' %}" method="post" class="flex flex-col px-2 py-1">
                                 {% csrf_token %}

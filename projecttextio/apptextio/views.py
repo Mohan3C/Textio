@@ -41,8 +41,13 @@ def home(request):
     page_obj = paginator.get_page(page_number)
 
     has_order = False
-    if request.user.is_authenticated:
-      has_order = Order.objects.filter(user=request.user, isordered = True).exists()
+    try:
+      if request.user.is_authenticated:
+        order = Order.objects.filter(user=request.user, isordered = True).exists()
+        if order:
+          has_order = True
+    except:
+      has_order = False
 
     return render(request, "public/main.html", {"page_obj": page_obj, "has_order":has_order})
 
@@ -103,18 +108,24 @@ def products(request,id=None):
 @login_required
 def buynow(request,id):
   product = get_object_or_404(Product,id = id)  
-  
+
+  addresses = Address.objects.filter(user=request.user)
+  if addresses.exists():
+    last_address = addresses.last()
+
   order = Order.objects.filter(user=request.user,isordered=False,from_buynow=True)
 
   if order.exists():
     order = order[0]
     OrderItem.objects.filter(user=request.user,isordered=False,order_id=order).delete()
     order.coupon_id = None
+    order.address = last_address if addresses else None
     order.save()
   else:
     order = Order()
     order.user = request.user
     order.from_buynow = True
+    order.address = last_address if addresses else None
     order.save()
 
   orderitem = OrderItem()
@@ -131,11 +142,15 @@ def checkoutaddress(request,id):
   order = get_object_or_404(Order,user=request.user,isordered=False,id=id)
   orderitems = OrderItem.objects.filter(user=request.user,order_id=id,isordered=False)
   product_no = int(orderitems.count())
- 
   addresses = Address.objects.filter(user=request.user)
 
   form = AddressForm(request.POST or None)
   couponform = CouponcartForm(request.POST or None)
+
+  show_form = False
+
+  if request.GET.get("add_new_address") == "true":
+    show_form = True
 
   if  request.method == "POST":
     if form.is_valid():
@@ -143,12 +158,39 @@ def checkoutaddress(request,id):
       address.user = request.user
       address.save()
 
-      order.address_id = address
+      order.address = address
       order.save()
       messages.success(request,"Address has been saved successfully")
+      show_form = False
       return redirect('address',id = order.id)
+    else:
+      show_form = True
+
+  selected_address_id = request.POST.get("address")
+  if selected_address_id:
+    order.address = Address.objects.filter(id=selected_address_id,user=request.user)
+
+  other_addresses = None
+  if order.address:
+    selected_address = order.address
+    other_addresses = addresses.exclude(id=selected_address.id)
+  
+  
+  if not addresses.exists():
+    show_form = True
+
+  context = {
+    "product_no":product_no,
+    "form":form,
+    "order":order,
+    "orderitems":orderitems,
+    "other_addresses":other_addresses,
+    "selected_address":selected_address,
+    "couponform":couponform,
+    "show_form":show_form,
+    }
     
-  return render(request, 'public/address.html',{"product_no":product_no,"form":form,"order":order,"orderitems":orderitems,"addresses":addresses,"couponform":couponform})
+  return render(request, 'public/address.html',context)
 
 def addAddressInfo(request):
   if request.method == 'POST':
@@ -168,11 +210,17 @@ def addAddressInfo(request):
 def addtocart(request,product_id):
   product = get_object_or_404(Product,id = product_id)
   
+  addresses = Address.objects.filter(user=request.user)
+  if addresses.exists():
+    last_address = addresses.last()
+
   orders = Order.objects.filter(user=request.user, isordered = False,from_buynow=False)
 
   if orders.exists():
     order = orders[0]
     existorderitem = OrderItem.objects.filter(user=request.user,isordered=False,product_id=product,order_id=order).exists()
+    order.address = last_address if addresses else None
+
 
     if existorderitem:
       existoi = OrderItem.objects.get(user=request.user,isordered=False,product_id=product,order_id=order)
@@ -190,6 +238,7 @@ def addtocart(request,product_id):
     o = Order()
     o.user = request.user
     o.from_buynow = False
+    o.address = last_address if addresses else None
     o.save()
 
     oi = OrderItem()
@@ -204,6 +253,9 @@ def addtocart(request,product_id):
 
 @login_required()
 def cart(request):
+  addresses = Address.objects.filter(user=request.user)
+  if addresses.exists():
+    last_address = addresses.last()
   order = Order.objects.filter(user=request.user,isordered = False,from_buynow=False).first()
   if order:
     orderitems = OrderItem.objects.filter(user=request.user,isordered = False,order_id = order)
@@ -211,6 +263,7 @@ def cart(request):
     order = Order()
     order.user = request.user
     order.from_buynow = False
+    order.address = last_address if addresses else None
     order.save()
 
   orderitems = OrderItem.objects.filter(order_id=order,user=request.user)
@@ -322,9 +375,14 @@ def payment(request):
     if request.method == "POST":
       order.isordered = True
       orderitems = OrderItem.objects.filter(order_id=order.id)
+      total = 0
       for item in orderitems:
         item.isordered =True
+        item.total_product_price = item.product_id.dis_price
         item.save()
+        total += item.total_product_price * item.qty
+
+      order.total_product_price = total
       order.save()
       return redirect("success")
     
@@ -345,10 +403,15 @@ def success(request):
   order.isordered = True
   order.save()
   order_items = OrderItem.objects.filter(order_id = order)
+  total = 0
   for item in order_items:
     item.isordered = True
+    item.total_product_price = item.product_id.dis_price
     item.save()
-  # order.items.update(isordered = True)
+    total += item.total_product_price*item.qty
+
+  order.total_product_price = total
+  order.save()
   return render(request, 'public/success_page.html')
 
 @login_required
