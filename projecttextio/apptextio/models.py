@@ -45,7 +45,8 @@ class OrderItem(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.IntegerField(default=1)
     isordered = models.BooleanField(default=False)
-    total_product_price = models.DecimalField(max_digits=10,default=0,decimal_places=2)
+    product_dis_price_at_order = models.DecimalField(max_digits=10,default=0,decimal_places=2)
+    product_price_at_order = models.DecimalField(max_digits=10,decimal_places=2,default=0)
 
     def __str__(self):
         return self.product_id.title
@@ -73,7 +74,7 @@ class Order(models.Model):
     razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_signature = models.CharField(max_length=100, blank=True, null=True)
     from_buynow = models.BooleanField(default=False)
-    total_product_price = models.DecimalField(max_digits=10,default=0,decimal_places=2)
+    price_at_order = models.DecimalField(max_digits=10,default=0,decimal_places=2)
 
 
     def __str__(self):

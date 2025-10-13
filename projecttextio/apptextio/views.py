@@ -378,13 +378,17 @@ def payment(request):
       total = 0
       for item in orderitems:
         item.isordered =True
-        item.total_product_price = item.product_id.dis_price
+        item.product_dis_price_at_order = item.product_id.dis_price
+        item.product_price_at_order = item.product_id.price
         item.save()
-        total += item.total_product_price * item.qty
+        total += item.product_dis_price_at_order * item.qty
 
-      order.total_product_price = total
+        if order.coupon_id:
+          total -= order.coupon_id.amount
+      
+      order.price_at_order = total
       order.save()
-      return redirect("success")
+      return redirect("ordercomplete")
     
     client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
     payment = client.order.create({'amount': order.getpayableamount()*100 , 'currency': 'INR', 'payment_capture': 1})
@@ -396,7 +400,7 @@ def payment(request):
   
 
     
-def success(request):
+def ordercomplete(request):
   order_id = request.GET.get('razorpay_order_id')
   
   order = Order.objects.get(razor_pay_order_id = order_id)
@@ -406,11 +410,14 @@ def success(request):
   total = 0
   for item in order_items:
     item.isordered = True
-    item.total_product_price = item.product_id.dis_price
+    item.product_dis_price_at_order = item.product_id.dis_price
+    item.product_price_at_order = item.product_id.price
     item.save()
-    total += item.total_product_price*item.qty
-
-  order.total_product_price = total
+    total += item.product_dis_price_at_order*item.qty
+    if order.coupon_id:
+          total -= order.coupon_id.amount
+      
+  order.price_at_order = total
   order.save()
   return render(request, 'public/success_page.html')
 
