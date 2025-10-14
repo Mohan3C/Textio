@@ -2,7 +2,7 @@
 {% load tailwind_filters %}
 
 {% block content %}
-<div class="bg-slate-100 flex flex-1 flex-col">
+<div class="bg-slate-100 flex flex-1 flex-col pb-10">
     <!-- Header -->
     <div class="flex-1 bg-teal-600 text-white px-[10%] py-6">
         <h2 class="text-3xl font-semibold">My Orders ({{ orders|length }})</h2>
@@ -40,8 +40,9 @@
                     </div>
                 </div>
                 {% endfor %}
-                <div>
+                <div class="flex flex-1 justify-between">
                     <span class="text-green-500 text-lg">Order Amount : {{order.price_at_order}}</span>
+                    <a href="{% url 'vieworder' order.id %}" class="px-10">View order detail</a>
                 </div>
 
             </div>

@@ -1,0 +1,28 @@
+
+    <div class="relative inline-block text-left group z-50">
+        
+        <button
+            class="inline-flex justify-center w-full px-4 py-2 font-medium rounded hover:bg-blue-200">
+           {{user.username}}
+            
+        </button>
+
+       
+        <div
+            class="absolute right-[-50%] mt-2 w-40 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+            <div class="py-1 flex flex-col items-center">
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile</a>
+                <a href="{% url 'my_order' %}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Order</a>
+                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
+                <div class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    <form action="{% url 'logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="items-center flex">
+                            <h1>Logout</h1>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+

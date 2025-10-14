@@ -375,18 +375,10 @@ def payment(request):
     if request.method == "POST":
       order.isordered = True
       orderitems = OrderItem.objects.filter(order_id=order.id)
-      total = 0
       for item in orderitems:
         item.isordered =True
-        item.product_dis_price_at_order = item.product_id.dis_price
-        item.product_price_at_order = item.product_id.price
         item.save()
-        total += item.product_dis_price_at_order * item.qty
-
-        if order.coupon_id:
-          total -= order.coupon_id.amount
       
-      order.price_at_order = total
       order.save()
       return redirect("ordercomplete")
     
@@ -430,3 +422,8 @@ def my_order(request):
       "orders":orders,
     }
     return render(request, "public/my_order.html", data)
+
+@login_required
+def view_my_order(request,order_id):
+  order = Order.objects.filter(user=request.user,id=order_id,isordered=True)
+  return render(request,"public/view_order.html",{"order":order})

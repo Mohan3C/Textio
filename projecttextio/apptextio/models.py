@@ -68,7 +68,6 @@ class Order(models.Model):
     isordered = models.BooleanField(default=False)
     address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
-    products = models.ForeignKey(OrderItem,on_delete=models.CASCADE,blank=True,null=True)
     create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
     razor_pay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)

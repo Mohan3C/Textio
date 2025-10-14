@@ -79,7 +79,7 @@
                         {% csrf_token %}
                         <div class=" bg-white divide-y">
                             {% if selected_address %}
-                            <h2 class="p-4 text-md font-semibold bg-blue-400">Dilivery address - <span class="px-2 bg-slate-200 text-slate-500 font-normal ">{{selected_address.type}}</span></h2>
+                            <h2 class="p-4 text-md font-semibold bg-blue-400">Delivery address - <span class="px-2 bg-slate-200 text-slate-500 font-normal ">{{selected_address.type}}</span></h2>
                             <div class="p-4 bg-blue-100">
                                 <label for="address{{selected_address.id}}" class="flex flex-col">
                                     <input type="radio" name="address" id="address{{selected_address.id}}"
@@ -107,7 +107,7 @@
 
                             {% if other_addresses %}
                             <div class="p-4 ">
-                                <h2 class="py-3">Saved Address</h2>
+                                <h2 class="py-3">Saved Address{{other_addresses|pluralize:"es"}}</h2>
                                 {% for address in other_addresses %}
                                 <label for="address{{address.id}}" class="flex flex-col gap-5 ">
                                     <input type="radio" name="address" id="address{{address.id}}" value="{{address.id}}"
@@ -168,16 +168,16 @@
                     <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
 
                     <div class="flex flex-col">
-                        <div class="w-full flex justify-between py-2">
-                            <span class="text-normal">Price({{ orderitems|length}} items)</span>
+                        <div class="gap-20 flex justify-between py-2">
+                            <span class="text-normal">Total Amount ({{ orderitems|length}} item{{orderitems|pluralize}})</span>
                             <span class="font-semibold">{{order.gettotalamount}}</span>
                         </div>
-                        <div class="w-full flex justify-between py-2 ">
+                        <div class="gap-20 flex justify-between py-2 ">
                             <span class="text-normal "> Discount </span>
                             <span class="font-semibold text-green-500">-{{order.gettotaldiscount}}</span>
                         </div>
                         {% if order.coupon_id %}
-                        <div class="w-full flex justify-between py-2 flex-1 ">
+                        <div class="gap-20 flex justify-between py-2 flex-1 ">
                             <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a
                                     href="{% url 'removecouponfrombuynow' order.coupon_id.id %}"
                                     class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
@@ -185,15 +185,15 @@
                         </div>
                         {% endif %}
 
-                        <div class="w-full flex justify-between border-y  py-2 ">
-                            <span class="text-normal">Total Amount</span>
+                        <div class="gap-20 flex justify-between border-t  py-2 ">
+                            <span class="text-normal font-semibold">Payableamount Amount</span>
                             <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
                         </div>
                         {% if not order.coupon_id %}
 
-                        <h2 class="py-2">Apply Coupons</h2>
+                        <h2 class="py-2 border-t">Apply Coupon</h2>
 
-                        <div class="flex flex-1 pb-2 pt-3   px-2 ">
+                        <div class="flex pb-2 pt-3   px-2 ">
                             <form action="{% url 'buynowaddCoupon' order.id %}" method="post"
                                 class="flex flex-col px-2 py-1">
                                 {% csrf_token %}
@@ -206,7 +206,7 @@
                         </div>
                         {% endif %}
                         <hr class="mt-5 ">
-                        <div class="flex flex-1 mt-5 ">
+                        <div class="flex mt-5 ">
                             <a href="{% url 'makepayment' %}"
                                 class="text-lg font-semibold py-2 rounded-lg text-center text-white bg-blue-500 hover:bg-blue-700 w-full">Pay
                                 Amount</a>
@@ -235,14 +235,6 @@
                 </div>
             </div>
         </div>
-
-
-
-
-
-
-
-
     </div>
 </div>
 

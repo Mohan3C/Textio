@@ -3,33 +3,33 @@
 {% block content %}
 
 <div class="flex flex-col">
-    <div class="flex flex-1 w-full">
+     <div class="flex flex-1 w-full z-0">
 
         <div id="indicators-carousel" class="relative w-full z-30" data-carousel="static">
-            <!-- Carousel wrapper -->
+            
             <div class="relative h-72 overflow-hidden rounded-lg md:h-96">
-                <!-- Item 1 -->
+                
                 <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
                     <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/93d40c153935699.6338efdbb9e15.jpeg" class="absolute block w-full h-96" alt="...">
                 </div>
-                <!-- Item 2 -->
+               
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <img src="https://d1csarkz8obe9u.cloudfront.net/posterpreviews/custom-t-shirts-banner-design-template-4900533935ea094ef9a9b73571605d04_screen.jpg?ts=1686064763" class="absolute block w-full h-96" alt="...">
                 </div>
-                <!-- Item 3 -->
+               
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <img src="https://img.freepik.com/premium-photo/vector-illustration-background-banner-colorful-tshirts_719646-694.jpg" class="absolute block w-full h-96" alt="...">
                 </div>
-                <!-- Item 4 -->
+                
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <img src="https://img.freepik.com/premium-psd/advertising-banner-shirt-with-model_181945-1058.jpg" class="absolute block w-full h-96" alt="...">
                 </div>
-                <!-- Item 5 -->
+               
                 <div class="hidden duration-700 ease-in-out" data-carousel-item>
                     <img src="https://i.pinimg.com/originals/d4/a8/fa/d4a8faa6147ef48adf272d83e2eb279e.jpg" class="absolute block w-full h-96" alt="...">
                 </div>
             </div>
-            <!-- Slider indicators -->
+           
             <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
                 <button type="button" class="w-3 h-3 rounded-full" aria-current="true" aria-label="Slide 1"
                     data-carousel-slide-to="0"></button>
@@ -42,7 +42,7 @@
                 <button type="button" class="w-3 h-3 rounded-full" aria-current="false" aria-label="Slide 5"
                     data-carousel-slide-to="4"></button>
             </div>
-            <!-- Slider controls -->
+            
             <button type="button"
                 class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
                 data-carousel-prev>
@@ -70,7 +70,9 @@
                 </span>
             </button>
         </div>
-    </div>
+    </div> 
+    
+
 
     <div class="flex flex-col w-full px-[8%] py-8">
         <div class="flex flex-1 justify-center">
@@ -126,7 +128,7 @@
                     </p>
                 </a>
             </div>
-        </div>
+        </div> 
 
 
     </div>
@@ -139,9 +141,9 @@
 
         <div class="grid  grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-[4%] gap-5">
 
-            
+
             {% for product in page_obj %}
-                <div
+            <div
                 class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <a href="{% url 'viewproduct' product.id %}">
                     <img class="rounded-t-lg w-full object-cover h-80" src="{{product.image.url}}" alt="" />
@@ -149,26 +151,32 @@
                 <div class="p-5">
                     <h2 class="text-xl font-semibold">Brand: <span>{{product.brand}} </span> </h2>
 
-                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">{{product.title}}</p>
+                    <p class="mb-2 text-md font-medium tracking-tight text-gray-900 dark:text-white truncate">
+                        {{product.title}}</p>
 
                     <div class="flex gap-5">
-                        <p class="text-lg font-medium">Price <span >{{product.dis_price}}</span> <del>{{product.price}}</del></p>
+                        <p class="text-lg font-medium">Price <span>{{product.dis_price}}</span>
+                            <del>{{product.price}}</del>
+                        </p>
                     </div>
 
-                    
-                    <a href="{% url 'viewproduct' product.id %}" class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View Details</a>
+
+                    <a href="{% url 'viewproduct' product.id %}"
+                        class="w-full mt-3 justify-center items-center flex rounded-lg text-lg font-semibold px-4 py-2 bg-blue-500 hover:bg-blue-800 text-white">View
+                        Details</a>
 
 
                 </div>
             </div>
-            
+
             {% endfor %}
-                
-            
+
+
 
         </div>
         <div class="flex flex-1 items-center justify-end">
-            <a href="{% url 'products' %}" class="text-lg font-medium py-2  px-4 border bg-gray-900 hover:bg-blue-800 text-white">View all
+            <a href="{% url 'products' %}"
+                class="text-lg font-medium py-2  px-4 border bg-gray-900 hover:bg-blue-800 text-white">View all
                 Product</a>
         </div>
     </div>

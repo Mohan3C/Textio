@@ -124,25 +124,25 @@
 
                     <span class="border-b pb-3 flex flex-1 text-md font-bold text-gray-400">Price detail</span>
                     <div class="flex flex-col">
-                        <div class="flex justify-between py-2">
-                            <span class="text-normal">Price({{ orderitems|length}} items)</span>
+                        <div class=" flex gap-20 justify-between py-2">
+                            <span class="text-normal">Total Amount ({{ orderitems|length}} item{{orderitems|pluralize}})</span>
                             <span class="font-semibold">{{order.gettotalamount}}</span>
                         </div>
-                        <div class="flex justify-between py-2 ">
+                        <div class="gap-20 flex justify-between py-2 ">
                             <span class="text-normal "> Discount </span>
                             <span class="font-semibold text-green-500">-{{order.gettotaldiscount}}</span>
                         </div>
                         {% if order.coupon_id %}
-                        <div class="flex justify-between py-2 flex-1 ">
+                        <div class="gap-20 flex justify-between py-2 flex-1 ">
                             <span class="text-normal">Coupon ( {{order.coupon_id}} ) <a
                                     href="{% url 'RemoveCoupon' order.coupon_id.id %}"
-                                    class=" text-red-600 mx-2 px-3 font-bold">X</a></span>
+                                    class=" text-red-600 px-1 font-bold">X</a></span>
                             <span class="font-medium text-gray-400">-₹{{order.coupon_id.amount}} <span>
                         </div>
                         {% endif %}
 
-                        <div class="flex justify-between border-y  py-2 ">
-                            <span class="text-normal">Total Amount</span>
+                        <div class="gap-20 flex justify-between border-y  py-2 ">
+                            <span class="text-normal font-semibold">Payable Amount</span>
                             <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
                         </div>
                         {% if not order.coupon_id %}
@@ -151,8 +151,8 @@
                         <h2 class="py-2">{{ message }}</h2>
                         {% endfor %}
                         {% endif %}
-                        <h2 class="py-2">Apply Coupons</h2>
-                        <div class="flex flex-1 pb-2 pt-3 mx-5 border-b px-2 ">
+                        <h2 class="py-2">Apply Coupon</h2>
+                        <div class="flex pb-2 pt-3 mx-5 border-b px-2 ">
                             <form action="{% url 'addCoupon' %}" method="post" class="flex flex-col px-2 py-1">
                                 {% csrf_token %}
                                 {{form|crispy}}
@@ -163,7 +163,7 @@
 
                         </div>
                         {% endif %}
-                        <div class="flex flex-1 py-2 border-t ">
+                        <div class="flex  py-2 border-t ">
                             <span class="text-sm font-semibold text-green-500">You will save ₹{{order.totalsaving}} on
                                 this order</span>
                         </div>

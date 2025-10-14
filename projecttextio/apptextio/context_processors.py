@@ -10,3 +10,13 @@ def no_of_orderitms(request):
         return {"numbers":numbers}
     except:
         return {"numbers":numbers}
+    
+def no_of_orders(request):
+    order_count = 0
+    try:
+        order = Order.objects.filter(user=request.user,isordered=True)
+        if order:
+            order_count = order.count()
+        return {"order_count":order_count}
+    except:
+        return {"order_count":order_count}
