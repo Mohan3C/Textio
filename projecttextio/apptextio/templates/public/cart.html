@@ -146,11 +146,11 @@
                             <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
                         </div>
                         {% if not order.coupon_id %}
-                        {% if messages %}
+                        <!-- {% if messages %}
                         {% for message in messages %}
                         <h2 class="py-2">{{ message }}</h2>
                         {% endfor %}
-                        {% endif %}
+                        {% endif %} -->
                         <h2 class="py-2">Apply Coupon</h2>
                         <div class="flex pb-2 pt-3 mx-5 border-b px-2 ">
                             <form action="{% url 'addCoupon' %}" method="post" class="flex flex-col px-2 py-1">

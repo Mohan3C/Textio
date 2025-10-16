@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from decimal import Decimal
 
 # Create your models here.
 
@@ -45,21 +46,23 @@ class OrderItem(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.IntegerField(default=1)
     isordered = models.BooleanField(default=False)
-    product_dis_price_at_order = models.DecimalField(max_digits=10,default=0,decimal_places=2)
-    product_price_at_order = models.DecimalField(max_digits=10,decimal_places=2,default=0)
+    
 
     def __str__(self):
         return self.product_id.title
     
 
     def total_price(self):
-        return self.product_id.price*self.qty
+        total_price = Decimal(str(self.product_id.price*self.qty))
+        return total_price
     
     def total_discount_price(self):
-        return self.product_id.dis_price*self.qty
+        total_discount_price = Decimal(str(self.product_id.dis_price*self.qty))
+        return total_discount_price
     
     def getpercentage(self):
-        return(self.total_price()-self.total_discount_price())/self.total_price()*100
+    
+        return (self.total_price()-self.total_discount_price())/self.total_price()*100
 
     
 
@@ -68,48 +71,95 @@ class Order(models.Model):
     isordered = models.BooleanField(default=False)
     address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
-    create_at =models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    create_at =models.DateTimeField(auto_now=True, blank=True, null=True)
     razor_pay_order_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_id = models.CharField(max_length=100, blank=True, null=True)
     razor_pay_payment_signature = models.CharField(max_length=100, blank=True, null=True)
     from_buynow = models.BooleanField(default=False)
-    price_at_order = models.DecimalField(max_digits=10,default=0,decimal_places=2)
+    
 
 
     def __str__(self):
         return self.user.username
     
     def gettotalamount(self):
-        total = 0
+        total = Decimal(0.00)
+        item_total = 0
         for item in OrderItem.objects.filter(order_id=self.id):
-            total += item.total_price()
+            item_total += item.total_price()
+            total = Decimal(str(item_total))
         return total
     
     def gettotaldiscountamount(self):
-        total_discount = 0
+        total_discount = Decimal(0.00)
+        item_discount = 0
         for item in OrderItem.objects.filter(order_id=self.id):
-            total_discount += item.total_discount_price()
+            item_discount += item.total_discount_price()
+            total_discount = Decimal(str(item_discount))
         return total_discount
     
     def gettotaldiscount(self):
-        return self.gettotalamount()-self.gettotaldiscountamount()
+        gettotaldiscount = Decimal(str(self.gettotalamount()-self.gettotaldiscountamount()))
+        return gettotaldiscount
 
    
     def getpayableamount(self):
+        
         if self.coupon_id:
-            return self.gettotaldiscountamount() - self.coupon_id.amount 
+            getpayableamount = Decimal(str(self.gettotaldiscountamount() - self.coupon_id.amount))
+            return  getpayableamount
         else:
-            return self.gettotaldiscountamount() 
+            getpayableamount = Decimal(str(self.gettotaldiscountamount()))
+            return  getpayableamount
 
     def totalsaving(self):
         if self.coupon_id:
-            return self.gettotaldiscount() + self.coupon_id.amount
+            totalsaving = Decimal(str(self.gettotaldiscount() + self.coupon_id.amount))
+            return totalsaving
         else:
-            return self.gettotaldiscount()
+            totalsaving = Decimal(str(self.gettotaldiscount()))
+            return totalsaving
+
+class CompleteOrderItem(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    product_title = models.CharField(max_length=200)
+    product_brand = models.CharField(max_length=50)
+    product_price = models.DecimalField(max_digits=10,decimal_places=2)
+    product_discount_price = models.DecimalField(max_digits=10,decimal_places=2)
+    product_img = models.ImageField(upload_to="complete_order_item/")
+    order = models.ForeignKey("CompleteOrder",on_delete=models.CASCADE,related_name="items")
+    qty = models.PositiveIntegerField(default=1)
+
+    def __str__(self):
+        return self.product_title
+    
+class CompleteOrder(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE)
+    price = models.DecimalField(max_digits=10,decimal_places=2)
+    discount = models.DecimalField(max_digits=10,decimal_places=2,blank=True,null=True)
+    payable_amount = models.DecimalField(max_digits=10,decimal_places=2)
+    coupon_code = models.CharField(max_length=50,blank=True,null=True)
+    coupon_amount = models.DecimalField(max_digits=10,decimal_places=2,blank=True,null=True)
+    razor_pay_order_id = models.CharField(max_length=100)
+    create_at = models.DateTimeField(auto_now_add=True,blank=True,null=True)
+    
+    # address 
+    name = models.CharField(max_length=200)
+    contact = models.CharField(max_length=10)
+    street = models.CharField(max_length=200)
+    landmark = models.CharField(max_length=200)
+    city = models.CharField(max_length=200)
+    state = models.CharField(max_length=200)
+    pincode = models.CharField(max_length=200)
+    type = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.user.username
+
 
 class Coupon(models.Model):
     code = models.CharField(max_length=200)
-    amount = models.FloatField(blank=False,null=False)
+    amount = models.DecimalField(max_digits=7,decimal_places=2)
 
     def __str__(self):
         return self.code

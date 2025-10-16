@@ -2,89 +2,98 @@
 {% load tailwind_filters %}
 
 {% block content %}
-<div class="bg-slate-100 flex flex-1 flex-col pb-10">
-    <!-- Header -->
-    <div class="flex-1 bg-teal-600 text-white px-[10%] py-6">
-        <h2 class="text-3xl font-semibold">My Order</h2>
-        <p class="text-sm mt-2">Explore your order history and details.</p>
-    </div>
+<div class="bg-gray-200 w-full pb-10 flex justify-center">
+    <div class="bg-white w-10/12 flex flex-col mt-4 p-4">
 
-    {% if order %}
-    <div class="flex flex-col mt-4 gap-5 px-[10%]">
-        <div class="w-full">
-            {% for order in order %}
-            <div class="flex flex-col gap-4 mt-6 border rounded-lg bg-white shadow-sm p-4">
-                <!-- Order Header -->
-                <div class="flex items-center justify-between border-b pb-2">
-                    <h2 class="text-lg font-semibold">Order ID - {{ order.razor_pay_order_id }}</h2>
-                    <span class="text-sm text-gray-800">{{ order.create_at|date:"d M, Y" }}</span>
-                </div>
-
-                <!-- Order Items -->
-                {% for item in order.items.all %}
-                <div class="flex gap-4 py-3 border-b last:border-none">
-                    <div class="w-[100px] h-[100px]">
-                        <img src="{{item.product_id.image.url }}" alt="{{ item.product.title }}"
-                            class="object-cover w-full h-full rounded-lg border">
+        <div class="flex-1 pt-2">
+            <h2 class="text-2xl font-semibold ">Order Detail </h2>
+            <span>order placed {{ order.create_at|date:"d M Y" }}</span>
+            <span class="px-4">|</span>
+            <span>Order id - {{ order.razor_pay_order_id }}</span>
+        </div>
+        <div class="flex flex-col bg-white border rounded-lg">
+            <div class="flex flex-1 justify-between p-4">
+                <div class="flex flex-col">
+                    <h2 class="font-semibold text-sm">Ship to</h2>
+                    <span>{{order.name}}</span>
+                    <span>{{order.landmark}}</span>
+                    <div class="flex flex-row">
+                        <span class="">{{order.street}}</span> ,
+                        <span>{{order.city}}</span>
                     </div>
-                    <div class="flex flex-col justify-between w-full">
-                        <h1 class="font-semibold">{{item.product_id.title}}</h1>
-                        <p class="text-gray-600 text-sm">Brand: {{ item.product_id.brand }}</p>
-                        <div class="flex justify-between mt-2">
-                            <div class="flex gap-4 items-center">
-                                <span class="font-bold ">₹{{ item.product_dis_price_at_order }}</span>
-                                <del class="font-semibold text-sm">₹{{ item.product_price_at_order }}</del>
-                            </div>
-                            <span class="text-sm text-gray-500 px-10 font-semibold">Qty: {{ item.qty }}</span>
-                        </div>
+                    <div class="flex flex-row">
+                        <span>{{order.city}}</span>,
+                        <span>{{order.state}} - </span>
+                        <span class="font-semibold px-2">{{order.pincode}}</span>
                     </div>
                 </div>
-
-                {% endfor %}
-                <div class="flex flex-1 justify-between">
-                    <span class="text-green-500 text-lg">Order Amount : {{order.price_at_order}}</span>
+                <div class="flex flex-col">
+                    <h2 class="font-semibold text-sm">Payment Method</h2>
+                    <span class="flex justify-center">Online</span>
                 </div>
-                <div class="flex mt-4">
-                    <div class="font-bold text-xl">
-                        <h2> Delivered address - <span class="px-2 bg-slate-200 text-slate-500 font-normal ">{{order.address.type}}</span></h2>
-                       
-                        <div class="flex flex-col flex-1 border rounded-lg mt-2">
-                            <div class="">
-
-                                <div class="flex flex-col gap-5">
-
-                                    <div class=" bg-white divide-y">
-
-                                        <div class="p-4 bg-slate-200">
-                                            <label for="address{{selected_address.id}}" class="flex flex-col">
-                                                <div class=" border px-4 py-2 rounded ">
-                                                    <h2 class="font-semibold text-md uppercase pb-1">
-                                                        {{order.address.name}}
-                                                        <span class="px-3"> {{order.address.alt_contact}}</span>
-                                                    </h2>
-                                                    <h2 class="capitalize">{{order.address.street}},
-                                                        {{order.address.landmark}}, {{order.address.city}},
-                                                        {{order.address.state}} - <span
-                                                            class="font-semibold">{{order.address.pincode}}</span>
-                                                    </h2>
-                                                </div>
-
-                                            </label>
-                                        </div>
-
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <div class="flex flex-col">
+                    <h2 class="font-semibold text-sm">Order Summary</h2>
+                    <div class="flex gap-20 justify-between">
+                        <span>Total Price: </span>
+                        <span class="p"> {{order.price}}</span>
+                    </div>
+                    <div class="flex gap-20 justify-between">
+                        <span>Discount: </span>
+                        <span class=""> {{order.discount}}</span>
+                    </div>
+                    {% if order.coupon_id %}
+                    <div class="flex gap-20 justify-between">
+                        <span>Coupon {{order.coupon_code}}: </span>
+                        <span class=""> {{order.coupon_amount}}</span>
+                    </div>
+                    {% endif %}
+                    <div class="flex gap-20 justify-between">
+                        <span class="font-semibold">Paid Price:</span>
+                        <span class=""> {{order.payable_amount}}</span>
                     </div>
                 </div>
             </div>
-            {% endfor %}
         </div>
         
-    </div>
-    {% endif %}
+        <div class="flex flex-col gap-5 mt-5">
+            <div class="w-full">
 
+                <div class="flex flex-col gap-4 border rounded-lg bg-white shadow-sm p-4">
+
+                    <div class="flex items-center justify-between border-b pb-2">
+                        <h2 class="text-lg font-semibold">Orderitem{{order.items.all|pluralize}}</h2>
+                        <span class="text-sm text-gray-800">{{ order.create_at|date:"d M, Y" }}</span>
+                    </div>
+
+                    {% for item in order.items.all %}
+                    <div class="flex gap-4 py-3 border-b last:border-none">
+                        <div class="w-[100px] h-[100px]">
+                            <img src="{{item.product_img.url }}" alt="{{ item.product.title }}"
+                                class="object-cover w-full h-full rounded-lg border">
+                        </div>
+                        <div class="flex flex-col justify-between w-full">
+                            <h1 class="font-semibold">{{item.product_title}}</h1>
+                            <p class="text-gray-600 text-sm">Brand: {{ item.product_brand }}</p>
+                            <div class="flex justify-between mt-2">
+                                <div class="flex gap-4 items-center">
+                                    <span class="font-bold ">₹{{ item.product_discount_price }}</span>
+                                    <del class="font-semibold text-sm">₹{{ item.product_price }}</del>
+                                </div>
+                                <span class="text-sm text-gray-500 px-10 font-semibold">Qty: {{ item.qty }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                    <div class="flex flex-1 justify-between">
+                        <span class="text-green-500 text-lg">Order Amount : {{order.payable_amount}}</span>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+      
+    </div>
 </div>
 {% endblock %}

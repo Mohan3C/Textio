@@ -18,6 +18,7 @@ urlpatterns = [
     path("buynow/<int:id>/",buynow ,name="buynow"),
     path("success-page/",ordercomplete ,name="ordercomplete"),
     path("order/view/<int:order_id>/",view_my_order ,name="vieworder"),
+    path("profile/",profile,name="profile"),
 
     # cart and coupon urls
     path("home/product/cart",cart,name="cart"),

@@ -10,6 +10,8 @@ import razorpay
 from django.conf import settings
 from django.db.models import Q
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
+import os
 
 # Create your views here.
 
@@ -17,11 +19,13 @@ from django.core.paginator import Paginator
 
 def home(request):
     products = Product.objects.all()
+    category = Category.objects.all()
 
     # Check if search query exists
     search_query = request.GET.get('search')
     if search_query:
-        filter_products = products.filter(brand__icontains=search_query)
+        filter_products = products.filter(Q(brand__icontains=search_query))
+        filter_category = category.filter(Q(name__icontains=search_query))
         if filter_products.exists():
           paginator = Paginator(products, 12)  
           page_number = request.GET.get("page")
@@ -50,6 +54,9 @@ def home(request):
       has_order = False
 
     return render(request, "public/main.html", {"page_obj": page_obj, "has_order":has_order})
+
+def profile(request):
+  return render(request,"registration/profile.html")
 
 def registeruser(request):
 
@@ -383,40 +390,84 @@ def payment(request):
       return redirect("ordercomplete")
     
     client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
-    payment = client.order.create({'amount': order.getpayableamount()*100 , 'currency': 'INR', 'payment_capture': 1})
+    payment = client.order.create({'amount': float(order.getpayableamount()*100) , 'currency': 'INR', 'payment_capture': 1})
     order.razor_pay_order_id = payment['id']
     order.save()
     return render(request, 'public/make-payment.html', {'payment':payment})
   else:
     return redirect('address', id=order.id)
   
+def completeorderitem(request,item,completeorder):
+  complete_order_item = CompleteOrderItem()
+  complete_order_item.user = request.user
+  complete_order_item.product_title = item.product_id.title
+  complete_order_item.product_brand = item.product_id.brand
+  complete_order_item.product_price = item.product_id.price
+  complete_order_item.product_discount_price = item.product_id.dis_price
 
+  if item.product_id.image:
+    filename = os.path.basename(item.product_id.image.name)  
+    file_content = ContentFile(item.product_id.image.read())
+    complete_order_item.product_img.save(
+        filename,
+        file_content,
+        save=False
+    )
+  else:
+    complete_order_item.product_img = None
+
+  complete_order_item.order = completeorder
+  complete_order_item.qty = item.qty
+  complete_order_item.save()
+
+  return complete_order_item
     
+def complete_order(request,order):
+  completeorder = CompleteOrder()
+  completeorder.user = request.user
+  completeorder.price = order.gettotalamount()
+  completeorder.discount = order.gettotaldiscount()
+  completeorder.payable_amount = order.gettotaldiscountamount()
+  if order.coupon_id:
+    completeorder.coupon_code = order.coupon_id.code
+    completeorder.coupon_amount = order.coupon_id.amount
+  completeorder.razor_pay_order_id = order.razor_pay_order_id
+
+  # address save
+  completeorder.name = order.address.name
+  completeorder.contact = order.address.alt_contact
+  completeorder.street = order.address.street
+  completeorder.landmark = order.address.landmark
+  completeorder.state = order.address.state
+  completeorder.city = order.address.city
+  completeorder.pincode = order.address.pincode
+  completeorder.type = order.address.type
+  completeorder.save()
+ 
+
+  return completeorder
+
 def ordercomplete(request):
   order_id = request.GET.get('razorpay_order_id')
   
   order = Order.objects.get(razor_pay_order_id = order_id)
   order.isordered = True
   order.save()
+  completeorder = complete_order(request,order)
   order_items = OrderItem.objects.filter(order_id = order)
   total = 0
   for item in order_items:
     item.isordered = True
-    item.product_dis_price_at_order = item.product_id.dis_price
-    item.product_price_at_order = item.product_id.price
+    orderproduct = completeorderitem(request,item,completeorder)
     item.save()
-    total += item.product_dis_price_at_order*item.qty
-    if order.coupon_id:
-          total -= order.coupon_id.amount
-      
-  order.price_at_order = total
-  order.save()
+   
+    
   return render(request, 'public/success_page.html')
 
 @login_required
 def my_order(request):
 
-    orders = Order.objects.filter(user=request.user, isordered=True)
+    orders = CompleteOrder.objects.filter(user=request.user)
   
     data = {
       "orders":orders,
@@ -425,5 +476,5 @@ def my_order(request):
 
 @login_required
 def view_my_order(request,order_id):
-  order = Order.objects.filter(user=request.user,id=order_id,isordered=True)
+  order = CompleteOrder.objects.get(user=request.user,id=order_id)
   return render(request,"public/view_order.html",{"order":order})

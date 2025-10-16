@@ -23,7 +23,7 @@
                 <!-- User Section -->
                 <div class="flex items-center space-x-3">
                     {% if request.user.is_authenticated %}
-                    <!-- <span class="text-gray-800 dark:text-white font-semibold">{{ user.username }}</span> -->
+                    <!--  here the dropdown menu -->
 
                     {% include 'public/dropdown.html' %}
 
@@ -46,13 +46,8 @@
                         <span class="absolute inline-flex text-red-500 rounded-full top-[-35%] font-semibold right-[-20%] ">{{numbers}}</span>
                         {% endif %}
                     </div>
-<!-- 
-                    {% if has_order %}
-
-                    <a href="{% url 'my_order' %}" class="bg-purple-300 py-1 px-3 text-md rounded-lg font-semibold">My
-                        Order</a>
-                    {% endif %} -->
-
+ 
+    
 
                 </div>
             </div>
