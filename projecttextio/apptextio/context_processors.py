@@ -5,7 +5,7 @@ def no_of_orderitms(request):
     try:
         order = Order.objects.filter(user=request.user,isordered=False,from_buynow=False).first()
         if order:
-            orderitems = OrderItem.objects.filter(user=request.user,order_id=order)
+            orderitems = OrderItem.objects.filter(order_id=order,isordered=False)
             numbers = orderitems.count()
         return {"numbers":numbers}
     except:

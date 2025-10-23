@@ -118,8 +118,8 @@ def user_login(request):
 
       login(request,user)
 
-      
-      return redirect("homepage")
+      next_url = request.POST.get('next') or 'homepage'
+      return redirect(next_url)
     else:
       return redirect("login_user")
   return render(request,"registration/login.html")
@@ -603,7 +603,7 @@ def ordercomplete(request):
     item.isordered = True
 
     completeorderitem(request,item,completeorder)
-    
+
     item.save()
    
     
