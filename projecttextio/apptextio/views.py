@@ -598,10 +598,12 @@ def ordercomplete(request):
   order.save()
   completeorder = complete_order(request,order)
   order_items = OrderItem.objects.filter(order_id = order)
-  total = 0
+  
   for item in order_items:
     item.isordered = True
-    orderproduct = completeorderitem(request,item,completeorder)
+
+    completeorderitem(request,item,completeorder)
+    
     item.save()
    
     
