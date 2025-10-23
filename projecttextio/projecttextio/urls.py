@@ -37,6 +37,7 @@ urlpatterns = [
 
     # default login urls
     path("accounts/", include("django.contrib.auth.urls")),
+    path("accounts/login", user_login,name="login_user"),
     path("accounts/registration/",registeruser, name="registration"),
        
        

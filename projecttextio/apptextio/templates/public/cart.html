@@ -8,6 +8,7 @@
 
 <div class=" bg-slate-100 w-full px-10 ">
 
+    <!-- breedcrem -->
     <div class="flex  flex-1 items-start justify-start">
         <nav class="flex " aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -33,26 +34,16 @@
                             class="ms-1 text-sm font-medium text-gray-700 hover:text-blue-600 md:ms-2 dark:text-gray-400 dark:hover:text-white">Cart</a>
                     </div>
                 </li>
-                <!-- <li aria-current="page">
-                    <div class="flex items-center">
-                        <svg class="rtl:rotate-180 w-3 h-3 text-gray-400 mx-1" aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="m1 9 4-4-4-4" />
-                        </svg>
-                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">Products</span>
-                    </div>
-                </li> -->
             </ol>
         </nav>
     </div>
 
 
-
-    <div class="flex flex-1  gap-10 ">
+    {% if orderitems %}
+    <div class="flex flex-1  gap-10 w-full">
         <div class="w-8/12 border rounded-lg mt-5 ">
             <div class=" rounded-lg px-5 py-3 flex flex-1 justify-between items-center border bg-white">
-                <span>From save address</span>
+                <span>Item{{numbers|pluralize}}</span>
                 <a href="" class="flex items-center justify-center border rounded-lg">
                     <span class="px-3 py-2  text-sm font-bold text-blue-600">Enter Delivary Pincode</span>
                 </a>
@@ -194,13 +185,16 @@
 
         {% endif %}
 
-
-
-
-
-
-
     </div>
+    {% else %}
+    
+   <div class="m-0 p-0">
+        <div class="w-screen h-screen bg-slate-100 overflow-hidden">
+            <h1 class="text-9xl font-bold text-slate-200 flex justify-center items-center">Empty Cart</h1>
+
+        </div>
+   </div>
+    {% endif %}
 </div>
 
 {% endblock %}

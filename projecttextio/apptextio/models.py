@@ -41,7 +41,7 @@ class Product(models.Model):
         return f"{self.title} - {sizes}"
     
 class OrderItem(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    temp_user = models.CharField(max_length=50,blank=True,null=True)
     order_id = models.ForeignKey("Order", on_delete=models.CASCADE,blank=True,null=True, related_name="items")
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     qty = models.IntegerField(default=1)
@@ -49,7 +49,10 @@ class OrderItem(models.Model):
     
 
     def __str__(self):
-        return self.product_id.title
+        if self.order_id.user:
+            return str(self.order_id.id)
+        else:
+            return self.order_id.temp_user
     
 
     def total_price(self):
@@ -67,7 +70,8 @@ class OrderItem(models.Model):
     
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,blank=True,null=True)
+    temp_user = models.CharField(max_length=50,blank=True,null=True)
     isordered = models.BooleanField(default=False)
     address = models.ForeignKey("Address", on_delete=models.CASCADE, blank=True, null=True)
     coupon_id = models.ForeignKey("Coupon",on_delete=models.CASCADE, blank=True, null=True)
@@ -80,7 +84,9 @@ class Order(models.Model):
 
 
     def __str__(self):
-        return self.user.username
+        if self.user:
+            return self.user.username
+        return self.temp_user
     
     def gettotalamount(self):
         total = Decimal(0.00)
