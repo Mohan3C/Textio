@@ -127,7 +127,6 @@ class Order(models.Model):
             return totalsaving
 
 class CompleteOrderItem(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
     product_title = models.CharField(max_length=200)
     product_brand = models.CharField(max_length=50)
     product_price = models.DecimalField(max_digits=10,decimal_places=2)
