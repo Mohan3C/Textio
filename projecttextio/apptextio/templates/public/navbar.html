@@ -23,9 +23,9 @@
                 <!-- User Section -->
                 <div class="flex items-center space-x-3">
                     {% if request.user.is_authenticated %}
-                    <!--  here the dropdown menu -->
 
-                    {% include 'public/dropdown.html' %}
+                        <!--  here the dropdown menu -->
+                        {% include 'public/dropdown.html' %}
 
                     {% else %}
                     <a href="{% url 'login_user' %}?next={{ request.path }}"
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Navigation Menu -->
-            <div class="#">
+            <div class="">
                 <ul class="hidden lg:flex">
                     <li>
                         <a href="{% url 'homepage' %}"

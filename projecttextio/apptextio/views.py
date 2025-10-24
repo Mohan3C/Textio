@@ -48,40 +48,31 @@ def registeruser(request):
 def assign_item_to_order(request,guest_user,user):
   temp_orders = Order.objects.filter(temp_user=guest_user,isordered=False,from_buynow=False)
 
-  print("this is healper function")
-
   if not temp_orders.exists():
     return 
   
-  print("we are inside healper function")
   
   user_order = Order.objects.filter(user=user,isordered=False,from_buynow=False).first()
 
   for temp_order in temp_orders:
-    print("we are inside temp_orders loop")
 
     orderitems = OrderItem.objects.filter(isordered=False,order_id=temp_order)
     if orderitems.exists():
 
       for item in orderitems:
-        print("now we are inside orderitems loop")
         if user_order:
-          print("we are inside user_order")
           existitem = OrderItem.objects.filter(isordered=False,product_id=item.product_id,order_id=user_order).first()
 
           if existitem:
-            print("item is exist")
             existitem.qty += 1
             existitem.save()
           else:
             orderitem = OrderItem()
-            print("we adding product to order after item not exists")
             orderitem.order_id = user_order
             orderitem.product_id = item.product_id
             orderitem.isordered =False
             orderitem.save()
         else:
-          print("we creating new order")
           user_order = Order()
           user_order.user = user
           user_order.isordered=False
@@ -89,7 +80,6 @@ def assign_item_to_order(request,guest_user,user):
           user_order.save()
 
           orderitem = OrderItem()
-          print("we adding product to order")
           orderitem.order_id = user_order
           orderitem.product_id = item.product_id
           orderitem.isordered =False
@@ -97,7 +87,6 @@ def assign_item_to_order(request,guest_user,user):
 
     temp_order.delete()
 
-    print("we are end of healper function")
   request.session.pop('guest_user',None)
 
 
@@ -114,7 +103,7 @@ def user_login(request):
       if guest_user:
         assign_item_to_order(request,guest_user,user)
 
-      print("this is main function ")
+     
 
       login(request,user)
 
