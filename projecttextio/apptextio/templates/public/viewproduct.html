@@ -4,7 +4,8 @@
 
 <div class=" w-full bg-slate-100">
 
-    <div class="flex  flex-1 items-start justify-start pl-[4%]">
+    <!-- breedcrum -->
+    <div class="flex  flex-1 items-start justify-start pl-[4%] bg-white">
         <nav class="flex " aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
                 <li class="inline-flex items-center">
@@ -36,7 +37,8 @@
                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="m1 9 4-4-4-4" />
                         </svg>
-                        <span class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{products.title}}</span>
+                        <span
+                            class="ms-1 text-sm font-medium text-gray-500 md:ms-2 dark:text-gray-400">{{product.title}}</span>
                     </div>
                 </li>
             </ol>
@@ -45,63 +47,74 @@
 
 
 
-    <div class="flex flex-1 px-[8%] py-8 gap-10">
+    <div class="flex flex-1 px-[8%] py-8 gap-10 bg-white">
 
-        <div class="w-4/12 flex flex-col">
+        <div class="w-4/12 flex flex-col bg-white p-[20px]">
             <div class="flex flex-1">
-                <img src="{{products.image.url}}" alt="random photo" class="object-cover h-[60vh] w-full">
+                <img src="{{display_variant.image.url}}" alt="random photo" class="object-cover h-[60vh] w-full">
             </div>
             <div class="flex flex-1 mt-3 gap-3 ">
-                <a href="{% url 'addtocart' products.id %}"
+                <a href=""
                     class="text-lg font-semibold bg-[#FF8C00] items-center justify-center flex w-full py-2 px-4 bg">Add
                     To Cart</a>
-                <a href="{% url 'buynow' products.id %}"
+                <a href=""
                     class="text-lg font-semibold bg-[#FC4C02] text-white items-center justify-center flex w-full py-2 px-4 bg">Buy
                     Now</a>
             </div>
         </div>
-        <div class="w-8/12 mt-5 px-[4%]">
-            <div class="flex flex-col space-y-3">
-                <h2 class="text-lg font-medium text-black">Brand : <span
-                        class="text-md text-gray-700">{{products.brand}}</span></h2>
+        <div class="w-8/12  px-[4%] bg-white">
+            <div class="flex flex-col space-y-3 mt-5">
+                <h2 class="text-lg font-semibold text-black">Brand : <span
+                        class="text-md text-gray-700">{{product.brand}}</span></h2>
                 <div class="flex flex-1 items-center text-lg font-semibold ">
-                    Title : <span
-                        class="text-sm font-semibold ml-2 line-clamp-1 text-gray-700">{{products.title}}</span>
+                    Title : <span class="text-sm font-semibold ml-2 line-clamp-1 text-gray-700">{{product.title}}</span>
                 </div>
                 <div class="flex flex-1 items-center">
                     <p class="text-lg font-semibold mr-2">Price :</p>
-                    <span class="mr-3  font-medium"> ₹{{products.dis_price}} <del
-                            class="mr-3 text-sm text-gray-700">₹{{products.price}} </del> <span
-                            class="text-green-700 text-sm">{{products.getpercentag}} %Off</span></span>
+                    <span class="mr-3  font-medium"> ₹{{display_variant.dis_price}} <del
+                            class="mr-3 text-sm text-gray-700">₹{{display_variant.price}} </del> <span
+                            class="text-green-700 text-sm">{{display_variant.getprecentage}} %Off</span></span>
                 </div>
                 <div class="flex flex-1 gap-5 items-center">
-                    <span class="text-xl font-semibold">Size :-</span>
+                    <span class="font-semibold">Size : {{display_variant.size}}</span>
 
-                    {% for size in products.size.all %}
+                    <!-- {% for size in products.size.all %}
 
                     <a href="#"
                         class="text-sm font-semibold py-1 rounded-sm px-3 bg-gray-200 hover:bg-gray-300">{{size.get_size_display}}</a>
-                    {% endfor %}
+                    {% endfor %} -->
 
                 </div>
 
+                <div class="flex flex-row ">
+                    <span class="font-semibold pr-4">Color :</span>
+                    {% for variant in variants %}
+                    <a href="?variant={{ variant.id }}" class="border-[px] rounded-lg mx-2 cursor-pointer">
+                        <img src="{{ variant.image.url }}" alt="{{ variant.size }}"
+                            class="{% if variant.id == display_variant.id %}border-2 border-black {% else %}solid {% endif %} size-[90px] object-cover rounded-lg">
+                    </a>
+                    {% endfor %}
+                </div>
+
+
+
                 <div class=" text-md"> <span class="text-xl font-medium text-gray-800">Descriptiions
                         :</span>
-                    <p class="text-gray-700">{{products.description}}</p>
+                    <p class="text-gray-700">{{product.description}}</p>
                 </div>
             </div>
         </div>
 
     </div>
-<!-- Related product here  -->
+    <!-- Related product here  -->
     <div class="flex flex-col  px-[5%] ">
-        <h2 class="text-center text-2xl font-semibold">Related products</h2>
+        <h2 class="text-center text-2xl font-semibold mt-5">Related products</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-[2%] gap-5">
             {% for product in items %}
             <div
                 class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
                 <a href="{% url 'viewproduct' product.id %}">
-                    <img class="rounded-t-lg w-full object-cover h-80" src="{{product.image.url}}" alt="" />
+                    <img class="rounded-t-lg w-full object-cover h-80" src="{{product.first_variant.image.url}}" alt="" />
                 </a>
                 <div class="p-5">
                     <h2 class="text-xl font-semibold">Brand: <span>{{product.brand}} </span> </h2>
@@ -110,8 +123,9 @@
                         {{product.title}}</p>
 
                     <div class="flex gap-5">
-                        <p class="text-lg font-medium">Price <span>{{product.dis_price}}</span>
-                            <del>{{product.price}}</del></p>
+                        <p class="text-lg font-medium">Price: <span class="font-semibold">{{product.first_variant.dis_price}}</span>
+                            <del class="text-sm">{{product.first_variant.price}}</del>
+                        </p>
                     </div>
 
 

@@ -50,8 +50,7 @@ def assign_item_to_order(request,guest_user,user):
 
   if not temp_orders.exists():
     return 
-  
-  
+
   user_order = Order.objects.filter(user=user,isordered=False,from_buynow=False).first()
 
   for temp_order in temp_orders:
@@ -61,15 +60,15 @@ def assign_item_to_order(request,guest_user,user):
 
       for item in orderitems:
         if user_order:
-          existitem = OrderItem.objects.filter(isordered=False,product_id=item.product_id,order_id=user_order).first()
+          existitem = OrderItem.objects.filter(isordered=False,product=item.product,order=user_order).first()
 
           if existitem:
             existitem.qty += 1
             existitem.save()
           else:
             orderitem = OrderItem()
-            orderitem.order_id = user_order
-            orderitem.product_id = item.product_id
+            orderitem.order = user_order
+            orderitem.variant_product = item.variant_product
             orderitem.isordered =False
             orderitem.save()
         else:
@@ -80,8 +79,8 @@ def assign_item_to_order(request,guest_user,user):
           user_order.save()
 
           orderitem = OrderItem()
-          orderitem.order_id = user_order
-          orderitem.product_id = item.product_id
+          orderitem.order = user_order
+          orderitem.variant_product = item.variant_product
           orderitem.isordered =False
           orderitem.save()
 
@@ -103,8 +102,6 @@ def user_login(request):
       if guest_user:
         assign_item_to_order(request,guest_user,user)
 
-     
-
       login(request,user)
 
       next_url = request.POST.get('next') or 'homepage'
@@ -114,42 +111,44 @@ def user_login(request):
   return render(request,"registration/login.html")
 
 def home(request):
-    products = Product.objects.all()
+    products = Product.objects.prefetch_related('variants')
+
+    for product in products:
+      product.first_variant = product.variants.first()
+
     category = Category.objects.all()
 
-    # Check if search query exists
-    search_query = request.GET.get('search')
-    if search_query:
-        filter_products = products.filter(Q(brand__icontains=search_query))
-        filter_category = category.filter(Q(name__icontains=search_query))
-        if filter_products.exists():
-          paginator = Paginator(products, 12)  
-          page_number = request.GET.get("page")
-          page_obj = paginator.get_page(page_number)
+    #  for random product in home page 
+    # products = list(Product.objects.prefetch_related('variants')[:20])
+    # random.shuffle(products)
+    # page_products = products[:20]
 
-          return render(request, "public/allproduct.html", {"page_obj": page_obj,"search_query": search_query})
+
+
+    # Check if search query exists
+    # search_query = request.GET.get('search')
+    # if search_query:
+    #     filter_products = products.filter(Q(brand__icontains=search_query))
+    #     filter_category = category.filter(Q(name__icontains=search_query))
+    #     if filter_products.exists():
+    #       paginator = Paginator(products, 12)  
+    #       page_number = request.GET.get("page")
+    #       page_obj = paginator.get_page(page_number)
+
+    #       return render(request, "public/allproduct.html", {"page_obj": page_obj,"search_query": search_query})
     
 
-        paginator = Paginator(products, 12)  
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    #     paginator = Paginator(products, 12)  
+    #     page_number = request.GET.get("page")
+    #     page_obj = paginator.get_page(page_number)
 
-        return render(request, "public/main.html", {"page_obj": page_obj})
+    #     return render(request, "public/main.html", {"page_obj": page_obj})
 
     paginator = Paginator(products, 12)  
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    has_order = False
-    try:
-      if request.user.is_authenticated:
-        order = Order.objects.filter(user=request.user, isordered = True).exists()
-        if order:
-          has_order = True
-    except:
-      has_order = False
-
-    return render(request, "public/main.html", {"page_obj": page_obj, "has_order":has_order})
+    return render(request, "public/main.html", {"page_obj": page_obj})
 
 def temp_User(request):
 
@@ -166,10 +165,28 @@ def profile(request):
 
 
 def viewproduct(request,id):
-  products = Product.objects.get(id=id)
-  categories = Category.objects.all()
-  items = Product.objects.exclude(pk=id)
-  return render(request, 'public/viewproduct.html',{'products':products, "categories":categories, "items":items})
+  product = Product.objects.prefetch_related('variants').get(id=id)
+
+  variants = product.variants.all()
+  display_variant =variants.first()
+
+  variant_id = request.GET.get("variant")
+  if variant_id:
+    display_variant = variants.filter(id=variant_id).first() or display_variant
+
+  items = Product.objects.exclude(pk=id).filter(category = product.category)
+  for item in items:
+    item.first_variant = item.variants.first()
+
+  context = {
+    'products':products,
+    'display_variant':display_variant,
+    'variants':variants,
+    "items":items,
+    "product":product,
+  }
+  
+  return render(request, 'public/viewproduct.html',context)
 
 def products(request,id=None):
   categories = Category.objects.all()
@@ -206,8 +223,8 @@ def buynow(request,id):
 
     if order.exists():
       order = order[0]
-      OrderItem.objects.filter(isordered=False,order_id=order).delete()
-      order.coupon_id = None
+      OrderItem.objects.filter(isordered=False,order=order).delete()
+      order.coupon = None
       order.address = last_address if addresses else None
       order.save()
     else:
@@ -219,8 +236,8 @@ def buynow(request,id):
 
     orderitem = OrderItem()
     orderitem.isordered = False
-    orderitem.product_id = product
-    orderitem.order_id = order
+    orderitem.product = product
+    orderitem.order = order
     orderitem.save()
 
     return redirect(checkoutaddress,id=order.id)
@@ -230,7 +247,7 @@ def buynow(request,id):
 @login_required
 def checkoutaddress(request,id):
   order = get_object_or_404(Order,user=request.user,isordered=False,id=id)
-  orderitems = OrderItem.objects.filter(order_id=order,isordered=False)
+  orderitems = OrderItem.objects.filter(order=order,isordered=False)
   product_no = int(orderitems.count())
   addresses = Address.objects.filter(user=request.user)
 
@@ -310,20 +327,20 @@ def addtocart(request,product_id):
 
     if orders.exists():
       order = orders[0]
-      existorderitem = OrderItem.objects.filter(isordered=False,product_id=product,order_id=order). exists()
+      existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order). exists()
       order.address = last_address if addresses else None
 
 
       if existorderitem:
-        existoi = OrderItem.objects.get(isordered=False,product_id=product,order_id=order)
+        existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
         existoi.qty += 1
         existoi.save()
       else:
         oi = OrderItem()
         oi.user = request.user
         oi.isordered = False
-        oi.product_id = product
-        oi.order_id = order
+        oi.product = product
+        oi.order = order
       
         oi.save()
     else:
@@ -336,8 +353,8 @@ def addtocart(request,product_id):
       oi = OrderItem()
       oi.user = request.user
       oi.isordered = False
-      oi.product_id = product
-      oi.order_id = o
+      oi.product = product
+      oi.order = o
     
       oi.save()
 
@@ -350,17 +367,17 @@ def addtocart(request,product_id):
 
     if orders.exists():
       order = orders[0]
-      existorderitemi = OrderItem.objects.filter(isordered=False,product_id=product,order_id=order). exists()
+      existorderitemi = OrderItem.objects.filter(isordered=False,product=product,order=order). exists()
 
       if existorderitemi:
-        existoi = OrderItem.objects.get(isordered=False,product_id=product,order_id=order)
+        existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
         existoi.qty += 1
         existoi.save()
       else:
         oi = OrderItem()
         oi.isordered = False
-        oi.product_id = product
-        oi.order_id = order
+        oi.product = product
+        oi.order = order
         oi.save()
     else:
       o = Order()
@@ -369,8 +386,8 @@ def addtocart(request,product_id):
 
       oi = OrderItem()
       oi.isordered = False
-      oi.product_id = product
-      oi.order_id = o
+      oi.product = product
+      oi.order = o
     
       oi.save()
 
@@ -392,7 +409,7 @@ def cart(request):
     #   order.save()
 
     if order:
-      orderitems = OrderItem.objects.filter(order_id=order,isordered = False)
+      orderitems = OrderItem.objects.filter(order=order,isordered = False)
     
 
     return render(request,"public/cart.html",{"order":order,"orderitems":orderitems,"form":form})
@@ -407,7 +424,7 @@ def cart(request):
       order.save()
 
       
-    orderitems = OrderItem.objects.filter(isordered=False,order_id=order)
+    orderitems = OrderItem.objects.filter(isordered=False,order=order)
       
     return render(request,"public/cart.html",{"order":order,"orderitems":orderitems,"form":form})
 
@@ -419,10 +436,10 @@ def removefromcart(request,product_id):
 
   if orders.exists():
     order = orders[0]
-    existorderitem = OrderItem.objects.filter(isordered=False,product_id=product,order_id=order).exists()
+    existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order).exists()
 
     if existorderitem:
-      existoi = OrderItem.objects.get(isordered=False,product_id=product,order_id=order)
+      existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
 
       if existoi.qty >1:
         existoi.qty -= 1
@@ -441,10 +458,10 @@ def deletefromcart(request,product_id):
 
   if orders.exists():
     order = orders[0]
-    existorderitem = OrderItem.objects.filter(isordered=False,product_id=product,order_id=order).exists()
+    existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order).exists()
 
     if existorderitem:
-      existoi = OrderItem.objects.get(isordered=False,product_id=product,order_id=order)
+      existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
 
       existoi.delete()
 
@@ -459,7 +476,7 @@ def buynowaddCoupon(request,id):
     if coupon:
         order = Order.objects.filter(user=request.user, isordered=False,id=id).first()
         if order.getpayableamount() > coupon.amount:
-          order.coupon_id = coupon
+          order.coupon = coupon
           order.save()
         else:
           messages.add_message(request,messages.ERROR,  message="this Coupon is not applicable in this Order Amount")
@@ -473,7 +490,7 @@ def removecouponfrombuynow(request, coupon_id):
 
   order = Order.objects.filter(user=request.user, isordered=False).last()
   if coupon:
-    order.coupon_id = None
+    order.coupon = None
     order.save()
     return redirect(checkoutaddress,id=order.id) 
 
@@ -485,7 +502,7 @@ def addCoupon(request):
     if coupon:
         order = Order.objects.filter(user=request.user, isordered=False).first()
         if order.getpayableamount() > coupon.amount:
-          order.coupon_id = coupon
+          order.coupon = coupon
           order.save()
         else:
           messages.add_message(request,messages.ERROR,  message="this Coupon is not applicable in this Order Amount")
@@ -499,7 +516,7 @@ def RemoveCoupon(request, coupon_id):
   coupon  = Coupon.objects.get(id=coupon_id)
   order = Order.objects.filter(user=request.user, isordered=False,from_buynow=False).last()
   if coupon:
-    order.coupon_id = None
+    order.coupon = None
     order.save()
     return redirect(cart) 
   
@@ -513,7 +530,7 @@ def payment(request):
   if order.address:
     if request.method == "POST":
       order.isordered = True
-      orderitems = OrderItem.objects.filter(order_id=order.id)
+      orderitems = OrderItem.objects.filter(order=order.id)
       for item in orderitems:
         item.isordered =True
         item.save()
@@ -531,14 +548,14 @@ def payment(request):
   
 def completeorderitem(request,item,completeorder):
   complete_order_item = CompleteOrderItem()
-  complete_order_item.product_title = item.product_id.title
-  complete_order_item.product_brand = item.product_id.brand
-  complete_order_item.product_price = item.product_id.price
-  complete_order_item.product_discount_price = item.product_id.dis_price
+  complete_order_item.product_title = item.product.title
+  complete_order_item.product_brand = item.product.brand
+  complete_order_item.product_price = item.product.price
+  complete_order_item.product_discount_price = item.product.dis_price
 
   if item.product_id.image:
-    filename = os.path.basename(item.product_id.image.name)  
-    file_content = ContentFile(item.product_id.image.read())
+    filename = os.path.basename(item.product.image.name)  
+    file_content = ContentFile(item.product.image.read())
     complete_order_item.product_img.save(
         filename,
         file_content,
@@ -559,9 +576,9 @@ def complete_order(request,order):
   completeorder.price = order.gettotalamount()
   completeorder.discount = order.gettotaldiscount()
   completeorder.payable_amount = order.gettotaldiscountamount()
-  if order.coupon_id:
-    completeorder.coupon_code = order.coupon_id.code
-    completeorder.coupon_amount = order.coupon_id.amount
+  if order.coupon:
+    completeorder.coupon_code = order.coupon.code
+    completeorder.coupon_amount = order.coupon.amount
   completeorder.razor_pay_order_id = order.razor_pay_order_id
 
   # address save
@@ -586,7 +603,7 @@ def ordercomplete(request):
   order.isordered = True
   order.save()
   completeorder = complete_order(request,order)
-  order_items = OrderItem.objects.filter(order_id = order)
+  order_items = OrderItem.objects.filter(order = order)
   
   for item in order_items:
     item.isordered = True

@@ -5,16 +5,14 @@
 {% block content %}
 
 <div class="flex flex-1 justify-between items-center">
-    <h2 class="text-2xl font-semibold ">Manage Product {{products|length}}</h2>
+    <h2 class="text-2xl font-semibold ">Manage Product({{products|length}})</h2>
     <a href="{% url 'insert-product' %}" class="text-white bg-green-600 px-3 py-2 rounded">Insert Product</a>
 </div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+    <!-- <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
-                <th scope="col" class="px-6 py-3">
-                    Id
-                </th>
+                <th scope="col" class="px-6 py-3">Id </th>
                 <th scope="col" class="px-6 py-3">Title</th>
                 <th scope="col" class="px-6 py-3">Brand</th>
                 <th scope="col" class="px-6 py-3">Description</th>
@@ -40,8 +38,8 @@
                 <td class="px-6 py-3 text-right space-x-4">
                     <a href="{% url 'deleteproduct' product.id %}"
                         class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
-                    <!-- <a href=""
-                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> -->
+                    <a href=""
+                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> 
                 </td>
             </tr>
             {% empty %}
@@ -52,7 +50,65 @@
             </tr>
             {% endfor %}
         </tbody>
+    </table> -->
+    <table class="mt-5 w-full">
+        <thead class="">
+            <tr class="flex justify-between px-10 border py-1 ">
+                <th class="">Product and Variant</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr class="flex justify-between border py-1 px-10">
+                <td class="">
+                    <div class="my-2">
+                        <div class="flex flex-1">
+                            <span class="">{{ forloop.counter }}.</span>
+                            <h2 class="px-1">Product : </h2>
+                            <h2>{{ product.title }}</h2>
+                        </div>
+                        <div class="flex flex-1">
+                            <h2 class="px-4">Category : </h2>
+                            <h2>{{ product.category }}</h2>
+                        </div>
+                        <div class="flex flex-1">
+                            <h2 class="px-4">Brand : </h2>
+                            <h2>{{ product.brand }}</h2>
+                        </div>
+                        <div class="flex flex-col px-10">
+                            {% for variant in product.variants.all %}
+                            <div class="flex flex-row justify-between py-1 gap-10">
+                                <div class=" flex flex-row">
+                                    <h2 class="px-2">Variant : </h2>
+                                    <h2 class="px-2">size-{{variant.size}}</h2>
+                                    <h2 class="px-2">Color-{{variant.color}}</h2>
+                                    <h2 class="px-2">price-{{variant.price}}</h2>
+                                    <h2 class="px-2">Discount Price - {{variant.dis_price}}</h2>
+                                </div>
+                                <div class="">
+                                    <img class="size-[70px] mr-[20px]" src="{{variant.image.url}}" alt="varient image">
+                                </div>
+                                <div class="">
+                                    <a href="{% url 'editvariant' variant.id %}" class="text-blue-400 text-sm">[edit variant]</a>
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+                            <div class="">
+                                <a href="{% url 'addvariant' product.id %}" class="text-blue-400 text-sm">[add
+                                    varient]</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
     </table>
+
 </div>
 
 {% endblock %}

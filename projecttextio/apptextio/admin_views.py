@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .admin_forms import CategroyForm, ProductInsertForm,CouponForm
+from .admin_forms import CategroyForm, ProductInsertForm,CouponForm,VariantForm,VariantFormSet
 from .models import *
 from django.contrib.auth.decorators import login_required
 
@@ -18,7 +18,7 @@ def dashboard(request):
 
 def manageproduct(request):
     if request.user.is_superuser:
-        products = Product.objects.all()
+        products = Product.objects.prefetch_related('variants')
         return render(request,"admin/manage_products.html",{"products":products})
     else:
         return render(request,"public/main.html")
@@ -29,13 +29,44 @@ def deleteProduct(request, id):
     return redirect(manageproduct)
 
 def insertProduct(request):
-    form = ProductInsertForm(request.POST or None, request.FILES or None)
+    productform = ProductInsertForm(request.POST or None)
+    variantform = VariantFormSet(request.POST or None, request.FILES or None)
     if request.method == 'POST':
-       if form.is_valid():
-          form.save()
+       if productform.is_valid() and variantform.is_valid():
+          product = productform.save()
+          variants = variantform.save(commit=False)
+          for variant in variants:
+              variant.product = product
+              variant.save()
           return redirect(manageproduct)
 
-    return render(request, 'admin/insert_product.html', {'form':form})
+    return render(request, 'admin/insert_product.html', {'productform':productform,"variantform":variantform})
+
+def add_variant(request,id):
+    product = get_object_or_404(Product,id=id)
+    
+    variantform = VariantFormSet(request.POST or None , request.FILES or None)
+    if request.method == "POST":
+        variants = variantform.save(commit=False)
+
+        for variant in variants:
+            variant.product = product
+            variant.save()
+        return redirect("manageproduct")
+    
+    return render(request,"admin/addvariant.html",{"variantform":variantform,"product":product})
+
+def edit_variant(request,id):
+    variant = get_object_or_404(Variant,id=id)
+
+    var_form = VariantForm(request.POST or None, request.FILES or None,instance=variant)
+    if request.method == "POST":
+        if var_form.is_valid():
+            var_form.save()
+        return redirect("manageproduct")
+    
+    return render(request,"admin/addvariant.html",{"var_form":var_form,"variant":variant})
+
 
 def managecategory(request):
     form = CategroyForm(request.POST or None)

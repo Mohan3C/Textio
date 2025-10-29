@@ -2,16 +2,22 @@
 from django.contrib import admin
 from .models import *
 
+class VariantInline(admin.TabularInline):
+    model = Variant
+    extra = 1
+
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'price', 'get_sizes')
+    list_display = ('id', 'title', 'get_variants')
+    inlines = [VariantInline]
 
-    def get_sizes(self, obj):
-        return ", ".join([s.get_size_display() for s in obj.size.all()])
+    def get_variants(self, obj):
+        return ", ".join([f"{v.color} - {v.size.get_size_display()}" for v in obj.variants.all()])
+    get_variants.short_description = "Variants"
 
-    get_sizes.short_description = "Sizes"
 
 admin.site.register(Product, ProductAdmin)
 admin.site.register(SizeVariant)
+admin.site.register(Variant)
 admin.site.register(Category)
 admin.site.register(Order)
 admin.site.register(OrderItem)

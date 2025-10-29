@@ -1,0 +1,26 @@
+{% extends 'admin/admin_base.html' %}
+
+{% load tailwind_filters %}
+
+{% block content %}
+
+<div class=" mb-5">
+    <h2 class="text-md font-semibold">{% if product %}Add New {% else %}Edit {% endif %}Variant </h2>
+    <div class="mt-5">
+        {% if variantform %}
+        <form action="{% url 'addvariant' product.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ variantform|crispy }}
+            <input type="submit" value="Add variant" class="text-white bg-teal-600 px-3 py-2 rounded w-full">
+        </form>
+        {% else %}
+        <form action="{% url 'editvariant' variant.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ var_form|crispy }}
+            <input type="submit" value="Edit variant" class="text-white bg-teal-600 px-3 py-2 rounded w-full">
+        </form>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

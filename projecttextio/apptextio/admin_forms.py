@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm,inlineformset_factory
 from .models import *
 
 class CategroyForm(ModelForm):
@@ -10,6 +10,14 @@ class ProductInsertForm(ModelForm):
     class Meta:
         model = Product
         fields = "__all__"
+
+class VariantForm(ModelForm):
+
+    class Meta:
+        model = Variant
+        fields = "__all__"
+
+VariantFormSet = inlineformset_factory(Product,Variant,form=VariantForm,extra=1)
         
 class CouponcartForm(ModelForm):
     
@@ -26,4 +34,4 @@ class CouponForm(ModelForm):
 class AddressForm(ModelForm):
     class Meta:
         model = Address
-        fields = ['name','alt_contact','street','landmark','city','state','pincode','type']
+        fields = ['name','contact','street','landmark','city','state','pincode','type']
