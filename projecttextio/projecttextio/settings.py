@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-8uh49!a!uffa30bo!fvx_jz+&#xff)sjup-i&ozt@@f!-8e@!t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['textio1.onrender.com','www.textio1.onrender.com']
+CSRF_TRUSTED_ORIGINS = ['https://textio1.onrender.com']
+
+
+ALLOWED_HOSTS = ['textio1.onrender.com']
 
 
 # Application definition
