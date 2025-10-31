@@ -42,17 +42,30 @@ def insertProduct(request):
 
     return render(request, 'admin/insert_product.html', {'productform':productform,"variantform":variantform})
 
+def edit_product(request,id):
+    product = get_object_or_404(Product,id=id)
+    
+    edit_productform = ProductInsertForm(request.POST or None,instance=product)
+    if request.method == "POST":
+        if edit_productform.is_valid():
+            edit_productform.save()
+        return redirect("manageproduct")
+    
+    return render(request,"admin/insert_product.html",{"edit_productform":edit_productform,"product":product})
+
+
 def add_variant(request,id):
     product = get_object_or_404(Product,id=id)
     
     variantform = VariantFormSet(request.POST or None , request.FILES or None)
     if request.method == "POST":
-        variants = variantform.save(commit=False)
+        if variantform.is_valid():
+            variants = variantform.save(commit=False)
 
-        for variant in variants:
-            variant.product = product
-            variant.save()
-        return redirect("manageproduct")
+            for variant in variants:
+                variant.product = product
+                variant.save()
+            return redirect("manageproduct")
     
     return render(request,"admin/addvariant.html",{"variantform":variantform,"product":product})
 
@@ -66,6 +79,11 @@ def edit_variant(request,id):
         return redirect("manageproduct")
     
     return render(request,"admin/addvariant.html",{"var_form":var_form,"variant":variant})
+
+def delete_variant(request,id):
+    variant = Variant.objects.get(id=id)
+    variant.delete()
+    return redirect('manageproduct')
 
 
 def managecategory(request):

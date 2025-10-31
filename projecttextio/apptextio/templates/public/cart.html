@@ -40,8 +40,8 @@
 
 
     {% if orderitems %}
-    <div class="flex flex-1  gap-10 w-full">
-        <div class="w-8/12 border rounded-lg mt-5 ">
+    <div class="flex flex-1  gap-10 w-full h-screen">
+        <div class="w-8/12  mt-5 ">
             <div class=" rounded-lg px-5 py-3 flex flex-1 justify-between items-center border bg-white">
                 <span>Item{{numbers|pluralize}}</span>
                 <a href="" class="flex items-center justify-center border rounded-lg">
@@ -51,38 +51,38 @@
 
 
             <div class="flex flex-col gap-4 mt-3">
-                {% for i in orderitems %}
+                {% for item in orderitems %}
                 <div class="bg-white w-full self-start">
                     <div class="flex flex-col gap-2 border-t py-5">
                         <div class="flex flex-1 gap-4 ">
                             <div class="w-2/12 flex justify-center items-center ">
                                 <div class="w-[100px] h-[100px]">
-                                    <img src="{{i.product_id.image.url}}" class="object-cover h-[100px] w-[100px]"
+                                    <img src="{{item.variant_product.image.url}}" class="object-cover h-[100px] w-[100px]"
                                         alt="">
                                 </div>
                             </div>
                             <div class="w-10/12">
                                 <div class="flex flex-col items-start justify-between  h-full">
-                                    <h1 class="text-normal font-semibold truncate w-[20]"
-                                        title="{{o.product_id.title}}">
-                                        {{i.product_id.title | truncatewords:10}}</h1>
-                                    <h1 class="text-sm font-bold  w-[20]">Brand: {{i.product_id.brand}}</h1>
-                                    <h2>Price: ₹{{i.total_discount_price}} <del
-                                            class="text-normal text-slate-600">₹{{i.total_price}}</del>
-                                        <span
-                                            class="text-green-700 font-semibold text-sm">{{i.getpercentage|floatformat:0}}%Off</span>
+                                    <h1 class="text-normal font-semibold truncate w-[20]" title="{{item.variant_product.product.title}}">
+                                        {{item.variant_product.product.title | truncatewords:10}}
+                                    </h1>
+                                    <h1 class="text-sm font-bold  w-[20]">Brand: <span class="font-normal px-2">{{item.variant_product.product.brand}}</span></h1>
+                                    <h2 class="font-semibold">Size : <span class="font-normal px-2">{{item.variant_product.size}}</span></h2>
+                                    <h2 class="font-semibold">Price: <span class="font-normal px-2">₹{{item.total_discount_price}}</span> <del
+                                            class="text-sm text-slate-600 font-normal">₹{{item.total_price}}</del>
+                                        <span class="text-green-700 font-semibold text-sm">{{item.getpercentage|floatformat:0}}%Off</span>
                                     </h2>
                                 </div>
                             </div>
                         </div>
                         <div class="flex flex-1 mt-2  justify-center   items-center px-5 gap-3">
-                            <a href="{% url 'removefromcart' i.product_id.id %}"
+                            <a href="{% url 'removefromcart' item.variant_product.id %}"
                                 class="bg-slate-100 rounded-full text-sm px-3 py-1">-</a>
-                            <span class="px-3 py-1 text-sm border">{{i.qty}}</span>
-                            <a href="{% url 'addtocart' i.product_id.id%}"
+                            <span class="px-3 py-1 text-sm border">{{item.qty}}</span>
+                            <a href="{% url 'addtocart' item.variant_product.id%}"
                                 class="bg-slate-100 rounded-full text-sm  px-2 py-1">+</a>
                             <div class="flex flex-1 justify-start px-4">
-                                <a href="{% url 'deletefromcart' i.product_id.id%}" class=" font-bold text-xl ">
+                                <a href="{% url 'deletefromcart' item.variant_product.id%}" class=" font-bold text-xl ">
                                     <span>remove</span>
 
                                 </a>

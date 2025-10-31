@@ -24,6 +24,10 @@ class Variant(models.Model):
 
     def __str__(self):
         return f"{self.product.title} - {self.color} - {self.size.get_size_display()}"
+    
+    def get_discount_percentage(self):
+        percentage = ((self.price - self.dis_price)/self.price)*100
+        return percentage
 
 class SizeVariant(models.Model):
     SIZE_CHOICES = [
@@ -73,7 +77,6 @@ class OrderItem(models.Model):
         return total_discount_price
     
     def getpercentage(self):
-    
         return (self.total_price()-self.total_discount_price())/self.total_price()*100
 
 class Order(models.Model):
@@ -137,9 +140,12 @@ class Order(models.Model):
 class CompleteOrderItem(models.Model):
     product_title = models.CharField(max_length=200)
     product_brand = models.CharField(max_length=50)
+    product_size = models.CharField(max_length=10,default="M")
+    product_color = models.CharField(max_length=30,default="color")
     product_price = models.DecimalField(max_digits=10,decimal_places=2)
     product_discount_price = models.DecimalField(max_digits=10,decimal_places=2)
     product_img = models.ImageField(upload_to="complete_order_item/")
+    product_discreption = models.TextField(default="This is a Product")
     order = models.ForeignKey("CompleteOrder",on_delete=models.CASCADE,related_name="items")
     qty = models.PositiveIntegerField(default=1)
 
@@ -168,6 +174,10 @@ class CompleteOrder(models.Model):
 
     def __str__(self):
         return self.user.username
+    
+    def dis_percentage(self):
+        percentage = (self.discount/self.price)*100
+        return percentage
 
 
 class Coupon(models.Model):

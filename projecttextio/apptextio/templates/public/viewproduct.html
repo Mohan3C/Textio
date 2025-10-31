@@ -54,10 +54,10 @@
                 <img src="{{display_variant.image.url}}" alt="random photo" class="object-cover h-[60vh] w-full">
             </div>
             <div class="flex flex-1 mt-3 gap-3 ">
-                <a href=""
+                <a href="{% url 'addtocart' display_variant.id %}"
                     class="text-lg font-semibold bg-[#FF8C00] items-center justify-center flex w-full py-2 px-4 bg">Add
                     To Cart</a>
-                <a href=""
+                <a href="{% url 'buynow' display_variant.id %}"
                     class="text-lg font-semibold bg-[#FC4C02] text-white items-center justify-center flex w-full py-2 px-4 bg">Buy
                     Now</a>
             </div>
@@ -72,27 +72,40 @@
                 <div class="flex flex-1 items-center">
                     <p class="text-lg font-semibold mr-2">Price :</p>
                     <span class="mr-3  font-medium"> ₹{{display_variant.dis_price}} <del
-                            class="mr-3 text-sm text-gray-700">₹{{display_variant.price}} </del> <span
-                            class="text-green-700 text-sm">{{display_variant.getprecentage}} %Off</span></span>
+                            class="mr-3 text-sm text-gray-700">₹{{display_variant.price}} </del>
+                            <!-- discount percentage is not working -->
+                            <span class="text-green-700 text-sm">{{display_variant.get_discount_percentage|floatformat:2}} %Off</span></span>
                 </div>
                 <div class="flex flex-1 gap-5 items-center">
                     <span class="font-semibold">Size : {{display_variant.size}}</span>
+                </div>
+                <div class="flex flex-row ">
+                    <span class="font-semibold pr-2">Available sizes :</span>
+                    {% for v in size_variants %}
+                    {% if v.size.id in available_sizes %}
+                        <a href="{% url 'viewproduct' product.id %}?size={{v.size.id}}{% if selected_color %}&color={{ selected_color}}{% endif %}" 
+                            class="{% if selected_size and v.size.id == display_variant.size.id %}border-2 border-black {% endif %}text-sm font-semibold py-1 rounded-sm px-3 mx-3 bg-gray-100 hover:bg-gray-300">{{v.size}}</a>
+                            
+                    {% else %}
+                        <span class="text-sm font-semibold py-1 rounded-sm px-3 mx-3 bg-gray-100 hover:bg-gray-300 cursor-not-allowed opacity-40">{{v.size.size}}</span>
+                    {% endif %}
+                    {% endfor %}
 
-                    <!-- {% for size in products.size.all %}
-
-                    <a href="#"
-                        class="text-sm font-semibold py-1 rounded-sm px-3 bg-gray-200 hover:bg-gray-300">{{size.get_size_display}}</a>
-                    {% endfor %} -->
 
                 </div>
 
                 <div class="flex flex-row ">
                     <span class="font-semibold pr-4">Color :</span>
-                    {% for variant in variants %}
-                    <a href="?variant={{ variant.id }}" class="border-[px] rounded-lg mx-2 cursor-pointer">
-                        <img src="{{ variant.image.url }}" alt="{{ variant.size }}"
-                            class="{% if variant.id == display_variant.id %}border-2 border-black {% else %}solid {% endif %} size-[90px] object-cover rounded-lg">
-                    </a>
+                    {% for variant in color_variants %}
+                    {% if variant.color in available_colors %}
+                        <a href="{% url 'viewproduct' product.id %}?color={{ variant.color }}{% if selected_size %}&size={{ selected_size }}{% endif %}" 
+                            class="border-[px] rounded-lg mx-2 cursor-pointer">
+                            <img src="{{ variant.image.url }}" alt="{{ variant.color }}" 
+                                class="{% if selected_color and variant.color == selected_color %}border-2 border-black {% endif %} size-[90px] object-cover rounded-lg">
+                        </a>
+                    {% else %}
+                        <img src="{{variant.image.url}}" alt="{{variant.color}}" class="cursor-not-allowed opacity-40 size-[90px] object-cover rounded-lg">
+                    {% endif %}
                     {% endfor %}
                 </div>
 
@@ -107,6 +120,7 @@
 
     </div>
     <!-- Related product here  -->
+    {% if items %}
     <div class="flex flex-col  px-[5%] ">
         <h2 class="text-center text-2xl font-semibold mt-5">Related products</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 py-[2%] gap-5">
@@ -141,6 +155,7 @@
         </div>
 
     </div>
+    {% endif %}
     {% include 'public/footer.html' %}
 </div>
 

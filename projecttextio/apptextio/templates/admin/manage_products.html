@@ -9,52 +9,10 @@
     <a href="{% url 'insert-product' %}" class="text-white bg-green-600 px-3 py-2 rounded">Insert Product</a>
 </div>
 <div class="relative overflow-x-auto shadow-md sm:rounded-lg mt-5">
-    <!-- <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-                <th scope="col" class="px-6 py-3">Id </th>
-                <th scope="col" class="px-6 py-3">Title</th>
-                <th scope="col" class="px-6 py-3">Brand</th>
-                <th scope="col" class="px-6 py-3">Description</th>
-                <th scope="col" class="px-6 py-3">Image</th>
-                <th scope="col" class="px-6 py-3">price</th>
-                <th scope="col" class="px-6 py-3 text-right pr-[5%]">
-                    Action
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in products %}
-            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                <th scope="row" class="px-6 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    {{ product.id }}
-                </th>
-                <td class="px-6 py-3 text-sm">{{product.title}}</td>
-                <td class="px-6 py-3 text-sm">{{product.brand}}</td>
-                <td class="px-6 py-3 text-sm ">{{ product.description|truncatewords:5 }}</td>
-                <td class="px-6 py-3 text-sm"> <img src="{{product.image.url}}" alt="" class="size-[50px]"> </td>
-                <td class="px-6 py-3 text-sm">{{product.price }}</td>
-
-                <td class="px-6 py-3 text-right space-x-4">
-                    <a href="{% url 'deleteproduct' product.id %}"
-                        class="font-medium text-red-600 dark:text-red-500 hover:underline">Delete</a>
-                    <a href=""
-                        class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a> 
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="3" class="px-6 py-4 text-center text-gray-500 dark:text-gray-400">
-                    No categories found.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table> -->
-    <table class="mt-5 w-full">
+    <table class="my-5 w-full">
         <thead class="">
-            <tr class="flex justify-between px-10 border py-1 ">
-                <th class="">Product and Variant</th>
+            <tr class="flex justify-between px-10 border py-1 rounded-t-lg">
+                <th class="py-2 ">Product and Variant</th>
             </tr>
         </thead>
         <tbody>
@@ -62,10 +20,15 @@
             <tr class="flex justify-between border py-1 px-10">
                 <td class="">
                     <div class="my-2">
-                        <div class="flex flex-1">
-                            <span class="">{{ forloop.counter }}.</span>
-                            <h2 class="px-1">Product : </h2>
-                            <h2>{{ product.title }}</h2>
+                        <div class="flex flex-1 justify-between">
+                            <div class="flex flex-row font-semibold">
+                                <span class="">{{ forloop.counter }}.</span>
+                                <h2 class="px-1 ">Product : </h2>
+                                <h2 class="">{{ product.title }}</h2>
+                            </div>
+                            <div class="">
+                                <a href="{% url 'edit_product' product.id %}" class="text-blue-500 text-sm">Edit Product</a>
+                            </div>
                         </div>
                         <div class="flex flex-1">
                             <h2 class="px-4">Category : </h2>
@@ -75,10 +38,11 @@
                             <h2 class="px-4">Brand : </h2>
                             <h2>{{ product.brand }}</h2>
                         </div>
-                        <div class="flex flex-col px-10">
+                        <div class="flex flex-col pl-10">
                             {% for variant in product.variants.all %}
                             <div class="flex flex-row justify-between py-1 gap-10">
                                 <div class=" flex flex-row">
+                                    <h2 class="px-2">{{ forloop.counter }}.</h2>
                                     <h2 class="px-2">Variant : </h2>
                                     <h2 class="px-2">size-{{variant.size}}</h2>
                                     <h2 class="px-2">Color-{{variant.color}}</h2>
@@ -89,14 +53,17 @@
                                     <img class="size-[70px] mr-[20px]" src="{{variant.image.url}}" alt="varient image">
                                 </div>
                                 <div class="">
-                                    <a href="{% url 'editvariant' variant.id %}" class="text-blue-400 text-sm">[edit variant]</a>
+                                    <a href="{% url 'editvariant' variant.id %}" class="text-blue-500 text-sm">[edit variant]</a>
+                                </div>
+                                <div class="">
+                                    <a href="{% url 'delete_variant' variant.id %}" class="text-red-600 text-sm">Delete</a>
                                 </div>
 
                             </div>
 
                             {% endfor %}
                             <div class="">
-                                <a href="{% url 'addvariant' product.id %}" class="text-blue-400 text-sm">[add
+                                <a href="{% url 'addvariant' product.id %}" class="text-blue-500 text-sm">[add
                                     varient]</a>
                             </div>
 

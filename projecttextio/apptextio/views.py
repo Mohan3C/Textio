@@ -60,7 +60,7 @@ def assign_item_to_order(request,guest_user,user):
 
       for item in orderitems:
         if user_order:
-          existitem = OrderItem.objects.filter(isordered=False,product=item.product,order=user_order).first()
+          existitem = OrderItem.objects.filter(isordered=False,variant_product=item.variant_product,order=user_order).first()
 
           if existitem:
             existitem.qty += 1
@@ -111,17 +111,13 @@ def user_login(request):
   return render(request,"registration/login.html")
 
 def home(request):
-    products = Product.objects.prefetch_related('variants')
-
+    
+    # for random product in home page 
+    products = list(Product.objects.prefetch_related('variants'))
+    random.shuffle(products)
+  
     for product in products:
       product.first_variant = product.variants.first()
-
-    category = Category.objects.all()
-
-    #  for random product in home page 
-    # products = list(Product.objects.prefetch_related('variants')[:20])
-    # random.shuffle(products)
-    # page_products = products[:20]
 
 
 
@@ -168,22 +164,61 @@ def viewproduct(request,id):
   product = Product.objects.prefetch_related('variants').get(id=id)
 
   variants = product.variants.all()
-  display_variant =variants.first()
+  display_variant = variants.first()
 
-  variant_id = request.GET.get("variant")
-  if variant_id:
-    display_variant = variants.filter(id=variant_id).first() or display_variant
+  selected_size = request.GET.get('size') or None
+  selected_color = request.GET.get("color") or None
+
+  color_variants = []
+  colors = set()
+
+  for v in variants:
+    if v.color not in colors:
+      color_variants.append(v)
+      colors.add(v.color)
+
+  size_variants = []
+  sizes = set()
+
+  for v in variants:
+    if v.size not in sizes:
+      size_variants.append(v)
+      sizes.add(v.size)
+  
+  if selected_color and selected_size:
+    display_variant = variants.filter(color=selected_color,size=selected_size).first()
+    display_variant = variants.filter(color = selected_color,size=selected_size).first()
+
+    available_sizes = list(set(variants.filter(color=selected_color).values_list('size__id', flat=True)))
+    available_colors = list(set(variants.filter(size=selected_size).values_list('color', flat=True)))
+  elif selected_color:
+    display_variant = variants.filter(color=selected_color).first()
+
+    available_sizes = list(set(variants.filter(color=selected_color).values_list('size__id', flat=True)))
+    available_colors = list(set(variants.values_list('color', flat=True)))
+  elif selected_size:
+    display_variant = variants.filter(size=selected_size).first()
+
+    available_colors = list(set(variants.filter(size=selected_size).values_list('color', flat=True)))
+    available_sizes = list(set(variants.values_list('size__id', flat=True)))
+  else:
+    available_sizes = list(set(variants.values_list('size__id', flat=True)))
+    available_colors = list(set(variants.values_list('color', flat=True)))
 
   items = Product.objects.exclude(pk=id).filter(category = product.category)
   for item in items:
     item.first_variant = item.variants.first()
 
   context = {
-    'products':products,
-    'display_variant':display_variant,
-    'variants':variants,
-    "items":items,
     "product":product,
+    'display_variant':display_variant,
+    'color_variants':color_variants,
+    'size_variants':size_variants,
+    'selected_color':selected_color,
+    'selected_size':selected_size,
+    'available_colors':available_colors,
+    'available_sizes':available_sizes,
+    "items":items,
   }
   
   return render(request, 'public/viewproduct.html',context)
@@ -193,13 +228,23 @@ def products(request,id=None):
 
   context ={}
   if id is not None:
-    filter_products = Product.objects.filter(category = id)
+    filter_products = list(Product.objects.prefetch_related('variants').filter(category = id))
+    random.shuffle(filter_products)
+
+    for product in filter_products:
+      product.display_variant = product.variants.first()
+
     context["filter_category"] = get_object_or_404(Category,id=id)
-    context["numbers"] = filter_products.count()
+    context["numbers"] = len(filter_products)
     paging = Paginator(filter_products,16)
   else:
-    products = Product.objects.all()
-    context["no_of_products"] = products.count()
+    products = list(Product.objects.all())
+    random.shuffle(products)
+
+    for product in products:
+      product.display_variant = product.variants.first()
+
+    context["no_of_products"] = len(products)
     paging = Paginator(products,16)
   
   page_number = request.GET.get("page")
@@ -213,7 +258,7 @@ def products(request,id=None):
 
 def buynow(request,id):
   if request.user.is_authenticated:
-    product = get_object_or_404(Product,id = id)  
+    product = get_object_or_404(Variant,id = id)  
 
     addresses = Address.objects.filter(user=request.user)
     if addresses.exists():
@@ -236,7 +281,7 @@ def buynow(request,id):
 
     orderitem = OrderItem()
     orderitem.isordered = False
-    orderitem.product = product
+    orderitem.variant_product = product
     orderitem.order = order
     orderitem.save()
 
@@ -277,6 +322,7 @@ def checkoutaddress(request,id):
   if selected_address_id:
     order.address = Address.objects.filter(id=selected_address_id,user=request.user)
 
+  selected_address = None
   other_addresses = None
   if order.address:
     selected_address = order.address
@@ -315,9 +361,9 @@ def addAddressInfo(request):
       return redirect(cart)  
 
 
-def addtocart(request,product_id):
+def addtocart(request,variant_id):
   if request.user.is_authenticated:
-    product = get_object_or_404(Product,id = product_id)
+    product = get_object_or_404(Variant, id = variant_id)
   
     addresses = Address.objects.filter(user=request.user)
     if addresses.exists():
@@ -327,19 +373,18 @@ def addtocart(request,product_id):
 
     if orders.exists():
       order = orders[0]
-      existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order). exists()
+      existorderitem = OrderItem.objects.filter(isordered=False,variant_product=product,order=order). exists()
       order.address = last_address if addresses else None
 
 
       if existorderitem:
-        existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
+        existoi = OrderItem.objects.get(isordered=False,variant_product=product,order=order)
         existoi.qty += 1
         existoi.save()
       else:
         oi = OrderItem()
-        oi.user = request.user
         oi.isordered = False
-        oi.product = product
+        oi.variant_product = product
         oi.order = order
       
         oi.save()
@@ -351,32 +396,31 @@ def addtocart(request,product_id):
       o.save()
 
       oi = OrderItem()
-      oi.user = request.user
       oi.isordered = False
-      oi.product = product
+      oi.variant_product = product
       oi.order = o
     
       oi.save()
 
     return redirect("cart")
   else:
-    product = get_object_or_404(Product,id = product_id)
+    product = get_object_or_404(Variant,id = variant_id)
     user = temp_User(request)
 
     orders = Order.objects.filter(temp_user = user, isordered = False,from_buynow=False)
 
     if orders.exists():
       order = orders[0]
-      existorderitemi = OrderItem.objects.filter(isordered=False,product=product,order=order). exists()
+      existorderitemi = OrderItem.objects.filter(isordered=False,variant_product=product,order=order). exists()
 
       if existorderitemi:
-        existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
+        existoi = OrderItem.objects.get(isordered=False,variant_product=product,order=order)
         existoi.qty += 1
         existoi.save()
       else:
         oi = OrderItem()
         oi.isordered = False
-        oi.product = product
+        oi.variant_product = product
         oi.order = order
         oi.save()
     else:
@@ -386,7 +430,7 @@ def addtocart(request,product_id):
 
       oi = OrderItem()
       oi.isordered = False
-      oi.product = product
+      oi.variant_product = product
       oi.order = o
     
       oi.save()
@@ -401,13 +445,8 @@ def cart(request):
     if addresses.exists():
       last_address = addresses.last()
     order = Order.objects.filter(user=request.user,isordered = False,from_buynow=False).first()
-    # if not order:
-    #   order = Order()
-    #   order.user = request.user
-    #   order.from_buynow = False
-    #   order.address = last_address if addresses else None
-    #   order.save()
-
+   
+    orderitems = None
     if order:
       orderitems = OrderItem.objects.filter(order=order,isordered = False)
     
@@ -429,17 +468,23 @@ def cart(request):
     return render(request,"public/cart.html",{"order":order,"orderitems":orderitems,"form":form})
 
 
-def removefromcart(request,product_id):
-  product = get_object_or_404(Product,id = product_id)
+def removefromcart(request,variant_id):
+  product = get_object_or_404(Variant,id = variant_id)
   
-  orders = Order.objects.filter(user=request.user, isordered = False)
+  if request.user.is_authenticated:
+    orders = Order.objects.filter(user=request.user, isordered = False)
+  else:
+    user = temp_User(request)
+
+    orders = Order.objects.filter(temp_user=user)
+
 
   if orders.exists():
     order = orders[0]
-    existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order).exists()
+    existorderitem = OrderItem.objects.filter(isordered=False,variant_product=product,order=order).exists()
 
     if existorderitem:
-      existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
+      existoi = OrderItem.objects.get(isordered=False,variant_product=product,order=order)
 
       if existoi.qty >1:
         existoi.qty -= 1
@@ -451,17 +496,22 @@ def removefromcart(request,product_id):
 
 
 
-def deletefromcart(request,product_id):
-  product = get_object_or_404(Product,id = product_id)
+def deletefromcart(request,variant_id):
+  product = get_object_or_404(Variant,id = variant_id)
   
-  orders = Order.objects.filter(user=request.user, isordered = False)
+  if request.user.is_authenticated:
+    orders = Order.objects.filter(user=request.user, isordered = False)
+  else:
+    user = temp_User(request)
+
+    orders = Order.objects.filter(temp_user=user)
 
   if orders.exists():
     order = orders[0]
-    existorderitem = OrderItem.objects.filter(isordered=False,product=product,order=order).exists()
+    existorderitem = OrderItem.objects.filter(isordered=False,variant_product=product,order=order).exists()
 
     if existorderitem:
-      existoi = OrderItem.objects.get(isordered=False,product=product,order=order)
+      existoi = OrderItem.objects.get(isordered=False,variant_product=product,order=order)
 
       existoi.delete()
 
@@ -548,14 +598,15 @@ def payment(request):
   
 def completeorderitem(request,item,completeorder):
   complete_order_item = CompleteOrderItem()
-  complete_order_item.product_title = item.product.title
-  complete_order_item.product_brand = item.product.brand
-  complete_order_item.product_price = item.product.price
-  complete_order_item.product_discount_price = item.product.dis_price
+  complete_order_item.product_title = item.variant_product.product.title
+  complete_order_item.product_brand = item.variant_product.product.brand
+  complete_order_item.product_discreption = item.variant_product.product.description
+  complete_order_item.product_price = item.variant_product.price
+  complete_order_item.product_discount_price = item.variant_product.dis_price
 
-  if item.product_id.image:
-    filename = os.path.basename(item.product.image.name)  
-    file_content = ContentFile(item.product.image.read())
+  if item.variant_product.image:
+    filename = os.path.basename(item.variant_product.image.name)  
+    file_content = ContentFile(item.variant_product.image.read())
     complete_order_item.product_img.save(
         filename,
         file_content,
@@ -583,7 +634,7 @@ def complete_order(request,order):
 
   # address save
   completeorder.name = order.address.name
-  completeorder.contact = order.address.alt_contact
+  completeorder.contact = order.address.contact
   completeorder.street = order.address.street
   completeorder.landmark = order.address.landmark
   completeorder.state = order.address.state

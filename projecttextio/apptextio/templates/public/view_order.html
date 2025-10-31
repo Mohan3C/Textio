@@ -73,11 +73,13 @@
                         </div>
                         <div class="flex flex-col justify-between w-full">
                             <h1 class="font-semibold">{{item.product_title}}</h1>
-                            <p class="text-gray-600 text-sm">Brand: {{ item.product_brand }}</p>
+                            <h2 class="text-sm font-semibold">Brand: <span class="font-normal">{{ item.product_brand }}</span></h2>
+                            <h2 class="text-sm font-semibold">Size :<span class="px-2 font-normal">{{item.product_size}}</span></h2>
                             <div class="flex justify-between mt-2">
-                                <div class="flex gap-4 items-center">
-                                    <span class="font-bold ">₹{{ item.product_discount_price }}</span>
-                                    <del class="font-semibold text-sm">₹{{ item.product_price }}</del>
+                                <div class="flex items-center font-semibold">Price :
+                                    <span class="font-semibold px-2">₹{{ item.product_discount_price }}</span>
+                                    <del class="font-normal text-sm">₹{{ item.product_price }}</del>
+                                    <span class="px-1 text-green-600">{{item.dis_percentage}}%Off</span>
                                 </div>
                                 <span class="text-sm text-gray-500 px-10 font-semibold">Qty: {{ item.qty }}</span>
                             </div>

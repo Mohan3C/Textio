@@ -6,9 +6,10 @@
 
 
 
-<div class="flex flex-col">
-    <h2 class="text-2xl font-semibold ">Insert Products Here</h2>
+<div class="flex flex-col mb-4">
+    <h2 class="text-2xl font-semibold ">{% if productform %}Insert Products Here {% else %}Edit Product Detail {% endif %}</h2>
 
+    {% if productform %}
     <form action="{% url 'insert-product' %}" method="post" enctype="multipart/form-data" class="text-md">
         {% csrf_token %}
         {{ productform|crispy }}
@@ -24,6 +25,14 @@
 
         <input type="submit" value="insert product" class="text-white bg-teal-600 px-3 py-2 rounded w-full">
     </form>
+    {% else %}
+    <form action="{% url 'edit_product' product.id %}" method="post" enctype="multipart/form-data" class="text-md">
+        {% csrf_token %}
+        {{ edit_productform|crispy }}
+
+        <input type="submit" value="Save Changes" class="text-white bg-teal-600 px-3 py-2 rounded w-full">
+    </form>
+    {% endif %}
 </div>
 
 

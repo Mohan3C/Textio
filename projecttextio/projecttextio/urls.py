@@ -15,16 +15,16 @@ urlpatterns = [
     path("allproducts/<int:id>/",products,name="filter"),
     path("address/<int:id>/",checkoutaddress ,name="address"),
     path("address-info/",addAddressInfo ,name="address-info"),
-    path("buynow/<int:id>/",buynow ,name="buynow"),
     path("success-page/",ordercomplete ,name="ordercomplete"),
     path("order/view/<int:order_id>/",view_my_order ,name="vieworder"),
     path("profile/",profile,name="profile"),
 
     # cart and coupon urls
     path("home/product/cart",cart,name="cart"),
-    path("order/<int:product_id>/add-to-cart/",addtocart,name="addtocart"),
-    path("order/<int:product_id>/remove-from-cart/",removefromcart,name="removefromcart"),
-    path("order/<int:product_id>/delete-from-cart/",deletefromcart,name="deletefromcart"),
+    path("buynow/<int:id>/",buynow ,name="buynow"),
+    path("order/<int:variant_id>/add-to-cart/",addtocart,name="addtocart"),
+    path("order/<int:variant_id>/remove-from-cart/",removefromcart,name="removefromcart"),
+    path("order/<int:variant_id>/delete-from-cart/",deletefromcart,name="deletefromcart"),
     path("my-order/complete/",my_order,name="my_order"),
     path("addCoupon/", addCoupon, name="addCoupon"),
     path("Couponadd/<int:id>/", buynowaddCoupon, name="buynowaddCoupon"),
@@ -52,8 +52,10 @@ urlpatterns = [
     path("manage-payment/",managePayment,name="managepayment"),
     path("delete-product/<int:id>/",deleteProduct ,name="deleteproduct"),
     path("insert-product/",insertProduct,name="insert-product"),
+    path("edit_product/<int:id>/",edit_product,name="edit_product"),
     path("variant/<int:id>/add",add_variant,name="addvariant"),
     path("variant/<int:id>/edit",edit_variant,name="editvariant"),
+    path("variant/<int:id>/delete",delete_variant,name="delete_variant"),
     path("delete-product/<int:id>/",deleteCategory ,name="delete-product"),
 
 

@@ -4,7 +4,7 @@
 
 
 
-<div class="flex flex-col">
+<div class="flex flex-col w-full">
   <div class="flex  flex-1 items-start justify-start px-[5%] mt-3">
     <nav class="flex " aria-label="Breadcrumb">
       <ol class="inline-flex items-center space-x-1 md:space-x-2 rtl:space-x-reverse">
@@ -83,25 +83,20 @@
       <h1 class="pb-2">Showing {{page_obj.start_index}}-{{page_obj.end_index}} of {{numbers}} results{% if filter_category %} for "{{ filter_category.name }}"{% endif %}</h1>
       {% endif %}
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 items-stretch ">
-        {% for i in page_obj %}
+        {% for product in page_obj %}
         <!-- i make changes in loop for pagination. i change products to page_obj  -->
-        <a href="{% url 'viewproduct' i.id %}" class="bg-slate-100 h-full rounded-lg">
+        <a href="{% url 'viewproduct' product.id %}" class="bg-slate-100 h-full rounded-lg">
 
           <div class=" border rounded-lg shadow-lg flex flex-col ">
-            <img src="{{i.image.url}}" class="w-full h-80 object-cover  rounded-t-lg " alt="{{i.title}}">
+            <img src="{{product.display_variant.image.url}}" class="w-full h-80 object-cover  rounded-t-lg " alt="{{product.title}}">
 
             <div class=" flex flex-col justify-between flex-grow">
-              <h2 class="px-3 font-bold truncate " title="{{i.title}}">{{i.title}}</h2>
-              <p class="px-3 font-semibold truncate  ">{{i.brand}}</p>
-              <div class="px-3 text-md font-medium"> Size : {% for size in i.size.all%}
-                <span>
-                  {{size.get_size_display}}|
-                </span>
-                {% endfor %}
-              </div>
+              <h2 class="px-3 font-bold truncate " title="{{product.title}}">{{product.title}}</h2>
+              <p class="px-3 font-semibold truncate  ">{{product.brand}}</p>
+              
               <div class="px-3 py-1 text-md font-semibold"> Price :
-                <span class="text-lg font-semibold">₹{{ i.dis_price }}</span>
-                <del class="text-md text-gray-700 ml-2">₹{{ i.price }}</del>
+                <span class="text-lg font-semibold">₹{{ product.display_variant.dis_price }}</span>
+                <del class="text-md text-gray-700 ml-2">₹{{ product.display_variant.price }}</del>
               </div>
             </div>
           </div>
