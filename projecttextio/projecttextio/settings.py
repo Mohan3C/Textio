@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8uh49!a!uffa30bo!fvx_jz+&#xff)sjup-i&ozt@@f!-8e@!t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
@@ -143,4 +143,9 @@ LOGOUT_REDIRECT_URL = "/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 KEY = 'rzp_test_RJKzOMnn4i4LG0'
-SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
+
+# for deployment i hide my secret key
+# SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
+
+import os
+SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')
