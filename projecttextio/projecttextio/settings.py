@@ -154,8 +154,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -170,24 +170,23 @@ LOGOUT_REDIRECT_URL = "/"
 #  always put media url in the bottom
 
 # Local vs Render logic
-USE_CLOUDINARY = os.environ.get("RENDER", False)
+USE_CLOUDINARY = os.environ.get("RENDER_EXTERNAL_URL") is not None
 
 if USE_CLOUDINARY:
-    # Cloudinary settings for Render
     INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
-
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
         'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
         'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
 
-    MEDIA_URL = '/media/'  # Cloudinary handles actual storage
+    MEDIA_URL = '/media/'
 else:
-    # Local settings for development
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
+
 
 
 
