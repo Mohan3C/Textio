@@ -60,6 +60,8 @@ INSTALLED_APPS = [
     "apptextio",
     'crispy_forms',
     'crispy_tailwind',
+    'cloudinary',
+    'cloudinary_storage',
 
 ]
 
@@ -170,9 +172,25 @@ LOGOUT_REDIRECT_URL = "/"
 
 #  always put media url in the bottom
 
-MEDIA_URL = "media/"
+# Local vs Render logic
+USE_CLOUDINARY = os.environ.get("RENDER", False)
 
-MEDIA_ROOT = BASE_DIR / 'media'
+if USE_CLOUDINARY:
+    # Cloudinary settings for Render
+    INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
+
+    MEDIA_URL = '/media/'  # Cloudinary handles actual storage
+else:
+    # Local settings for development
+    MEDIA_URL = '/media/'
+    MEDIA_ROOT = BASE_DIR / 'media'
 
 
 
