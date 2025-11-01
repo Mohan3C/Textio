@@ -608,16 +608,25 @@ def completeorderitem(request,item,completeorder):
   complete_order_item.product_price = item.variant_product.price
   complete_order_item.product_discount_price = item.variant_product.dis_price
 
-  if item.variant_product.image:
-    filename = os.path.basename(item.variant_product.image.name)  
-    file_content = ContentFile(item.variant_product.image.read())
-    complete_order_item.product_img.save(
-        filename,
-        file_content,
-        save=False
-    )
+  # if item.variant_product.image:
+  #   filename = os.path.basename(item.variant_product.image.name)  
+  #   file_content = ContentFile(item.variant_product.image.read())
+  #   complete_order_item.product_img.save(
+  #       filename,
+  #       file_content,
+  #       save=False
+  #   )
+  # else:
+  #   complete_order_item.product_img = None
+
+  if item.variant_product.image and item.variant_product.image.storage.exists(item.variant_product.image.name):
+    with item.variant_product.image.open('rb') as img_file:
+        file_content = ContentFile(img_file.read())
+        filename = os.path.basename(item.variant_product.image.name)
+        complete_order_item.product_img.save(filename, file_content, save=False)
   else:
     complete_order_item.product_img = None
+
 
   complete_order_item.order = completeorder
   complete_order_item.qty = item.qty
