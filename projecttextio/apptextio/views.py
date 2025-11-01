@@ -588,11 +588,13 @@ def payment(request):
       order.save()
       return redirect("ordercomplete")
     
-    client = razorpay.Client(auth=(settings.KEY, settings.SECRET))
+    client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_SECRET_KEY))
     payment = client.order.create({'amount': float(order.getpayableamount()*100) , 'currency': 'INR', 'payment_capture': 1})
     order.razor_pay_order_id = payment['id']
     order.save()
-    return render(request, 'public/make-payment.html', {'payment':payment})
+
+    razorpay_key = settings.RAZORPAY_KEY_ID
+    return render(request, 'public/make-payment.html', {'payment':payment,'razorpay_key':razorpay_key})
   else:
     return redirect('address', id=order.id)
   

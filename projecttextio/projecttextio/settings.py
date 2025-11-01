@@ -22,14 +22,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-8uh49!a!uffa30bo!fvx_jz+&#xff)sjup-i&ozt@@f!-8e@!t'
 
-KEY = 'rzp_test_RJKzOMnn4i4LG0'
-
-# for deployment i hide my secret key
-SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
 
 import os
-SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')
-SECRET = os.environ.get('SECRET', 'unsafe-default-key')
+
+
+# Razorpay keys
+RAZORPAY_KEY_ID = os.environ.get('RAZORPAY_KEY_ID', 'rzp_test_RJKzOMnn4i4LG0')
+RAZORPAY_SECRET_KEY = os.environ.get('RAZORPAY_SECRET_KEY', 'skDdejIqeeky1G0kAPw2wbE2')
+
+# Django secret key (for security)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'unsafe-default-key')
+
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -157,6 +160,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 MEDIA_URL = "media/"
 
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 

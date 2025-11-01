@@ -54,10 +54,10 @@
 <!-- Main Content -->
 <script>
     var options = {
-        "key": "rzp_test_RJKzOMnn4i4LG0", // Enter the Key ID generated from the Dashboard
+        "key": "{{ razorpay_key }}", // Enter the Key ID generated from the Dashboard
         "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
         "currency": "INR",
-        "name": "Ecom",
+        "name": "TEXTio",
         "description": "Test Transaction",
         "image": "https://example.com/your_logo",
         "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
