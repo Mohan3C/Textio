@@ -650,12 +650,24 @@ def complete_order(request,order):
 
   return completeorder
 
+# try to debug paymen success in render
+import logging
+logger = logging.getLogger(__name__)
+
 @login_required
 def ordercomplete(request):
 
+  logger.warning("ordercomplete view triggered")
+
   order_id = request.GET.get('razorpay_order_id')
-  
-  order = Order.objects.get(razor_pay_order_id = order_id)
+  logger.warning(f"Order ID received: {order_id}")
+
+  try:
+    order = Order.objects.get(razor_pay_order_id=order_id)
+  except Order.DoesNotExist:
+    logger.error(f"No Order found with razor_pay_order_id={order_id}")
+    return render(request, 'public/error_page.html', {"message": "Order not found"})
+
   order.isordered = True
   order.save()
   completeorder = complete_order(request,order)
