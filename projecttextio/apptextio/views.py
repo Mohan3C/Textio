@@ -657,10 +657,6 @@ def complete_order(request,order):
 @login_required
 def ordercomplete(request):
 
-  #  i add this for debugging
-  logger.warning("Payment success view reached")
-  print("✅ Payment success view reached")
-
   order_id = request.GET.get('razorpay_order_id')
   
   order = Order.objects.get(razor_pay_order_id = order_id)
