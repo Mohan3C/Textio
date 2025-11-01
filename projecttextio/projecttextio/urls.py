@@ -30,6 +30,7 @@ urlpatterns = [
     path("Couponadd/<int:id>/", buynowaddCoupon, name="buynowaddCoupon"),
     path("removecouponfrombuynow/<int:coupon_id>/", removecouponfrombuynow, name="removecouponfrombuynow"),
     path("makepayment/", payment, name="makepayment"),
+    path("/thank_you/", success_payment, name="success_payment"),
     path("RemoveCoupon/<int:coupon_id>/", RemoveCoupon, name="RemoveCoupon"),
     path("admin/coupons", manageCoupons, name="manageCoupons"),
     path("admin/coupons/<int:id>/delete/", delete_coupon, name="deletecoupon"),

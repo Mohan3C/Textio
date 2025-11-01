@@ -659,53 +659,46 @@ def complete_order(request,order):
 
   return completeorder
 
-# try to debug paymen success in render
-import logging
-logger = logging.getLogger(__name__)
+@login_required
+def ordercomplete(request):
 
-# @login_required
-# def ordercomplete(request):
-
-#   logger.warning("ordercomplete view triggered")
-
-#   order_id = request.GET.get('razorpay_order_id')
-#   logger.warning(f"Order ID received: {order_id}")
-
-#   try:
-#     order = Order.objects.get(razor_pay_order_id=order_id)
-#   except Order.DoesNotExist:
-#     logger.error(f"No Order found with razor_pay_order_id={order_id}")
-#     return render(request, 'public/error_page.html', {"message": "Order not found"})
-
-#   order.isordered = True
-#   order.save()
-#   completeorder = complete_order(request,order)
-#   order_items = OrderItem.objects.filter(order = order)
+  order_id = request.GET.get('razorpay_order_id')
   
-#   for item in order_items:
-#     item.isordered = True
 
-#     completeorderitem(request,item,completeorder)
+  order = Order.objects.get(razor_pay_order_id=order_id)
+ 
+  order.isordered = True
+  order.save()
+  completeorder = complete_order(request,order)
+  order_items = OrderItem.objects.filter(order = order)
+  
+  for item in order_items:
+    item.isordered = True
 
-#     item.save()
+    completeorderitem(request,item,completeorder)
+
+    item.save()
    
     
-#   return render(request, 'public/success_page.html')
+  return redirect('success_payment')
 
 #  temparary ordercomplete function for debug
-def ordercomplete(request):
-    order_id = request.GET.get('razorpay_order_id')
-    print("ORDER ID:", order_id)
+# def ordercomplete(request):
+#     order_id = request.GET.get('razorpay_order_id')
+#     print("ORDER ID:", order_id)
 
-    try:
-        order = Order.objects.get(razor_pay_order_id=order_id)
-    except Exception as e:
-        print("ERROR WHILE FETCHING ORDER:", e)
-        return render(request, 'public/error_page.html', {"message": str(e)})
+#     try:
+#         order = Order.objects.get(razor_pay_order_id=order_id)
+#     except Exception as e:
+#         print("ERROR WHILE FETCHING ORDER:", e)
+#         return render(request, 'public/error_page.html', {"message": str(e)})
 
-    order.isordered = True
-    order.save()
-    return render(request, 'public/success_page.html', {"order": order})
+#     order.isordered = True
+#     order.save()
+#     return render(request, 'public/success_page.html', {"order": order})
+
+def success_payment(request):
+  return render(request, 'public/success_page.html')
 
 
 @login_required
