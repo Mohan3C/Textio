@@ -28,16 +28,12 @@ logger = logging.getLogger(__name__)
 def registeruser(request):
 
   if request.method == "POST":
-    first_name = request.POST.get("first name")
-    last_name = request.POST.get("last name")
     username = request.POST.get("username")
     email = request.POST.get("email")
     pass1 = request.POST.get("password1")
     pass2 = request.POST.get("password2")
     if pass1==pass2:
       user = User()
-      user.first_name = first_name
-      user.last_name = last_name
       user.username = username
       user.email = email
       user.set_password(pass1)

@@ -12,32 +12,11 @@
                 <p class="text-gray-500">You can create a free account now</p>
             </div>
 
-            <div class=" bg-white mr-5 px-3 py-2 borde rounded-lg  ">
-                <form action="" method="post">
+            <div class=" bg-white mr-5 px-3 py-2 borde rounded-lg w-full ">
+                <form action="{% url 'registration' %}" method="post">
                     {% csrf_token %}
 
-                    <div class="w-full gap-5">
-                        
-                        <div class="flex gap-2 pb-2">
-                            <div class="flex flex-col">
-                                <div class="flex flex-row gap-5">
-                                    <div class="flex">  
-                                        <input type="text" name="first name" id="first name" placeholder="Full Name "
-                                            class="border px-4 py-2 rounded-lg" required>
-                                    </div>
-                                    <div class="flex">
-                                        <input type="text" name="last name" id="last name" placeholder="Full Name "
-                                            class="border px-4 py-2 rounded-lg" required>
-                                    </div>
-                                </div>
-
-
-
-                                <label for="first name" class=" px-1 pt-1">First Name</label>
-                            </div>
-
-
-                        </div>
+                    <div class=" gap-5 px-5">
                         <div class="flex flex-col pb-2">
                             <input type="text" name="username" id="username" placeholder="Username "
                                 class="border px-4 py-2 rounded-lg" required>
