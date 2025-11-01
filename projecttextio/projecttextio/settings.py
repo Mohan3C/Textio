@@ -25,10 +25,14 @@ SECRET_KEY = 'django-insecure-8uh49!a!uffa30bo!fvx_jz+&#xff)sjup-i&ozt@@f!-8e@!t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-CSRF_TRUSTED_ORIGINS = ['https://textio1.onrender.com']
+CSRF_TRUSTED_ORIGINS = [
+    'https://textio1.onrender.com',
+    'http://127.0.0.1:8000',
+    'http://localhost:8000'
+]
 
 
-ALLOWED_HOSTS = ['textio1.onrender.com']
+ALLOWED_HOSTS = ['textio1.onrender.com', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -143,12 +147,12 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
 
-MEDIA_ROOT = BASE_DIR / "media"
 
 KEY = 'rzp_test_RJKzOMnn4i4LG0'
 
 # for deployment i hide my secret key
-# SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
+SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
 
 import os
 SECRET_KEY = os.environ.get('SECRET_KEY', 'unsafe-default-key')
+SECRET = os.environ.get('SECRET', 'unsafe-default-key')
