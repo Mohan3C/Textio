@@ -144,7 +144,7 @@ class CompleteOrderItem(models.Model):
     product_color = models.CharField(max_length=30,default="color")
     product_price = models.DecimalField(max_digits=10,decimal_places=2)
     product_discount_price = models.DecimalField(max_digits=10,decimal_places=2)
-    product_img = models.ImageField(upload_to="complete_order_item/")
+    product_img = models.ImageField(upload_to="complete_order_item/",blank=True,null=True)
     product_discreption = models.TextField(default="This is a Product")
     order = models.ForeignKey("CompleteOrder",on_delete=models.CASCADE,related_name="items")
     qty = models.PositiveIntegerField(default=1)
