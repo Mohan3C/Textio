@@ -60,9 +60,6 @@ INSTALLED_APPS = [
     "apptextio",
     'crispy_forms',
     'crispy_tailwind',
-    'cloudinary',
-    'cloudinary_storage',
-
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
