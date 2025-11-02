@@ -179,10 +179,9 @@ import cloudinary.uploader
 import cloudinary.api
 
 if USE_CLOUDINARY:
-    INSTALLED_APPS += [
-        'cloudinary',
-        'cloudinary_storage',
-    ]
+    INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
+
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
     CLOUDINARY_STORAGE = {
         'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
@@ -190,13 +189,17 @@ if USE_CLOUDINARY:
         'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
 
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    cloudinary.uploader.upload_preset('ml_default')
-    MEDIA_URL = f"https://res.cloudinary.com/{CLOUDINARY_STORAGE['CLOUD_NAME']}/image/upload/"
+    cloudinary.config(
+        cloud_name=CLOUDINARY_STORAGE['CLOUD_NAME'],
+        api_key=CLOUDINARY_STORAGE['API_KEY'],
+        api_secret=CLOUDINARY_STORAGE['API_SECRET']
+    )
 
-    # Debug check
-    print("Cloudinary storage active ✅")
-    print("cloudinary.config().cloud_name =", cloudinary.config().cloud_name)
+    MEDIA_URL = '/media/'  # Keep this simple — Cloudinary builds its own full URL
+
+    print("USE_CLOUDINARY =", USE_CLOUDINARY)
+    print("DEFAULT_FILE_STORAGE =", DEFAULT_FILE_STORAGE)
+    print("Cloudinary configured with cloud:", cloudinary.config().cloud_name)
 
 else:
     MEDIA_URL = '/media/'
