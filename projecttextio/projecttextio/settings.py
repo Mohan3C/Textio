@@ -178,27 +178,12 @@ if USE_CLOUDINARY:
     INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
-        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
-        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
-    }
-
-    
-    print("USE_CLOUDINARY =", USE_CLOUDINARY)
-    print("DEFAULT_FILE_STORAGE =", DEFAULT_FILE_STORAGE)
-    print("CLOUDINARY_STORAGE =", CLOUDINARY_STORAGE)
-    print("cloudinary.config() =", cloudinary.config())
-
     MEDIA_URL = '/media/'  # Cloudinary handles actual storage
+
+    # Debug prints to confirm environment setup
+    print("USE_CLOUDINARY =", USE_CLOUDINARY)
+    print("cloudinary.config().cloud_name =", cloudinary.config().cloud_name)
 else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-
-import logging
-logger = logging.getLogger(__name__)
-logger.warning(f"USE_CLOUDINARY = {USE_CLOUDINARY}")
-logger.warning(f"DEFAULT_FILE_STORAGE = {locals().get('DEFAULT_FILE_STORAGE', 'Not Set')}")
-logger.warning(f"CLOUDINARY_STORAGE = {locals().get('CLOUDINARY_STORAGE', 'Not Set')}")
-
 
