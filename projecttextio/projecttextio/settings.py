@@ -187,5 +187,10 @@ else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
 
+import logging
+logger = logging.getLogger(__name__)
+logger.warning(f"USE_CLOUDINARY = {USE_CLOUDINARY}")
+logger.warning(f"DEFAULT_FILE_STORAGE = {locals().get('DEFAULT_FILE_STORAGE', 'Not Set')}")
+logger.warning(f"CLOUDINARY_STORAGE = {locals().get('CLOUDINARY_STORAGE', 'Not Set')}")
 
 
