@@ -170,7 +170,7 @@ LOGOUT_REDIRECT_URL = "/"
 #  always put media url in the bottom
 
 # Local vs Render logic
-USE_CLOUDINARY = os.environ.get("CLOUDINARY_URL") is not None
+USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY") == "True"
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
