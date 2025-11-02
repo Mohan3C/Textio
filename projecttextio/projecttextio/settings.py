@@ -191,7 +191,7 @@ if USE_CLOUDINARY:
     }
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    MEDIA_URL = 'https://res.cloudinary.com/{}/'.format(CLOUDINARY_STORAGE['CLOUD_NAME'])
+    MEDIA_URL = f"https://res.cloudinary.com/{CLOUDINARY_STORAGE['CLOUD_NAME']}/image/upload/"
 
     # Debug check
     print("Cloudinary storage active ✅")
