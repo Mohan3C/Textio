@@ -174,16 +174,31 @@ USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY") == "True"
 
 import cloudinary
 
+import os
+import cloudinary.uploader
+import cloudinary.api
+
 if USE_CLOUDINARY:
-    INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
+    INSTALLED_APPS += [
+        'cloudinary',
+        'cloudinary_storage',
+    ]
+
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-    MEDIA_URL = '/media/'  # Cloudinary handles actual storage
+    MEDIA_URL = 'https://res.cloudinary.com/{}/'.format(CLOUDINARY_STORAGE['CLOUD_NAME'])
 
-    # Debug prints to confirm environment setup
-    print("USE_CLOUDINARY =", USE_CLOUDINARY)
+    # Debug check
+    print("Cloudinary storage active ✅")
     print("cloudinary.config().cloud_name =", cloudinary.config().cloud_name)
+
 else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
+
 
