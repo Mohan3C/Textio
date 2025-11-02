@@ -175,20 +175,22 @@ USE_CLOUDINARY = os.environ.get("CLOUDINARY_URL") is not None
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+USE_CLOUDINARY = os.environ.get("RENDER") == "True"
+
 if USE_CLOUDINARY:
     INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': os.environ.get('CLOUDINARY_CLOUD_NAME'),
+        'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
+        'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
+    }
 
-    MEDIA_URL = '/media/'
-
-    print("USE_CLOUDINARY =", USE_CLOUDINARY)
-    print("DEFAULT_FILE_STORAGE =", DEFAULT_FILE_STORAGE)
-
+    MEDIA_URL = '/media/'  # Cloudinary handles actual storage
 else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-
 
 
 
