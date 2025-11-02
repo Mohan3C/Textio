@@ -181,6 +181,10 @@ if USE_CLOUDINARY:
     DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
     MEDIA_URL = '/media/'
+
+    print("USE_CLOUDINARY =", USE_CLOUDINARY)
+    print("DEFAULT_FILE_STORAGE =", DEFAULT_FILE_STORAGE)
+
 else:
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
