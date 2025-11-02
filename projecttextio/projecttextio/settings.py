@@ -172,6 +172,8 @@ LOGOUT_REDIRECT_URL = "/"
 # Local vs Render logic
 USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY") == "True"
 
+import cloudinary
+
 if USE_CLOUDINARY:
     INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
@@ -181,6 +183,12 @@ if USE_CLOUDINARY:
         'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
         'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
     }
+
+    
+    print("USE_CLOUDINARY =", USE_CLOUDINARY)
+    print("DEFAULT_FILE_STORAGE =", DEFAULT_FILE_STORAGE)
+    print("CLOUDINARY_STORAGE =", CLOUDINARY_STORAGE)
+    print("cloudinary.config() =", cloudinary.config())
 
     MEDIA_URL = '/media/'  # Cloudinary handles actual storage
 else:
