@@ -172,11 +172,6 @@ LOGOUT_REDIRECT_URL = "/"
 # Local vs Render logic
 USE_CLOUDINARY = os.environ.get("USE_CLOUDINARY") == "True"
 
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-
-USE_CLOUDINARY = os.environ.get("RENDER") == "True"
-
 if USE_CLOUDINARY:
     INSTALLED_APPS += ['cloudinary', 'cloudinary_storage']
 
