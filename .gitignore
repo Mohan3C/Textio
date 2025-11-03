@@ -213,3 +213,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+#  add db in gitinore 
+projecttextio/db.sqlite3
+db.sqlite3
+
