@@ -1,0 +1,74 @@
+{% extends "admin/admin_base.html" %}
+
+{% block content %}
+
+<div class="relative overflow-x-auto  sm:rounded-lg mt-3">
+    <table class="mb-5 w-full shadow-md">
+        <thead class="">
+            <tr class="flex justify-between px-10 border py-1 rounded-t-lg">
+                <th class="py-2 text-2xl">Product and Variant</th>
+            </tr>
+        </thead>
+        <tbody>
+           
+            <tr class="flex justify-between border py-1 pl-10">
+                <td class="">
+                    <div class="my-2">
+                        <div class="flex flex-1 justify-between">
+                            <div class="flex flex-row font-semibold">
+                                <h2 class="">Title : </h2>
+                                <h2 class="px-2 font-normal">{{ product.title }}</h2>
+                            </div>
+                        </div>
+                        <div class="flex flex-1">
+                            <h2 class="font-semibold">Category : </h2>
+                            <h2 class="px-2">{{ product.category }}</h2>
+                        </div>
+                        <div class="flex flex-1">
+                            <h2 class="font-semibold">Brand : </h2>
+                            <h2 class="px-2">{{ product.brand }}</h2>
+                        </div>
+                        <div class="flex flex-1">
+                            <h2 class="font-semibold">Discription : </h2>
+                            <h2 class="px-2">{{ product.description }}</h2>
+                        </div>
+                        <div class="flex flex-col pl-10 pt-5">
+                            {% for variant in product.variants.all %}
+                            <div class="flex flex-1 justify-between py-1 gap-10">
+                                <div class=" flex flex-row">
+                                    <h2 class="pl-2 font-semibold">{{ forloop.counter }}.</h2>
+                                    <h2 class="pl-2 font-semibold">Variant : </h2>
+                                    <h2 class="pl-2">size-{{variant.size}}</h2>
+                                    <h2 class="pl-2">Color-{{variant.color}}</h2>
+                                    <h2 class="pl-2">price-{{variant.price}}</h2>
+                                    <h2 class="pl-2">Discount Price - {{variant.dis_price}}</h2>
+                                </div>
+                              
+                                <div class="ml-auto flex flex-row">
+                                    <img class="size-[70px] mr-5" src="{{variant.image.url}}" alt="varient image">
+                                
+                                    <a href="{% url 'editvariant' variant.id %}" class="text-blue-500 pr-5 text-sm">[edit variant]</a>
+                               
+                                    <a href="{% url 'delete_variant' variant.id %}" class="text-red-600 text-sm">Delete</a>
+                                </div>
+
+                            </div>
+
+                            {% endfor %}
+                            <div class="">
+                                <a href="{% url 'addvariant' product.id %}" class="text-blue-500 text-sm">[add
+                                    varient]</a>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

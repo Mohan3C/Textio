@@ -23,6 +23,13 @@ def manageproduct(request):
     else:
         return render(request,"public/main.html")
     
+
+def view_variants(request,id):
+    product = Product.objects.get(id = id)
+
+    return render(request,"admin/view_variants.html",{"product":product})
+
+
 def deleteProduct(request, id):
     itmes = Product.objects.get(id=id)
     itmes.delete()
@@ -65,7 +72,7 @@ def add_variant(request,id):
             for variant in variants:
                 variant.product = product
                 variant.save()
-            return redirect("manageproduct")
+            return redirect("viewvariants")
     
     return render(request,"admin/addvariant.html",{"variantform":variantform,"product":product})
 
@@ -76,14 +83,14 @@ def edit_variant(request,id):
     if request.method == "POST":
         if var_form.is_valid():
             var_form.save()
-        return redirect("manageproduct")
+        return redirect("viewvariants")
     
     return render(request,"admin/addvariant.html",{"var_form":var_form,"variant":variant})
 
 def delete_variant(request,id):
     variant = Variant.objects.get(id=id)
     variant.delete()
-    return redirect('manageproduct')
+    return redirect('viewvariants')
 
 
 def managecategory(request):

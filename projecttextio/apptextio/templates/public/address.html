@@ -5,8 +5,7 @@
 {% block content %}
 
 
-
-<div class=" bg-slate-100 w-full px-[5%]">
+<div class=" bg-slate-100 w-full px-[5%] {% if show_form %} h-full {% else %} pb-20 {% endif %} ">
 
     <div class="flex  flex-1 items-start justify-start">
         <nav class="flex " aria-label="Breadcrumb">
@@ -142,8 +141,10 @@
                 <div class="text-lg font-normal py-1 px-6 text-slate-800 flex justify-between">
                     <span>Insert New Address</span>
                     {% if order %}
+                    {% if not show_form %}
                     <a href="{% url 'address' order.id %}?add_new_address=true"
                         class="text-2xl font-bold px-5 bg-slate-100"> +</a>
+                    {% endif %}
                     {% endif %}
                 </div>
                 {% if show_form %}
@@ -186,10 +187,11 @@
                         {% endif %}
 
                         <div class="gap-20 flex justify-between border-t  py-2 ">
-                            <span class="text-normal font-semibold">Payableamount Amount</span>
+                            <span class="text-normal font-semibold">Payable Amount</span>
                             <span class="font-semibold   text-2xl">₹{{order.getpayableamount|floatformat:0}}</span>
                         </div>
                         {% if not order.coupon_id %}
+                        {% if show_coupon_apply == True %}
 
                         <h2 class="py-2 border-t">Apply Coupon</h2>
 
@@ -204,6 +206,7 @@
                             </form>
 
                         </div>
+                        {% endif %}
                         {% endif %}
                         <hr class="mt-5 ">
                         <div class="flex mt-5 ">

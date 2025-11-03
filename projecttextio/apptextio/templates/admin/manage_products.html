@@ -17,17 +17,20 @@
         </thead>
         <tbody>
             {% for product in products %}
-            <tr class="flex justify-between border py-1 px-10">
-                <td class="">
+            <tr class="border py-1">
+                <td class="px-10">
                     <div class="my-2">
-                        <div class="flex flex-1 justify-between">
+                        <div class="flex ">
                             <div class="flex flex-row font-semibold">
                                 <span class="">{{ forloop.counter }}.</span>
                                 <h2 class="px-1 ">Product : </h2>
                                 <h2 class="">{{ product.title }}</h2>
                             </div>
-                            <div class="">
-                                <a href="{% url 'edit_product' product.id %}" class="text-blue-500 text-sm">Edit Product</a>
+                            
+                            <div class="ml-auto ">
+                                <a href="{% url 'edit_product' product.id %}" class="text-blue-500 text-sm pr-10">Edit Product</a>
+                            
+                                <a href="{% url 'deleteproduct' product.id %}" class="text-red-500  text-sm">Delete Product</a>
                             </div>
                         </div>
                         <div class="flex flex-1">
@@ -39,32 +42,9 @@
                             <h2>{{ product.brand }}</h2>
                         </div>
                         <div class="flex flex-col pl-10">
-                            {% for variant in product.variants.all %}
-                            <div class="flex flex-row justify-between py-1 gap-10">
-                                <div class=" flex flex-row">
-                                    <h2 class="px-2">{{ forloop.counter }}.</h2>
-                                    <h2 class="px-2">Variant : </h2>
-                                    <h2 class="px-2">size-{{variant.size}}</h2>
-                                    <h2 class="px-2">Color-{{variant.color}}</h2>
-                                    <h2 class="px-2">price-{{variant.price}}</h2>
-                                    <h2 class="px-2">Discount Price - {{variant.dis_price}}</h2>
-                                </div>
-                                <div class="">
-                                    <img class="size-[70px] mr-[20px]" src="{{variant.image.url}}" alt="varient image">
-                                </div>
-                                <div class="">
-                                    <a href="{% url 'editvariant' variant.id %}" class="text-blue-500 text-sm">[edit variant]</a>
-                                </div>
-                                <div class="">
-                                    <a href="{% url 'delete_variant' variant.id %}" class="text-red-600 text-sm">Delete</a>
-                                </div>
-
-                            </div>
-
-                            {% endfor %}
                             <div class="">
-                                <a href="{% url 'addvariant' product.id %}" class="text-blue-500 text-sm">[add
-                                    varient]</a>
+                                <a href="{% url 'viewvariants' product.id %}" class="text-blue-500 text-sm">[view
+                                    varients]</a>
                             </div>
 
                         </div>

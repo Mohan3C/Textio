@@ -68,7 +68,8 @@
                                     </h1>
                                     <h1 class="text-sm font-bold  w-[20]">Brand: <span class="font-normal px-2">{{item.variant_product.product.brand}}</span></h1>
                                     <h2 class="font-semibold">Size : <span class="font-normal px-2">{{item.variant_product.size}}</span></h2>
-                                    <h2 class="font-semibold">Price: <span class="font-normal px-2">₹{{item.total_discount_price}}</span> <del
+                                    <h2 class="font-semibold">Colour : <span class="font-normal px-2">{{item.variant_product.color}}</span></h2>
+                                    <h2 class="font-semibold">Price: <span class="font-normal pl-2">₹{{item.total_discount_price}}</span> <del
                                             class="text-sm text-slate-600 font-normal">₹{{item.total_price}}</del>
                                         <span class="text-green-700 font-semibold text-sm">{{item.getpercentage|floatformat:0}}%Off</span>
                                     </h2>

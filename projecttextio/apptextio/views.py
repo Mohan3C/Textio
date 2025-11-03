@@ -299,6 +299,10 @@ def checkoutaddress(request,id):
   form = AddressForm(request.POST or None)
   couponform = CouponcartForm(request.POST or None)
 
+  show_coupon_apply = None
+  if order.from_buynow == True:
+    show_coupon_apply = True
+
   show_form = False
 
   if request.GET.get("add_new_address") == "true":
@@ -341,6 +345,7 @@ def checkoutaddress(request,id):
     "selected_address":selected_address,
     "couponform":couponform,
     "show_form":show_form,
+    "show_coupon_apply":show_coupon_apply,
     }
     
   return render(request, 'public/address.html',context)
