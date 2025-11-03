@@ -132,16 +132,15 @@ STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-MEDIA_URL = "media/"
-
-MEDIA_ROOT = BASE_DIR / "media"
-
 LOGIN_REDIRECT_URL = "/"
 
 LOGOUT_REDIRECT_URL = "/"
 
-
-MEDIA_ROOT = BASE_DIR / "media"
-
 KEY = 'rzp_test_RJKzOMnn4i4LG0'
 SECRET = 'skDdejIqeeky1G0kAPw2wbE2'
+
+# MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_URL = "media/"
+import os
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
