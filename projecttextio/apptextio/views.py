@@ -12,7 +12,7 @@ from django.db.models import Q
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 import os
-import random
+import random 
 
 # Create your views here.
 
