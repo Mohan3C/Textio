@@ -5,6 +5,20 @@ Includes session-based authentication, product variants, a full cart system, and
 
 ---
 
+## 🛠️ Setup Instructions
+
+```bash
+git clone https://github.com/Mohan3C/Textio.git
+cd Textio
+
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
+```
+
+---
+
+
 ## 🚀 Features
 
 ### **User Features**
@@ -49,19 +63,6 @@ projecttextio/
 |
 ├── projecttextio/# project config
 └── manage.py
-```
-
----
-
-## 🛠️ Setup Instructions
-
-```bash
-git clone https://github.com/Mohan3C/Textio.git
-cd Textio
-
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
 ```
 
 ---
